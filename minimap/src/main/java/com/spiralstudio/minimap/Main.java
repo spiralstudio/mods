@@ -33,7 +33,7 @@ public class Main {
                             })))
                     .installOnByteBuddyAgent();
         } catch (Throwable cause) {
-            throw new Error("Failed to load SpiralPing", cause);
+            throw new Error("Failed to load Minimap", cause);
         }
     }
 
