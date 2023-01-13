@@ -1,11 +1,10 @@
 package com.spiralstudio.minimap;
 
-import com.threerings.opengl.gui.Label;
 import com.threerings.projectx.client.ProjectXApp;
-import net.bytebuddy.agent.ByteBuddyAgent;
-import net.bytebuddy.agent.builder.AgentBuilder;
-import net.bytebuddy.implementation.InvocationHandlerAdapter;
-import net.bytebuddy.matcher.ElementMatchers;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.LoaderClassPath;
 
 /**
  * Overrides the `notePing` method of the class `Minimap` to display ping value.
@@ -17,21 +16,13 @@ public class Main {
 
     static {
         try {
-            ByteBuddyAgent.install();
-            new AgentBuilder.Default()
-                    .type(ElementMatchers.named("com.threerings.projectx.client.hud.Minimap"))
-                    .transform((builder, typeDescription, classLoader, module, domain) -> builder
-                            .method(ElementMatchers.named("bG"))
-                            .intercept(InvocationHandlerAdapter.of((proxy, method, args) -> {
-                                Object ping = proxy.getClass().getField("aoQ").get(proxy);
-                                if (ping == null) {
-                                    System.out.println("No ping label, should not happen!");
-                                    return null;
-                                }
-                                ((Label) ping).setText(args[0] + "ms");
-                                return null;
-                            })))
-                    .installOnByteBuddyAgent();
+            ClassPool classPool = ClassPool.getDefault();
+            classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
+            CtClass ctClass = classPool.get("com.threerings.projectx.client.hud.Minimap");
+            CtMethod ctMethod = ctClass.getDeclaredMethod("bG");
+            ctMethod.setBody("$0.aoQ.setText(Integer.toString($1) + \"ms\");");
+            ctClass.toClass();
+            ctClass.detach();
         } catch (Throwable cause) {
             throw new Error("Failed to load Minimap", cause);
         }

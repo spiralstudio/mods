@@ -57,7 +57,7 @@ public class ProjectXApp extends n implements ProjectXCodes, A {
 }
 ```
 
-Use `javassist` to modify the bytecode.
+Use `Javassist` to replace the method.
 
 ```java
 ClassPool classPool = ClassPool.getDefault();

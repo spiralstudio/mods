@@ -36,22 +36,14 @@ public class Minimap extends ay implements aC.b, ProjectXCodes {
 }
 ```
 
-Use `ByteBuddy` to replace the method and just display the ping value.
+Use `Javassist` to replace the method and display the ping value.
 
 ```java
-ByteBuddyAgent.install();
-new AgentBuilder.Default()
-        .type(ElementMatchers.named("com.threerings.projectx.client.hud.Minimap"))
-        .transform((builder, typeDescription, classLoader, module, domain) -> builder
-                .method(ElementMatchers.named("bG"))
-                .intercept(InvocationHandlerAdapter.of((proxy, method, args) -> {
-                    Object ping = proxy.getClass().getField("aoQ").get(proxy);
-                    if (ping == null) {
-                        System.out.println("No ping label, should not happen!");
-                        return null;
-                    }
-                    ((Label) ping).setText(args[0] + "ms");
-                    return null;
-                })))
-        .installOnByteBuddyAgent();
+ClassPool classPool = ClassPool.getDefault();
+classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
+CtClass ctClass = classPool.get("com.threerings.projectx.client.hud.Minimap");
+CtMethod ctMethod = ctClass.getDeclaredMethod("bG");
+ctMethod.setBody("$0.aoQ.setText(Integer.toString($1) + \"ms\");");
+ctClass.toClass();
+ctClass.detach();
 ```
