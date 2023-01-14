@@ -20,7 +20,7 @@ public class Main {
             classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
             CtClass ctClass = classPool.get("com.threerings.projectx.client.hud.Minimap");
             CtMethod ctMethod = ctClass.getDeclaredMethod("bG");
-            ctMethod.setBody("$0.aoQ.setText(Integer.toString($1) + \"ms\");");
+            ctMethod.setBody("{$0.aoQ.setIcon(null);$0.aoQ.setText(Integer.toString($1) + \"ms\");}");
             ctClass.toClass();
             ctClass.detach();
         } catch (Throwable cause) {
