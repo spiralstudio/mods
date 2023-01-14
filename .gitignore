@@ -27,3 +27,4 @@ node_modules/
 logs/
 *.log
 /out/
+/lib/projectx-config/

@@ -1,4 +1,4 @@
-package com.spiralstudio.stayonline;
+package com.spiralstudio.mod.stayonline;
 
 import com.threerings.projectx.client.ProjectXApp;
 import javassist.ClassPool;
@@ -24,7 +24,7 @@ public class Main {
             ctClass.toClass();
             ctClass.detach();
         } catch (Throwable cause) {
-            throw new Error("Failed to load SpiralCaffeine", cause);
+            throw new Error("Failed to load mod 'StayOnline'", cause);
         }
     }
 

@@ -12,10 +12,17 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>minimap</artifactId>
+    <artifactId>projectx-stayonline</artifactId>
     <version>1.0.0</version>
 
     <dependencies>
+        <dependency>
+            <groupId>com.threerings</groupId>
+            <artifactId>projectx-config</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/../lib/projectx-config.jar</systemPath>
+        </dependency>
         <dependency>
             <groupId>com.threerings</groupId>
             <artifactId>projectx-pcode</artifactId>
@@ -30,6 +37,7 @@
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -1,4 +1,4 @@
-package com.spiralstudio.minimap;
+package com.spiralstudio.mod.ping;
 
 import com.threerings.projectx.client.ProjectXApp;
 import javassist.ClassPool;
@@ -24,7 +24,7 @@ public class Main {
             ctClass.toClass();
             ctClass.detach();
         } catch (Throwable cause) {
-            throw new Error("Failed to load Minimap", cause);
+            throw new Error("Failed to load mod 'Ping'", cause);
         }
     }
 

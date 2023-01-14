@@ -37,8 +37,9 @@
     </developers>
 
     <modules>
-        <module>minimap</module>
-        <module>stayonline</module>
+        <module>projectx-modloader</module>
+        <module>projectx-ping</module>
+        <module>projectx-stayonline</module>
     </modules>
 
     <properties>
