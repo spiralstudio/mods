@@ -64,7 +64,7 @@ ClassPool classPool = ClassPool.getDefault();
 classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
 CtClass ctClass = classPool.get("com.threerings.projectx.client.ProjectXApp$c");
 CtMethod ctMethod = ctClass.getDeclaredMethod("start");
-ctMethod.setBody("System.out.println(\"Never sleep\");");
+ctMethod.setBody("{System.out.println(\"Never sleep\");}");
 ctClass.toClass();
 ctClass.detach();
 ```
