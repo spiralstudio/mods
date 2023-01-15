@@ -4,8 +4,8 @@ Mods for the Spiral Knights.
 
 ## Mods
 
-- [Minimap](minimap/README.md) enhances mini map.
-- [StayOnline](stayonline/README.md) prevents long idle logoff.
+- [Ping](projectx-ping/README.md) enhances mini map to display ping value.
+- [StayOnline](projectx-stayonline/README.md) prevents long idle logoff.
 
 ## License
 
