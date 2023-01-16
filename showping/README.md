@@ -1,11 +1,12 @@
-# Ping
+# ShowPing
 
-Enhance mini map.
+Show ping value on the minimap.
 
 ## How it works
 
-By decompiling [projectx-pcode.jar](src/lib/projectx-pcode.jar) we can find that
-`Minimap` defines three ping thresholds (`100`, `150`, `250`) and four icons (`"4_optimal"`, `"3_good"`, `"2_moderate"`, `"1_poor"`).
+By decompiling [projectx-pcode.jar](../lib/projectx-pcode.jar)
+we can find that `Minimap` defines three ping values (`100`, `150`, `250`)
+and four icons (`"4_optimal"`, `"3_good"`, `"2_moderate"`, `"1_poor"`).
 
 We are going to use the ping value instead of the icons.
 

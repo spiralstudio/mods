@@ -4,8 +4,8 @@ Make knights never sleep!
 
 ## How it works
 
-By decompiling [projectx-pcode.jar](src/lib/projectx-pcode.jar) we can find that `c` is the `IdleTracker`,
-so we just need to disable the `start()` method.
+By decompiling [projectx-pcode.jar](src/lib/projectx-pcode.jar) we can find that the inner class `c` is the `IdleTracker`,
+so we just need to disable it.
 
 ```java
 public class ProjectXApp extends n implements ProjectXCodes, A {
@@ -64,7 +64,7 @@ ClassPool classPool = ClassPool.getDefault();
 classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
 CtClass ctClass = classPool.get("com.threerings.projectx.client.ProjectXApp$c");
 CtMethod ctMethod = ctClass.getDeclaredMethod("start");
-ctMethod.setBody("{System.out.println(\"Never sleep\");}");
+ctMethod.setBody("{System.out.println(\"Never Idle\");}");
 ctClass.toClass();
 ctClass.detach();
 ```

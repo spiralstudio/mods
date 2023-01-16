@@ -37,9 +37,8 @@
     </developers>
 
     <modules>
-        <module>projectx-modloader</module>
-        <module>projectx-ping</module>
-        <module>projectx-stayonline</module>
+        <module>showping</module>
+        <module>stayonline</module>
     </modules>
 
     <properties>
@@ -53,8 +52,10 @@
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven-assembly-plugin.version>3.4.2</maven-assembly-plugin.version>
+        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
         <javassist.version>3.29.2-GA</javassist.version>
         <bytebuddy.version>1.12.21</bytebuddy.version>
+        <author>Leego Yih</author>
     </properties>
 
     <dependencyManagement>
@@ -145,6 +146,11 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

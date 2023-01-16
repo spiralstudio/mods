@@ -12,8 +12,12 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>projectx-stayonline</artifactId>
+    <artifactId>stayonline</artifactId>
     <version>1.0.0</version>
+
+    <properties>
+        <mainClass>com.spiralstudio.mod.stayonline.Main</mainClass>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -54,6 +58,32 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${mainClass}</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Author>${author}</Author>
+                            <Version>${project.version}</Version>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${mainClass}</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Author>${author}</Author>
+                            <Version>${project.version}</Version>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
         <resources>

@@ -1,4 +1,4 @@
-package com.spiralstudio.mod.ping;
+package com.spiralstudio.mod.stayonline;
 
 import com.threerings.projectx.client.ProjectXApp;
 import javassist.ClassPool;
@@ -7,24 +7,23 @@ import javassist.CtMethod;
 import javassist.LoaderClassPath;
 
 /**
- * Overrides the `notePing` method of the class `Minimap` to display ping value.
+ * Overrides the `start` method of the class `IdleTracker` to disable it.
  *
  * @author Leego Yih
- * @see com.threerings.projectx.client.hud.Minimap
+ * @see com.threerings.projectx.client.ProjectXApp.c aka IdleTracker
  */
 public class Main {
-
     static {
         try {
             ClassPool classPool = ClassPool.getDefault();
             classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
-            CtClass ctClass = classPool.get("com.threerings.projectx.client.hud.Minimap");
-            CtMethod ctMethod = ctClass.getDeclaredMethod("bG");
-            ctMethod.setBody("{$0.aoQ.setIcon(null);$0.aoQ.setText(Integer.toString($1) + \"ms\");}");
+            CtClass ctClass = classPool.get("com.threerings.projectx.client.ProjectXApp$c");
+            CtMethod ctMethod = ctClass.getDeclaredMethod("start");
+            ctMethod.setBody("{System.out.println(\"Never Idle\");}");
             ctClass.toClass();
             ctClass.detach();
         } catch (Throwable cause) {
-            throw new Error("Failed to load mod 'Ping'", cause);
+            throw new Error("Failed to load mod 'StayOnline'", cause);
         }
     }
 
