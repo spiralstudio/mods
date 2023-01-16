@@ -39,6 +39,7 @@
     <modules>
         <module>showping</module>
         <module>stayonline</module>
+        <module>pandorabox</module>
     </modules>
 
     <properties>
