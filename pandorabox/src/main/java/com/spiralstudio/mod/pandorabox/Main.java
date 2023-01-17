@@ -12,13 +12,14 @@ import javassist.LoaderClassPath;
  */
 public class Main {
     static {
+        System.out.println("PandoraBox initializing");
         try {
             ClassPool classPool = ClassPool.getDefault();
             classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
             CtClass ctClass = classPool.get("com.threerings.projectx.item.client.ArsenalPanel");
             CtMethod ctMethod = ctClass.getDeclaredMethod("a", new CtClass[]{classPool.get("com.threerings.presents.dobj.ElementUpdatedEvent")});
             ctMethod.setBody("{\n" +
-                    "        System.out.println($1.toString());\n" +
+                    "        System.out.println(\"[PandoraBox#elementUpdated] \" + $1.toString());\n" +
                     "        if ($1.getName().equals(\"equipment\")) {\n" +
                     "            Item item;\n" +
                     "            if ((item = (Item)this.asT.BZ().f((Long)$1.getOldValue())) != null) {\n" +
@@ -34,6 +35,7 @@ public class Main {
         } catch (Throwable cause) {
             throw new Error("Failed to load mod 'PandoraBox'", cause);
         }
+        System.out.println("PandoraBox initialized");
     }
 
     public static void main(String[] args) {

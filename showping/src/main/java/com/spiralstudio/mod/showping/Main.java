@@ -14,6 +14,7 @@ import javassist.LoaderClassPath;
  */
 public class Main {
     static {
+        System.out.println("ShowPing initializing");
         try {
             ClassPool classPool = ClassPool.getDefault();
             classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
@@ -25,6 +26,7 @@ public class Main {
         } catch (Throwable cause) {
             throw new Error("Failed to load mod 'ShowPing'", cause);
         }
+        System.out.println("ShowPing initialized");
     }
 
     public static void main(String[] args) {
