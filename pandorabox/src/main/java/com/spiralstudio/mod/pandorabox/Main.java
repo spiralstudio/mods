@@ -21,12 +21,12 @@ public class Main {
             ctMethod.setBody("{\n" +
                     "        System.out.println(\"[PandoraBox#elementUpdated] \" + $1.toString());\n" +
                     "        if ($1.getName().equals(\"equipment\")) {\n" +
-                    "            Item item;\n" +
-                    "            if ((item = (Item)this.asT.BZ().f((Long)$1.getOldValue())) != null) {\n" +
-                    "                this.b(item, false);\n" +
+                    "            com.threerings.projectx.item.data.Item item;\n" +
+                    "            if ((item = (com.threerings.projectx.item.data.Item)$0.asT.BZ().f((java.lang.Comparable)$1.getOldValue())) != null) {\n" +
+                    "                $0.b(item, false);\n" +
                     "            }\n" +
-                    "            if ((item = (Item)this.asT.BZ().f($1.qm())) != null) {\n" +
-                    "                this.b(item, false);\n" +
+                    "            if ((item = (com.threerings.projectx.item.data.Item)$0.asT.BZ().f((java.lang.Comparable)Long.valueOf($1.qm()))) != null) {\n" +
+                    "                $0.b(item, false);\n" +
                     "            }\n" +
                     "        }\n" +
                     "    }");
