@@ -17,36 +17,28 @@ public class Main {
             ClassPool classPool = ClassPool.getDefault();
             classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
             CtClass ctClass = classPool.get("com.threerings.projectx.item.client.ArsenalPanel");
-            /*CtMethod ctMethod = ctClass.getDeclaredMethod("a", new CtClass[]{classPool.get("com.threerings.presents.dobj.ElementUpdatedEvent")});
-            ctMethod.setBody("{\n" +
-                    "        System.out.println(\"[PandoraBox#elementUpdated] \" + $1.toString());\n" +
-                    "        if ($1.getName().equals(\"equipment\")) {\n" +
-                    "            com.threerings.projectx.item.data.Item item;\n" +
-                    "            if ((item = (com.threerings.projectx.item.data.Item)$0.asT.BZ().f((java.lang.Comparable)$1.getOldValue())) != null) {\n" +
-                    "                $0.b(item, false);\n" +
-                    "            }\n" +
-                    "            if ((item = (com.threerings.projectx.item.data.Item)$0.asT.BZ().f((java.lang.Comparable)Long.valueOf($1.qm()))) != null) {\n" +
-                    "                $0.b(item, false);\n" +
-                    "            }\n" +
-                    "        }\n" +
-                    "    }");*/
-            CtMethod ctMethod = ctClass.getDeclaredMethod("a", new CtClass[]{classPool.get("com.threerings.presents.dobj.AttributeChangedEvent")});
-            ctMethod.setBody("{\n" +
-                    "        if ($1.getName().equals(\"equippedSprite\")) {\n" +
-                    "            com.threerings.projectx.data.PlayerObject var2;\n" +
-                    "            com.threerings.projectx.sprites.data.BattleSprite var3;\n" +
-                    "            if ((var3 = (BattleSprite)(var2 = $0._ctx.uk()).sprites.f(((java.lang.Comparable))$1.getOldValue())) != null) {\n" +
-                    "                $0.a(var3, false);\n" +
-                    "            }\n" +
-                    "\n" +
-                    "            if ((var3 = (BattleSprite)var2.sprites.f(((java.lang.Comparable))Integer.valueOf($1.getIntValue()))) != null) {\n" +
-                    "                $0.a(var3, false);\n" +
-                    "            }\n" +
-                    "\n" +
-                    "        } else {\n" +
-                    "            super.a($1);\n" +
-                    "        }\n" +
-                    "    }");
+            CtMethod[] ctMethods = ctClass.getDeclaredMethods("a");
+            for (CtMethod ctMethod : ctMethods) {
+                CtClass[] pTypes = ctMethod.getParameterTypes();
+                if (pTypes.length == 1) {
+                    if (pTypes[0].getClass().getName().contains("ElementUpdatedEvent")) {
+                        ctMethod.setBody("{\n" +
+                                "        System.out.println(\"[PandoraBox#elementUpdated] \" + $1.toString());\n" +
+                                "        if ($1.getName().equals(\"equipment\")) {\n" +
+                                "            com.threerings.projectx.item.data.Item item;\n" +
+                                "            if ((item = (com.threerings.projectx.item.data.Item)$0.asT.BZ().f((java.lang.Comparable)$1.getOldValue())) != null) {\n" +
+                                "                $0.b(item, false);\n" +
+                                "            }\n" +
+                                "            if ((item = (com.threerings.projectx.item.data.Item)$0.asT.BZ().f((java.lang.Comparable)Long.valueOf($1.qm()))) != null) {\n" +
+                                "                $0.b(item, false);\n" +
+                                "            }\n" +
+                                "        }\n" +
+                                "    }");
+                        System.out.println("ArsenalPanel initialized");
+                        break;
+                    }
+                }
+            }
             ctClass.toClass();
             ctClass.detach();
         } catch (Throwable cause) {
