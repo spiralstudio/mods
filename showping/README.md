@@ -2,6 +2,8 @@
 
 Show ping value on the minimap.
 
+![ping](ping.png)
+
 ## How it works
 
 By decompiling [projectx-pcode.jar](../lib/projectx-pcode.jar)
@@ -17,7 +19,7 @@ public class Minimap extends ay implements aC.b, ProjectXCodes {
 
     public final void bG(int var1) {
         int var2;
-        for(var2 = 0; var2 < aoW.length && var1 > aoW[var2]; ++var2) {
+        for (var2 = 0; var2 < aoW.length && var1 > aoW[var2]; ++var2) {
         }
 
         if (this.aoR != var2) {
@@ -40,11 +42,11 @@ public class Minimap extends ay implements aC.b, ProjectXCodes {
 Use `Javassist` to replace the method and display the ping value.
 
 ```java
-ClassPool classPool = ClassPool.getDefault();
-classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
-CtClass ctClass = classPool.get("com.threerings.projectx.client.hud.Minimap");
-CtMethod ctMethod = ctClass.getDeclaredMethod("bG");
-ctMethod.setBody("{$0.aoQ.setIcon(null);$0.aoQ.setText(Integer.toString($1) + \"ms\");}");
-ctClass.toClass();
-ctClass.detach();
+ClassPool classPool=ClassPool.getDefault();
+        classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
+        CtClass ctClass=classPool.get("com.threerings.projectx.client.hud.Minimap");
+        CtMethod ctMethod=ctClass.getDeclaredMethod("bG");
+        ctMethod.setBody("{$0.aoQ.setIcon(null);$0.aoQ.setText(Integer.toString($1) + \"ms\");}");
+        ctClass.toClass();
+        ctClass.detach();
 ```

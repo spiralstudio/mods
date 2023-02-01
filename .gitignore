@@ -28,3 +28,4 @@ logs/
 *.log
 /out/
 /lib/projectx-config/
+/simplifiedchinese/src/main/java/com/spiralstudio/mod/simplifiedchinese/Test.java

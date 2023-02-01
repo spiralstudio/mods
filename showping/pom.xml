@@ -14,6 +14,7 @@
 
     <artifactId>showping</artifactId>
     <version>1.0.0</version>
+    <name>ShowPing</name>
 
     <properties>
         <mainClass>com.spiralstudio.mod.showping.Main</mainClass>
@@ -64,6 +65,7 @@
                             <mainClass>${mainClass}</mainClass>
                         </manifest>
                         <manifestEntries>
+                            <Name>${project.name}</Name>
                             <Author>${author}</Author>
                             <Version>${project.version}</Version>
                         </manifestEntries>
@@ -79,6 +81,7 @@
                             <mainClass>${mainClass}</mainClass>
                         </manifest>
                         <manifestEntries>
+                            <Name>${project.name}</Name>
                             <Author>${author}</Author>
                             <Version>${project.version}</Version>
                         </manifestEntries>

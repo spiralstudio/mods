@@ -14,7 +14,6 @@ import javassist.LoaderClassPath;
  */
 public class Main {
     static {
-        System.out.println("StayOnline initializing");
         try {
             ClassPool classPool = ClassPool.getDefault();
             classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
@@ -24,9 +23,8 @@ public class Main {
             ctClass.toClass();
             ctClass.detach();
         } catch (Throwable cause) {
-            throw new Error("Failed to load mod 'StayOnline'", cause);
+            throw new Error(cause);
         }
-        System.out.println("StayOnline initialized");
     }
 
     public static void main(String[] args) {

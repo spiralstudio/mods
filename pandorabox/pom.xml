@@ -14,6 +14,7 @@
 
     <artifactId>pandorabox</artifactId>
     <version>1.0.0</version>
+    <name>PandoraBox</name>
 
     <properties>
         <mainClass>com.spiralstudio.mod.pandorabox.Main</mainClass>
@@ -79,6 +80,7 @@
                             <mainClass>${mainClass}</mainClass>
                         </manifest>
                         <manifestEntries>
+                            <Name>${project.name}</Name>
                             <Author>${author}</Author>
                             <Version>${project.version}</Version>
                         </manifestEntries>

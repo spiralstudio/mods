@@ -12,12 +12,12 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>stayonline</artifactId>
+    <artifactId>simplifiedchinese</artifactId>
     <version>1.0.0</version>
-    <name>StayOnline</name>
+    <name>SimplifiedChinese</name>
 
     <properties>
-        <mainClass>com.spiralstudio.mod.stayonline.Main</mainClass>
+        <mainClass>com.spiralstudio.mod.simplifiedchinese.Main</mainClass>
     </properties>
 
     <dependencies>
