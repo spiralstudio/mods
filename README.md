@@ -8,9 +8,9 @@ All mods need to be loaded using [projectx-hazard](https://github.com/spiralstud
 
 ## Mods
 
-- [ShowPing](showping/README.md) enhances minimap to show ping value.
-- [StayOnline](stayonline/README.md) guarantees not to be kicked out even after long idle time.
-- [SimplifiedChinese](simplifiedchinese/README.md) is a pluggable Simplified Chinese language pack.
+- [ShowPing](showping) enhances minimap to show ping value.
+- [StayOnline](stayonline) guarantees not to be kicked out even after long idle time.
+- [SimplifiedChinese](simplifiedchinese) is a pluggable Simplified Chinese language pack.
 
 ## License
 
