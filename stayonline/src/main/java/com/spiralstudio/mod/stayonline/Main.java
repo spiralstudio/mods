@@ -10,7 +10,7 @@ import javassist.LoaderClassPath;
  * Overrides the `start` method of the class `IdleTracker` to disable it.
  *
  * @author Leego Yih
- * @see com.threerings.projectx.client.ProjectXApp.c aka IdleTracker
+ * @see com.threerings.projectx.client.ProjectXApp.c IdleTracker
  */
 public class Main {
     static {

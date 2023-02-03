@@ -53,10 +53,10 @@ public class Main {
         CtClass ctClass = classPool.get("com.threerings.projectx.client.du");
         CtMethod ctMethod = ctClass.getDeclaredMethod("b", classPool.get(new String[]{"com.threerings.presents.net.BootstrapData", "com.threerings.presents.dobj.e"}));
         ctMethod.setBody("{" +
-                "        System.out.println($1);\n" +
-                "        com.threerings.projectx.data.ProjectXBootstrapData var3 = (com.threerings.projectx.data.ProjectXBootstrapData)$1;\n" +
-                "        this.b(var3.hostname, var3.ports, var3.datagramPorts);\n" +
-                "        super.b($1, $2);" +
+                "System.out.println(\"BootstrapData\" + $1.toString());\n" +
+                "com.threerings.projectx.data.ProjectXBootstrapData var3 = (com.threerings.projectx.data.ProjectXBootstrapData)$1;\n" +
+                "this.b(var3.hostname, var3.ports, var3.datagramPorts);\n" +
+                "super.b($1, $2);" +
                 "}");
         ctClass.toClass();
         ctClass.detach();
@@ -67,19 +67,19 @@ public class Main {
         classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
         CtClass ctClass = classPool.get("com.threerings.projectx.data.ProjectXCredentials");
         CtConstructor ctConstructor = ctClass.getDeclaredConstructor(classPool.get(new String[]{"com.threerings.util.Name", "java.lang.String", "boolean"}));
-        ctConstructor.setBody("{\n" +
-                "        super($1, $2 == null ? \"\" : ($3 ? $2 : com.samskivert.util.aq.af($2)));\n" +
-                "        this.ident = com.threerings.util.G.QK();\n" +
-                "        if (this.ident != null && !this.ident.matches(\"S[A-Za-z0-9/+]{32}\")) {\n" +
-                "            this.ident = \"C\" + this.ident;\n" +
-                "        }\n" +
-                "        System.out.println(\"[ProjectXCredentials] Fixed Language: en, Original Language: \"+com.threerings.projectx.client.ProjectXPrefs.getLanguage());\n" +
-                "        this.language = \"en\";\n" +
-                "        this.region = com.threerings.projectx.client.ProjectXPrefs.xG();\n" +
-                "        this.steamClient = com.threerings.froth.SteamAPI.isInitialized();\n" +
-                "        this.siteId = java.lang.Integer.getInteger(\"siteId\", 0).intValue();\n" +
-                "        this.invite = java.lang.System.getProperty(\"invite\");\n" +
-                "    }");
+        ctConstructor.setBody("{" +
+                "super($1, $2 == null ? \"\" : ($3 ? $2 : com.samskivert.util.aq.af($2)));\n" +
+                "this.ident = com.threerings.util.G.QK();\n" +
+                "if (this.ident != null && !this.ident.matches(\"S[A-Za-z0-9/+]{32}\")) {\n" +
+                "    this.ident = \"C\" + this.ident;\n" +
+                "}\n" +
+                "System.out.println(\"[ProjectXCredentials] Fixed Language: en, Original Language: \"+com.threerings.projectx.client.ProjectXPrefs.getLanguage());\n" +
+                "this.language = \"en\";\n" +
+                "this.region = com.threerings.projectx.client.ProjectXPrefs.xG();\n" +
+                "this.steamClient = com.threerings.froth.SteamAPI.isInitialized();\n" +
+                "this.siteId = java.lang.Integer.getInteger(\"siteId\", 0).intValue();\n" +
+                "this.invite = java.lang.System.getProperty(\"invite\");\n" +
+                "}");
         ctClass.toClass();
         ctClass.detach();
     }
@@ -96,23 +96,23 @@ public class Main {
         classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
         CtClass ctClass = classPool.get("com.threerings.projectx.client.cs$a");
         CtMethod ctMethod = ctClass.getDeclaredMethod("a");
-        ctMethod.setBody("{\n" +
-                "            String var3;\n" +
-                "            if ((var3 = $0.getProperty($1)) != null) {\n" +
-                "                java.net.URL var6 = com.threerings.projectx.util.a.dl(var3.replaceAll(\"\\\\{lang\\\\}\", \"en\"));\n" +
-                "                try {\n" +
-                "                    return javax.imageio.ImageIO.read(var6);\n" +
-                "                } catch (java.lang.Throwable var5) {\n" +
-                "                    if (com.threerings.projectx.util.a.MP() && $0.j(var5)) {\n" +
-                "                        com.threerings.projectx.a.log.f(\"Could not read news image\", new Object[]{\"key\", $1, \"url\", var6});\n" +
-                "                    } else {\n" +
-                "                        com.threerings.projectx.a.log.f(\"Could not read news image\", new Object[]{\"key\", $1, \"url\", var6, var5});\n" +
-                "                        $2[0] = true;\n" +
-                "                    }\n" +
-                "                }\n" +
-                "            }\n" +
-                "            return null;\n" +
-                "        }");
+        ctMethod.setBody("{" +
+                "String var3;\n" +
+                "if ((var3 = $0.getProperty($1)) != null) {\n" +
+                "    java.net.URL var6 = com.threerings.projectx.util.a.dl(var3.replaceAll(\"\\\\{lang\\\\}\", \"en\"));\n" +
+                "    try {\n" +
+                "        return javax.imageio.ImageIO.read(var6);\n" +
+                "    } catch (java.lang.Throwable var5) {\n" +
+                "        if (com.threerings.projectx.util.a.MP() && $0.j(var5)) {\n" +
+                "            com.threerings.projectx.a.log.f(\"Could not read news image\", new Object[]{\"key\", $1, \"url\", var6});\n" +
+                "        } else {\n" +
+                "            com.threerings.projectx.a.log.f(\"Could not read news image\", new Object[]{\"key\", $1, \"url\", var6, var5});\n" +
+                "            $2[0] = true;\n" +
+                "        }\n" +
+                "    }\n" +
+                "}\n" +
+                "return null;\n" +
+                "}");
         ctClass.toClass();
         ctClass.detach();
     }

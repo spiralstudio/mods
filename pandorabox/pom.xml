@@ -65,6 +65,7 @@
                             <mainClass>${mainClass}</mainClass>
                         </manifest>
                         <manifestEntries>
+                            <Name>${project.name}</Name>
                             <Author>${author}</Author>
                             <Version>${project.version}</Version>
                         </manifestEntries>
