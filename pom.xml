@@ -41,6 +41,7 @@
         <module>stayonline</module>
         <module>pandorabox</module>
         <module>simplifiedchinese</module>
+        <module>noloading</module>
     </modules>
 
     <properties>
