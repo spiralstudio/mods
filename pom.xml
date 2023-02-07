@@ -39,9 +39,8 @@
     <modules>
         <module>showping</module>
         <module>stayonline</module>
-        <module>pandorabox</module>
+        <module>pandora</module>
         <module>simplifiedchinese</module>
-        <module>noloading</module>
     </modules>
 
     <properties>

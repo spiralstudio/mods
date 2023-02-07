@@ -12,12 +12,12 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>pandorabox</artifactId>
+    <artifactId>pandora</artifactId>
     <version>1.0.0</version>
-    <name>PandoraBox</name>
+    <name>Pandora</name>
 
     <properties>
-        <mainClass>com.spiralstudio.mod.pandorabox.Main</mainClass>
+        <mainClass>com.spiralstudio.mod.pandora.Main</mainClass>
     </properties>
 
     <dependencies>
