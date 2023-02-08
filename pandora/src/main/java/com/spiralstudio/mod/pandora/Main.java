@@ -82,40 +82,64 @@ public class Main {
         CtClass ctClass = classPool.get("com.threerings.projectx.shop.client.u");
         CtMethod ctMethod = ctClass.getDeclaredMethod("j");
         ctMethod.setBody("{\n" +
-                "            com.threerings.projectx.shop.data.UniqueShopInfo var8 = $0.aQj.KD();\n" +
-                "            int var2 = 0;\n" +
-                "            for (int var3 = var8.goodCounts.size(); var2 < var3; ++var2) {\n" +
-                "                com.threerings.projectx.shop.data.UniqueShopInfo.GoodCount var4 = (com.threerings.projectx.shop.data.UniqueShopInfo.GoodCount) var8.goodCounts.get(var2);\n" +
+                "            java.lang.reflect.Field configMapField = com.threerings.projectx.shop.client.e.class.getDeclaredField(\"aQk\");\n" +
+                "            configMapField.setAccessible(true);\n" +
+                "            java.util.Map configMap = configMapField.get((com.threerings.projectx.shop.client.e) $0);\n" +
+                "            com.threerings.projectx.shop.data.UniqueShopInfo usi = $0.aQj.KD();\n" +
+                "            int i = 0;\n" +
+                "            int size = usi.goodCounts.size();\n" +
+                "            for (; i < size; ++i) {\n" +
+                "                com.threerings.projectx.shop.data.UniqueShopInfo.GoodCount goodCount = (com.threerings.projectx.shop.data.UniqueShopInfo.GoodCount) usi.goodCounts.get(i);\n" +
                 "                try {\n" +
-                "                    if (var4 == null) {\n" +
-                "                        continue;\n" +
-                "                    }\n" +
-                "                    com.threerings.config.ConfigReference var5 = var4.good.FX();\n" +
-                "                    if (var5 == null) {\n" +
-                "                        continue;\n" +
-                "                    }\n" +
-                "                    com.threerings.projectx.item.config.ItemConfig.Original var6 = com.threerings.projectx.item.data.Item.j($0._ctx.getConfigManager(), var5);\n" +
-                "                    if (var6 == null) {\n" +
-                "                        continue;\n" +
-                "                    }\n" +
-                "                    com.threerings.projectx.client.d.c var7 = (com.threerings.projectx.client.d.c) $0.aEL.get(var6.BA());\n" +
-                "                    if (var7 == null) {\n" +
-                "                        continue;\n" +
-                "                    }\n" +
-                "                    if (var7.abG == null) {\n" +
-                "                        continue;\n" +
-                "                    }\n" +
-                "                    if (var7 != null && $0.bY(var6.a($0._ctx, var5)) && var4.count != 0) {\n" +
-                "                        var7.abG.put(Integer.valueOf(var2), (Object) $0.a(var4.good, var4.count, var2));\n" +
+                "                    com.threerings.config.ConfigReference itemConfigRef = goodCount.good.FX();\n" +
+                "                    com.threerings.projectx.item.config.ItemConfig.Original itemConfigOriginal = com.threerings.projectx.item.data.Item.j($0._ctx.getConfigManager(), itemConfigRef);\n" +
+                "                    com.threerings.projectx.client.d.c groupInfo = (com.threerings.projectx.client.d.c) $0.aEL.get(itemConfigOriginal.BA());\n" +
+                "                    if (groupInfo != null && $0.bY(itemConfigOriginal.a((com.threerings.projectx.util.A) $0._ctx, itemConfigRef))) {\n" +
+                "                        Object goodInfo = configMap.get(goodCount.good);\n" +
+                "                        if (goodInfo == null) {\n" +
+                "                            goodInfo = new com.threerings.projectx.shop.client.e.a($0,goodCount.good, goodCount.count, i);\n" +
+                "                            configMap.put(goodCount.good, goodInfo);\n" +
+                "                        }\n" +
+                "                        groupInfo.abG.put(Integer.valueOf(i), goodInfo);\n" +
                 "                    } else {\n" +
-                "                        $0.a((com.threerings.projectx.shop.client.e.a) var7.abG.remove(Integer.valueOf(var2)));\n" +
+                "                        groupInfo.abG.remove(Integer.valueOf(i));\n" +
                 "                    }\n" +
                 "                } catch (Exception e) {\n" +
+                "                    System.out.println(\"[VendorListPanel] Failed to add item to pandora \" + goodCount.good.toString() + \"\\n\" + e.getMessage());\n" +
                 "                }\n" +
                 "            }\n" +
                 "        }");
         ctClass.toClass();
         ctClass.detach();
+
+        /*{
+            java.lang.reflect.Field configMapField = com.threerings.projectx.shop.client.e.class.getDeclaredField("aQk");
+            configMapField.setAccessible(true);
+            java.util.Map configMap = configMapField.get((com.threerings.projectx.shop.client.e) $0);
+            com.threerings.projectx.shop.data.UniqueShopInfo usi = $0.aQj.KD();
+            int i = 0;
+            int size = usi.goodCounts.size();
+            for (; i < size; ++i) {
+                com.threerings.projectx.shop.data.UniqueShopInfo.GoodCount goodCount = (com.threerings.projectx.shop.data.UniqueShopInfo.GoodCount) usi.goodCounts.get(i);
+                try {
+                    com.threerings.config.ConfigReference itemConfigRef = goodCount.good.FX();
+                    com.threerings.projectx.item.config.ItemConfig.Original itemConfigOriginal = com.threerings.projectx.item.data.Item.j($0._ctx.getConfigManager(), itemConfigRef);
+                    com.threerings.projectx.client.d.c groupInfo = (com.threerings.projectx.client.d.c) $0.aEL.get(itemConfigOriginal.BA());
+                    if (groupInfo != null && $0.bY(itemConfigOriginal.a((com.threerings.projectx.util.A) $0._ctx, itemConfigRef))) {
+                        Object goodInfo = configMap.get(goodCount.good);
+                        if (goodInfo == null) {
+                            goodInfo = new com.threerings.projectx.shop.client.e.a($0,goodCount.good, goodCount.count, i);
+                            configMap.put(goodCount.good, goodInfo);
+                        }
+                        groupInfo.abG.put(Integer.valueOf(i), goodInfo);
+                    } else {
+                        groupInfo.abG.remove(Integer.valueOf(i));
+                    }
+                } catch (Exception e) {
+                    System.out.println("[VendorListPanel] Failed to add item to pandora " + goodCount.good.toString() + "\n" + e.getMessage());
+                }
+            }
+        }*/
 
         /*{
             com.threerings.projectx.shop.data.UniqueShopInfo var8 = $0.aQj.KD();
@@ -162,18 +186,35 @@ public class Main {
         CtClass ctClass2 = classPool.get("com.threerings.projectx.shop.client.l");
         CtMethod ctMethod2 = ctClass2.getDeclaredMethod("Bp");
         ctMethod2.setBody("{\n" +
-                "            com.threerings.projectx.client.g atS = new com.threerings.projectx.shop.client.p($0, $0._ctx, false);\n" +
-                "            com.threerings.projectx.shop.client.e abM = ( com.threerings.projectx.shop.client.e) atS.tH();\n" +
-                "            ((com.threerings.opengl.gui.Label)abM.getComponent(\"title\")).setText(\"Pandora\");\n" +
-                "            return atS;\n" +
+                "            if (this.atS != null) {\n" +
+                "                System.out.println(\"Use Cached VendorPanel\");\n" +
+                "                $0._ctx.getRoot().addWindow(this.atS, true);\n" +
+                "                return this.atS;\n" +
+                "            }\n" +
+                "            System.out.println(\"Create VendorPanel\");\n" +
+                "            this.atS = new com.threerings.projectx.shop.client.p($0, $0._ctx, false);\n" +
+                "            if ($0.aQw.name != null && $0.aQw.name.toLowerCase().contains(\"pandora\")) {\n" +
+                "                com.threerings.projectx.shop.client.e abM = (com.threerings.projectx.shop.client.e) this.atS.tH();\n" +
+                "                ((com.threerings.opengl.gui.Label) abM.getComponent(\"title\")).setText($0.aQw.title);\n" +
+                "            }\n" +
+                "            return this.atS;\n" +
                 "        }");
         ctClass2.toClass();
         ctClass2.detach();
+
         /*{
-            com.threerings.projectx.client.g atS = new com.threerings.projectx.shop.client.p($0, $0._ctx, false);
-            com.threerings.projectx.shop.client.e abM = ( com.threerings.projectx.shop.client.e) atS.tH();
-            ((com.threerings.opengl.gui.Label)abM.getComponent("title")).setText("Pandora");
-            return atS;
+            if (this.atS != null) {
+                System.out.println("Use Cached VendorPanel");
+                $0._ctx.getRoot().addWindow(this.atS, true);
+                return this.atS;
+            }
+            System.out.println("Create VendorPanel");
+            this.atS = new com.threerings.projectx.shop.client.p($0, $0._ctx, false);
+            if ($0.aQw.name != null && $0.aQw.name.toLowerCase().contains("pandora")) {
+                com.threerings.projectx.shop.client.e abM = (com.threerings.projectx.shop.client.e) this.atS.tH();
+                ((com.threerings.opengl.gui.Label) abM.getComponent("title")).setText($0.aQw.title);
+            }
+            return this.atS;
         }*/
     }
 
@@ -198,7 +239,7 @@ public class Main {
                 "                        pb.dismiss();\n" +
                 "                    }\n" +
                 "                } else {\n" +
-                "                    $0._ctx.getRoot().addWindow(pb, true);\n" +
+                "                    $0._ctx.getRoot().addWindow(pb);\n" +
                 "                }\n" +
                 "                return;\n" +
                 "            }\n" +
@@ -212,8 +253,8 @@ public class Main {
                 "            sdi.shopService = null;\n" +
                 "            sdi.model = null;\n" +
                 "            sdi.animation = null;\n" +
-                "            sdi.name = \"m.haven_weapon_1n\";\n" +
-                "            sdi.title = \"m.haven_weapon_1t\";\n" +
+                "            sdi.name = \"Pandora\";\n" +
+                "            sdi.title = \"Pandora's Box\";\n" +
                 "            sdi.sourceKey = new com.threerings.tudey.data.EntityKey.Actor(12);\n" +
                 "            sdi.sourceTranslation = new com.threerings.math.Vector2f(11.377774F, 11.8713F);\n" +
                 "            sdi.sourceRotation = -2.1118479F;\n" +
@@ -255,7 +296,7 @@ public class Main {
                 "            }\n" +
                 "            com.threerings.opengl.gui.aE a = shopDialog;\n" +
                 "            $0._pandora = a;\n" +
-                "            $0._ctx.getRoot().addWindow(a, true);\n" +
+                "            $0._ctx.getRoot().addWindow(a);\n" +
                 "        }");
         ctClass.toClass();
         ctClass.detach();
@@ -273,7 +314,7 @@ public class Main {
                         pb.dismiss();
                     }
                 } else {
-                    $0._ctx.getRoot().addWindow(pb, true);
+                    $0._ctx.getRoot().addWindow(pb);
                 }
                 return;
             }
@@ -287,8 +328,8 @@ public class Main {
             sdi.shopService = null;
             sdi.model = null;
             sdi.animation = null;
-            sdi.name = "m.haven_weapon_1n";
-            sdi.title = "m.haven_weapon_1t";
+            sdi.name = "Pandora";
+            sdi.title = "Pandora's Box";
             sdi.sourceKey = new com.threerings.tudey.data.EntityKey.Actor(12);
             sdi.sourceTranslation = new com.threerings.math.Vector2f(11.377774F, 11.8713F);
             sdi.sourceRotation = -2.1118479F;
@@ -330,8 +371,101 @@ public class Main {
             }
             com.threerings.opengl.gui.aE a = shopDialog;
             $0._pandora = a;
-            $0._ctx.getRoot().addWindow(a, true);
+            $0._ctx.getRoot().addWindow(a);
         }*/
+    }
+
+    static void redefineMessageBundleToIgnoreException(ClassPool classPool) throws Exception {
+        CtClass ctClass = classPool.get("com.threerings.util.N");
+        CtMethod ctMethod = ctClass.getDeclaredMethod("m", classPool.get(new String[]{"java.lang.String", "boolean"}));
+        ctMethod.setBody("{\n" +
+                "            try {\n" +
+                "                if (this.beF != null) {\n" +
+                "                    return this.beF.getString($1);\n" +
+                "                }\n" +
+                "            } catch (java.lang.Exception var4) {\n" +
+                "            }\n" +
+                "            String var3;\n" +
+                "            if (this.beG != null && (var3 = this.beG.m($1, false)) != null) {\n" +
+                "                return var3;\n" +
+                "            } else {\n" +
+                "                return null;\n" +
+                "            }\n" +
+                "        }");
+
+        /*{
+            try {
+                if (this.beF != null) {
+                    return this.beF.getString($1);
+                }
+            } catch (java.lang.Exception var4) {
+            }
+            String var3;
+            if (this.beG != null && (var3 = this.beG.m($1, false)) != null) {
+                return var3;
+            } else {
+                return null;
+            }
+        }*/
+
+        CtMethod ctMethod2 = ctClass.getDeclaredMethod("e");
+        ctMethod2.setBody("{\n" +
+                "            com.threerings.util.N self = this;\n" +
+                "            while($1.startsWith(\"%\")) {\n" +
+                "                com.threerings.util.N nnnnn = self._msgmgr.dI(com.threerings.util.N.dG($1));\n" +
+                "                $1 = com.threerings.util.N.dH($1);\n" +
+                "                self = nnnnn;\n" +
+                "            }\n" +
+                "\n" +
+                "            java.lang.String var3 = com.threerings.util.N.l($2);\n" +
+                "            java.lang.String var4;\n" +
+                "            if ((var4 = self.m($1 + var3, false)) == null) {\n" +
+                "                if (!var3.equals(\"\")) {\n" +
+                "                    var4 = self.m($1, false);\n" +
+                "                }\n" +
+                "\n" +
+                "                if (var4 == null) {\n" +
+                "                    return $1 + com.samskivert.util.aq.toString($2);\n" +
+                "                }\n" +
+                "            }\n" +
+                "\n" +
+                "            try {\n" +
+                "                return java.text.MessageFormat.format(var4.replace(\"'\", \"''\"), $2);\n" +
+                "            } catch (IllegalArgumentException var5) {\n" +
+                "                return var4 + com.samskivert.util.aq.toString($2);\n" +
+                "            }\n" +
+                "        }");
+
+
+        /*{
+            com.threerings.util.N self = this;
+            while($1.startsWith("%")) {
+                com.threerings.util.N nnnnn = self._msgmgr.dI(com.threerings.util.N.dG($1));
+                $1 = com.threerings.util.N.dH($1);
+                self = nnnnn;
+            }
+
+            java.lang.String var3 = com.threerings.util.N.l($2);
+            java.lang.String var4;
+            if ((var4 = self.m($1 + var3, false)) == null) {
+                if (!var3.equals("")) {
+                    var4 = self.m($1, false);
+                }
+
+                if (var4 == null) {
+                    return $1 + com.samskivert.util.aq.toString($2);
+                }
+            }
+
+            try {
+                return java.text.MessageFormat.format(var4.replace("'", "''"), $2);
+            } catch (IllegalArgumentException var5) {
+                return var4 + com.samskivert.util.aq.toString($2);
+            }
+        }*/
+
+        ctClass.toClass();
+        ctClass.detach();
     }
 
     public static void main(String[] args) {
