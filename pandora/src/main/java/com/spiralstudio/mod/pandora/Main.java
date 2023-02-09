@@ -6,6 +6,8 @@ import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.LoaderClassPath;
 
+import java.lang.reflect.Method;
+
 /**
  * @author Leego Yih
  * @see com.threerings.projectx.item.client.ArsenalPanel
@@ -217,21 +219,20 @@ public class Main {
     }
 
     static void redefineChatDirector(ClassPool classPool) throws Exception {
-        classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
-        CtClass ctClass = classPool.get("com.threerings.crowd.chat.client.a");
-        CtMethod ctMethod = ctClass.getDeclaredMethod("a", classPool.get(new String[]{"com.threerings.crowd.chat.client.m", "java.lang.String", "boolean"}));
-        ctMethod.insertBefore("" +
-                "if ($2.equals(\"/pandora\")) {\n" +
-                "            com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;\n" +
-                "            com.threerings.projectx.client.aC hud = com.threerings.projectx.client.aC.h(ctxxx);\n" +
-                "            com.threerings.projectx.shop.data.ShopDialogInfo sdi = new com.threerings.projectx.shop.data.ShopDialogInfo();\n" +
-                "            sdi.level = 0;\n" +
-                "            sdi.type = com.threerings.projectx.shop.data.ShopDialogInfo.Type.CROWN;\n" +
-                "            sdi.preparer = com.threerings.projectx.shop.util.ItemPreparer.BASIC;\n" +
-                "            sdi.seedKnight = true;\n" +
-                "            sdi.shopService = null;\n" +
-                "            sdi.model = null;\n" +
-                "            sdi.animation = null;\n" +
+        Method add = Class.forName("com.spiralstudio.mod.command.Command")
+            .getDeclaredMethod("add", String.class, String.class);
+
+        add.invoke(null, "pandora", "\n" +
+            "            com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;\n" +
+            "            com.threerings.projectx.client.aC hud = com.threerings.projectx.client.aC.h(ctxxx);\n" +
+            "            com.threerings.projectx.shop.data.ShopDialogInfo sdi = new com.threerings.projectx.shop.data.ShopDialogInfo();\n" +
+            "            sdi.level = 0;\n" +
+            "            sdi.type = com.threerings.projectx.shop.data.ShopDialogInfo.Type.CROWN;\n" +
+            "            sdi.preparer = com.threerings.projectx.shop.util.ItemPreparer.BASIC;\n" +
+            "            sdi.seedKnight = true;\n" +
+            "            sdi.shopService = null;\n" +
+            "            sdi.model = null;\n" +
+            "            sdi.animation = null;\n" +
                 "            sdi.name = \"Pandora\";\n" +
                 "            sdi.title = \"Pandora's Box\";\n" +
                 "            sdi.sourceKey = new com.threerings.tudey.data.EntityKey.Actor(12);\n" +
@@ -266,21 +267,17 @@ public class Main {
                 "                            new com.threerings.projectx.shop.config.GoodConfig.Item(ref),\n" +
                 "                            -1));\n" +
                 "                }\n" +
-                "                com.threerings.projectx.shop.data.UniqueShopInfo usi = new com.threerings.projectx.shop.data.UniqueShopInfo();\n" +
-                "                java.lang.reflect.Field goodCountsField = com.threerings.projectx.shop.data.UniqueShopInfo.class.getDeclaredField(\"goodCounts\");\n" +
-                "                goodCountsField.setAccessible(true);\n" +
-                "                goodCountsField.set(usi, goodCounts);\n" +
-                "                java.lang.reflect.Field aQxField = com.threerings.projectx.shop.client.l.class.getDeclaredField(\"aQx\");\n" +
-                "                aQxField.setAccessible(true);\n" +
-                "                aQxField.set(shopDialog, usi);\n" +
-                "            } catch (Exception e) {\n" +
-                "                throw new RuntimeException(e);\n" +
-                "            }\n" +
-                "            ctxxx.getRoot().addWindow(shopDialog);\n" +
-                "            return \"success\";\n" +
-                "        }");
-        ctClass.toClass();
-        ctClass.detach();
+            "                com.threerings.projectx.shop.data.UniqueShopInfo usi = new com.threerings.projectx.shop.data.UniqueShopInfo();\n" +
+            "                java.lang.reflect.Field goodCountsField = com.threerings.projectx.shop.data.UniqueShopInfo.class.getDeclaredField(\"goodCounts\");\n" +
+            "                goodCountsField.setAccessible(true);\n" +
+            "                goodCountsField.set(usi, goodCounts);\n" +
+            "                java.lang.reflect.Field aQxField = com.threerings.projectx.shop.client.l.class.getDeclaredField(\"aQx\");\n" +
+            "                aQxField.setAccessible(true);\n" +
+            "                aQxField.set(shopDialog, usi);\n" +
+            "            } catch (Exception e) {\n" +
+            "                throw new RuntimeException(e);\n" +
+            "            }\n" +
+            "            ctxxx.getRoot().addWindow(shopDialog);");
 
         /*if ($2.equals("/pandora")) {
             com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;
