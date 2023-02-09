@@ -1,9 +1,9 @@
 {
   "mod": {
-    "name": "StayOnline",
+    "name": "Stay Online",
     "description": "Make knights never sleep!",
     "author": "Leego",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "compatibility": "Yes"
   }
 }

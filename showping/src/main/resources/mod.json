@@ -1,9 +1,9 @@
 {
   "mod": {
-    "name": "ShowPing",
+    "name": "Show Ping",
     "description": "Show ping value on the minimap.",
     "author": "Leego",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "compatibility": "Yes"
   }
 }

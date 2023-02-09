@@ -228,7 +228,7 @@ public class Main {
         CtMethod ctMethod = ctClass.getDeclaredMethod("vc");
         ctMethod.setBody("{\n" +
                 "            com.threerings.opengl.gui.aE pb = $0._pandora;\n" +
-                "            if (pb != null ) {\n" +
+                "            if (pb != null) {\n" +
                 "                if (pb.isAdded()) {\n" +
                 "                    if (pb instanceof com.threerings.projectx.client.ui.SlidingPanel) {\n" +
                 "                        com.threerings.projectx.client.ui.SlidingPanel var6 = (com.threerings.projectx.client.ui.SlidingPanel) pb;\n" +
@@ -278,7 +278,10 @@ public class Main {
                 "                java.util.List goodCounts = new java.util.ArrayList();\n" +
                 "                java.util.Iterator iterator = configs.iterator();\n" +
                 "                while (iterator.hasNext()) {\n" +
-                "                    com.threerings.config.ManagedConfig o = (com.threerings.config.ManagedConfig) iterator.next();\n" +
+                "                    com.threerings.projectx.item.config.ItemConfig o = (com.threerings.projectx.item.config.ItemConfig) iterator.next();\n" +
+                "                    if (o.getName().startsWith(\"Weapon/PvP/\")) {\n" +
+                "                        continue;\n" +
+                "                    }\n" +
                 "                    com.threerings.config.ConfigReference ref = o.getReference();\n" +
                 "                    goodCounts.add(new com.threerings.projectx.shop.data.UniqueShopInfo.GoodCount(\n" +
                 "                            new com.threerings.projectx.shop.config.GoodConfig.Item(ref),\n" +
@@ -303,7 +306,7 @@ public class Main {
 
         /*{
             com.threerings.opengl.gui.aE pb = $0._pandora;
-            if (pb != null ) {
+            if (pb != null) {
                 if (pb.isAdded()) {
                     if (pb instanceof com.threerings.projectx.client.ui.SlidingPanel) {
                         com.threerings.projectx.client.ui.SlidingPanel var6 = (com.threerings.projectx.client.ui.SlidingPanel) pb;
@@ -353,7 +356,10 @@ public class Main {
                 java.util.List goodCounts = new java.util.ArrayList();
                 java.util.Iterator iterator = configs.iterator();
                 while (iterator.hasNext()) {
-                    com.threerings.config.ManagedConfig o = (com.threerings.config.ManagedConfig) iterator.next();
+                    com.threerings.projectx.item.config.ItemConfig o = (com.threerings.projectx.item.config.ItemConfig) iterator.next();
+                    if (o.getName().startsWith("Weapon/PvP/")) {
+                        continue;
+                    }
                     com.threerings.config.ConfigReference ref = o.getReference();
                     goodCounts.add(new com.threerings.projectx.shop.data.UniqueShopInfo.GoodCount(
                             new com.threerings.projectx.shop.config.GoodConfig.Item(ref),
