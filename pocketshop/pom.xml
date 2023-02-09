@@ -12,12 +12,12 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>pocketah</artifactId>
+    <artifactId>pocketshop</artifactId>
     <version>1.0.0</version>
-    <name>PocketAH</name>
+    <name>PocketShop</name>
 
     <properties>
-        <mainClass>com.spiralstudio.mod.pocketah.Main</mainClass>
+        <mainClass>com.spiralstudio.mod.pocketshop.Main</mainClass>
     </properties>
 
     <dependencies>

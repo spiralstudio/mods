@@ -3,10 +3,8 @@ package com.spiralstudio.mod.pandora;
 import com.threerings.projectx.client.ProjectXApp;
 import javassist.ClassPool;
 import javassist.CtClass;
-import javassist.CtField;
 import javassist.CtMethod;
 import javassist.LoaderClassPath;
-import javassist.Modifier;
 
 /**
  * @author Leego Yih
@@ -23,7 +21,7 @@ public class Main {
             redefineGoodSlotToIgnoreException(classPool);
             redefineVendorListPanelToIgnoreException(classPool);
             redefineShopDialogToRenameTitle(classPool);
-            redefineHudWindowToReplaceHelpWindow(classPool);
+            redefineChatDirector(classPool);
         } catch (Throwable cause) {
             throw new Error(cause);
         }
@@ -218,33 +216,14 @@ public class Main {
         }*/
     }
 
-    static void redefineHudWindowToReplaceHelpWindow(ClassPool classPool) throws Exception {
-        CtClass ctClass = classPool.get("com.threerings.projectx.client.aC");
-
-        CtField ctField = new CtField(classPool.get("com.threerings.opengl.gui.aE"), "_pandora", ctClass);
-        ctField.setModifiers(Modifier.PUBLIC);
-        ctClass.addField(ctField);
-
-        CtMethod ctMethod = ctClass.getDeclaredMethod("vc");
-        ctMethod.setBody("{\n" +
-                "            com.threerings.opengl.gui.aE pb = $0._pandora;\n" +
-                "            if (pb != null) {\n" +
-                "                if (pb.isAdded()) {\n" +
-                "                    if (pb instanceof com.threerings.projectx.client.ui.SlidingPanel) {\n" +
-                "                        com.threerings.projectx.client.ui.SlidingPanel var6 = (com.threerings.projectx.client.ui.SlidingPanel) pb;\n" +
-                "                        if (!var6.Av()) {\n" +
-                "                            var6.Au();\n" +
-                "                        }\n" +
-                "                    } else {\n" +
-                "                        pb.dismiss();\n" +
-                "                    }\n" +
-                "                } else {\n" +
-                "                    $0._ctx.getRoot().addWindow(pb);\n" +
-                "                }\n" +
-                "                return;\n" +
-                "            }\n" +
-                "            System.out.println($0.acf);\n" +
-                "            System.out.println($0.acf.uk());\n" +
+    static void redefineChatDirector(ClassPool classPool) throws Exception {
+        classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
+        CtClass ctClass = classPool.get("com.threerings.crowd.chat.client.a");
+        CtMethod ctMethod = ctClass.getDeclaredMethod("a", classPool.get(new String[]{"com.threerings.crowd.chat.client.m", "java.lang.String", "boolean"}));
+        ctMethod.insertBefore("" +
+                "if ($2.equals(\"/pandora\")) {\n" +
+                "            com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;\n" +
+                "            com.threerings.projectx.client.aC hud = com.threerings.projectx.client.aC.h(ctxxx);\n" +
                 "            com.threerings.projectx.shop.data.ShopDialogInfo sdi = new com.threerings.projectx.shop.data.ShopDialogInfo();\n" +
                 "            sdi.level = 0;\n" +
                 "            sdi.type = com.threerings.projectx.shop.data.ShopDialogInfo.Type.CROWN;\n" +
@@ -260,11 +239,11 @@ public class Main {
                 "            sdi.sourceRotation = -2.1118479F;\n" +
                 "            sdi.sourceTransient = null;\n" +
                 "            sdi.sourceCloseAnimation = null;\n" +
-                "            com.threerings.projectx.shop.client.l shopDialog = new com.threerings.projectx.shop.client.l($0._ctx, $0.acf, sdi);\n" +
+                "            com.threerings.projectx.shop.client.l shopDialog = new com.threerings.projectx.shop.client.l(ctxxx, hud.vk(), sdi);\n" +
                 "            try {\n" +
                 "                java.lang.reflect.Field cfgmgrField = com.threerings.opengl.e.class.getDeclaredField(\"_cfgmgr\");\n" +
                 "                cfgmgrField.setAccessible(true);\n" +
-                "                com.threerings.config.ConfigManager configManager = (com.threerings.config.ConfigManager) cfgmgrField.get($0._ctx);\n" +
+                "                com.threerings.config.ConfigManager configManager = (com.threerings.config.ConfigManager) cfgmgrField.get(ctxxx);\n" +
                 "\n" +
                 "                java.lang.reflect.Field groupsField = com.threerings.config.ConfigManager.class.getDeclaredField(\"_groups\");\n" +
                 "                groupsField.setAccessible(true);\n" +
@@ -297,32 +276,15 @@ public class Main {
                 "            } catch (Exception e) {\n" +
                 "                throw new RuntimeException(e);\n" +
                 "            }\n" +
-                "            com.threerings.opengl.gui.aE a = shopDialog;\n" +
-                "            $0._pandora = a;\n" +
-                "            $0._ctx.getRoot().addWindow(a);\n" +
+                "            ctxxx.getRoot().addWindow(shopDialog);\n" +
+                "            return \"success\";\n" +
                 "        }");
         ctClass.toClass();
         ctClass.detach();
 
-        /*{
-            com.threerings.opengl.gui.aE pb = $0._pandora;
-            if (pb != null) {
-                if (pb.isAdded()) {
-                    if (pb instanceof com.threerings.projectx.client.ui.SlidingPanel) {
-                        com.threerings.projectx.client.ui.SlidingPanel var6 = (com.threerings.projectx.client.ui.SlidingPanel) pb;
-                        if (!var6.Av()) {
-                            var6.Au();
-                        }
-                    } else {
-                        pb.dismiss();
-                    }
-                } else {
-                    $0._ctx.getRoot().addWindow(pb);
-                }
-                return;
-            }
-            System.out.println($0.acf);
-            System.out.println($0.acf.uk());
+        /*if ($2.equals("/pandora")) {
+            com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;
+            com.threerings.projectx.client.aC hud = com.threerings.projectx.client.aC.h(ctxxx);
             com.threerings.projectx.shop.data.ShopDialogInfo sdi = new com.threerings.projectx.shop.data.ShopDialogInfo();
             sdi.level = 0;
             sdi.type = com.threerings.projectx.shop.data.ShopDialogInfo.Type.CROWN;
@@ -338,11 +300,11 @@ public class Main {
             sdi.sourceRotation = -2.1118479F;
             sdi.sourceTransient = null;
             sdi.sourceCloseAnimation = null;
-            com.threerings.projectx.shop.client.l shopDialog = new com.threerings.projectx.shop.client.l($0._ctx, $0.acf, sdi);
+            com.threerings.projectx.shop.client.l shopDialog = new com.threerings.projectx.shop.client.l(ctxxx, hud.vk(), sdi);
             try {
                 java.lang.reflect.Field cfgmgrField = com.threerings.opengl.e.class.getDeclaredField("_cfgmgr");
                 cfgmgrField.setAccessible(true);
-                com.threerings.config.ConfigManager configManager = (com.threerings.config.ConfigManager) cfgmgrField.get($0._ctx);
+                com.threerings.config.ConfigManager configManager = (com.threerings.config.ConfigManager) cfgmgrField.get(ctxxx);
 
                 java.lang.reflect.Field groupsField = com.threerings.config.ConfigManager.class.getDeclaredField("_groups");
                 groupsField.setAccessible(true);
@@ -375,103 +337,9 @@ public class Main {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            com.threerings.opengl.gui.aE a = shopDialog;
-            $0._pandora = a;
-            $0._ctx.getRoot().addWindow(a);
+            ctxxx.getRoot().addWindow(shopDialog);
+            return "success";
         }*/
-    }
-
-    static void redefineMessageBundleToIgnoreException(ClassPool classPool) throws Exception {
-        CtClass ctClass = classPool.get("com.threerings.util.N");
-        CtMethod ctMethod = ctClass.getDeclaredMethod("m", classPool.get(new String[]{"java.lang.String", "boolean"}));
-        ctMethod.setBody("{\n" +
-                "            try {\n" +
-                "                if (this.beF != null) {\n" +
-                "                    return this.beF.getString($1);\n" +
-                "                }\n" +
-                "            } catch (java.lang.Exception var4) {\n" +
-                "            }\n" +
-                "            String var3;\n" +
-                "            if (this.beG != null && (var3 = this.beG.m($1, false)) != null) {\n" +
-                "                return var3;\n" +
-                "            } else {\n" +
-                "                return null;\n" +
-                "            }\n" +
-                "        }");
-
-        /*{
-            try {
-                if (this.beF != null) {
-                    return this.beF.getString($1);
-                }
-            } catch (java.lang.Exception var4) {
-            }
-            String var3;
-            if (this.beG != null && (var3 = this.beG.m($1, false)) != null) {
-                return var3;
-            } else {
-                return null;
-            }
-        }*/
-
-        CtMethod ctMethod2 = ctClass.getDeclaredMethod("e");
-        ctMethod2.setBody("{\n" +
-                "            com.threerings.util.N self = this;\n" +
-                "            while($1.startsWith(\"%\")) {\n" +
-                "                com.threerings.util.N nnnnn = self._msgmgr.dI(com.threerings.util.N.dG($1));\n" +
-                "                $1 = com.threerings.util.N.dH($1);\n" +
-                "                self = nnnnn;\n" +
-                "            }\n" +
-                "\n" +
-                "            java.lang.String var3 = com.threerings.util.N.l($2);\n" +
-                "            java.lang.String var4;\n" +
-                "            if ((var4 = self.m($1 + var3, false)) == null) {\n" +
-                "                if (!var3.equals(\"\")) {\n" +
-                "                    var4 = self.m($1, false);\n" +
-                "                }\n" +
-                "\n" +
-                "                if (var4 == null) {\n" +
-                "                    return $1 + com.samskivert.util.aq.toString($2);\n" +
-                "                }\n" +
-                "            }\n" +
-                "\n" +
-                "            try {\n" +
-                "                return java.text.MessageFormat.format(var4.replace(\"'\", \"''\"), $2);\n" +
-                "            } catch (IllegalArgumentException var5) {\n" +
-                "                return var4 + com.samskivert.util.aq.toString($2);\n" +
-                "            }\n" +
-                "        }");
-
-
-        /*{
-            com.threerings.util.N self = this;
-            while($1.startsWith("%")) {
-                com.threerings.util.N nnnnn = self._msgmgr.dI(com.threerings.util.N.dG($1));
-                $1 = com.threerings.util.N.dH($1);
-                self = nnnnn;
-            }
-
-            java.lang.String var3 = com.threerings.util.N.l($2);
-            java.lang.String var4;
-            if ((var4 = self.m($1 + var3, false)) == null) {
-                if (!var3.equals("")) {
-                    var4 = self.m($1, false);
-                }
-
-                if (var4 == null) {
-                    return $1 + com.samskivert.util.aq.toString($2);
-                }
-            }
-
-            try {
-                return java.text.MessageFormat.format(var4.replace("'", "''"), $2);
-            } catch (IllegalArgumentException var5) {
-                return var4 + com.samskivert.util.aq.toString($2);
-            }
-        }*/
-
-        ctClass.toClass();
-        ctClass.detach();
     }
 
     public static void main(String[] args) {
