@@ -24,7 +24,8 @@ public class Main {
                     "                if ($2.equals(\"/ah\")) {\n" +
                     "                    com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;\n" +
                     "                    com.threerings.projectx.client.aC hud = com.threerings.projectx.client.aC.h(ctxxx);\n" +
-                    "                    com.threerings.projectx.auction.client.a ah = new com.threerings.projectx.auction.client.a(ctxxx, hud.vk(), null);\n" +
+                    "                    com.threerings.projectx.auction.data.AuctionDialogInfo adi = new com.threerings.projectx.auction.data.AuctionDialogInfo();\n" +
+                    "                    com.threerings.projectx.client.ff ah = adi.a(ctxxx, hud.vk());\n" +
                     "                    ctxxx.getRoot().addWindow(ah);\n" +
                     "                    return \"success\";\n" +
                     "                } else if (!$2.startsWith(\"/\")) {\n" +
@@ -84,7 +85,8 @@ public class Main {
                 if ($2.equals("/ah")) {
                     com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;
                     com.threerings.projectx.client.aC hud = com.threerings.projectx.client.aC.h(ctxxx);
-                    com.threerings.projectx.auction.client.a ah = new com.threerings.projectx.auction.client.a(ctxxx, hud.vk(), null);
+                    com.threerings.projectx.auction.data.AuctionDialogInfo adi = new com.threerings.projectx.auction.data.AuctionDialogInfo();
+                    com.threerings.projectx.client.ff ah = adi.a(ctxxx, hud.vk());
                     ctxxx.getRoot().addWindow(ah);
                     return "success";
                 } else if (!$2.startsWith("/")) {
