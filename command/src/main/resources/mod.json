@@ -1,0 +1,9 @@
+{
+  "mod": {
+    "name": "$Command",
+    "description": "DO NOT RENAME IT! Keep its filename as \"_command.jar\".\nIt is the basis of the command-based mods.",
+    "author": "Leego",
+    "version": "0.0.1",
+    "compatibility": "Yes"
+  }
+}

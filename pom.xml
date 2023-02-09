@@ -37,6 +37,7 @@
     </developers>
 
     <modules>
+        <module>command</module>
         <module>showping</module>
         <module>stayonline</module>
         <module>noloading</module>
