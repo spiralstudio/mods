@@ -1,0 +1,9 @@
+{
+  "mod": {
+    "name": "No Loading",
+    "description": "Remove loading window.",
+    "author": "Leego",
+    "version": "0.0.1",
+    "compatibility": "Yes"
+  }
+}
