@@ -4,7 +4,7 @@ Mods for the Spiral Knights.
 
 ## Usage
 
-All mods need to be loaded using [projectx-hazard](https://github.com/spiralstudio/projectx-hazard).
+All mods need to be loaded using [projectx-hazard](https://github.com/spiralstudio/projectx-hazard) or [KnightLauncher](https://github.com/lucasluqui/KnightLauncher).
 
 ## Mods
 
