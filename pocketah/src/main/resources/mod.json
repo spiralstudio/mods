@@ -1,0 +1,9 @@
+{
+  "mod": {
+    "name": "Pocket AH",
+    "description": "Type \"/ah\" to call the Auction House anytime and anywhere.",
+    "author": "Leego",
+    "version": "0.0.1",
+    "compatibility": "Yes"
+  }
+}
