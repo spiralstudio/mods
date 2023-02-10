@@ -1,7 +1,7 @@
 {
   "mod": {
     "name": "Pocket Shop",
-    "description": "Type \"/ah\" to call the Auction House anytime and anywhere.",
+    "description": "Available commands: /ah /uv /punch /unbind /vice /craft /accessory /harness",
     "author": "Leego",
     "version": "0.0.1",
     "compatibility": "Yes"

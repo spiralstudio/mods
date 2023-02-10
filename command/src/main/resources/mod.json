@@ -1,7 +1,7 @@
 {
   "mod": {
     "name": "$Command",
-    "description": "DO NOT RENAME IT! Keep its filename as \"_command.jar\".\nIt is the basis of the command-based mods.",
+    "description": "Enter \"/xhelp\" to learn more about each command. \\nDO NOT RENAME IT! Keep its filename as \"~command.jar\"",
     "author": "Leego",
     "version": "0.0.1",
     "compatibility": "Yes"
