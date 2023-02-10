@@ -3,8 +3,10 @@ package com.spiralstudio.mod.command;
 import com.threerings.projectx.client.ProjectXApp;
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.CtField;
 import javassist.CtMethod;
 import javassist.LoaderClassPath;
+import javassist.Modifier;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,10 +20,17 @@ import java.util.Map;
  */
 public class Command {
     private static Map<String, String> commands = new LinkedHashMap<>();
+    private static Map<String, String> fields = new LinkedHashMap<>();
 
-    public static void add(String cmd, String action) {
+    public static void addCommand(String cmd, String action) {
         synchronized (commands) {
             commands.put(cmd, action);
+        }
+    }
+
+    public static void addField(String fieldName, String fieldType) {
+        synchronized (commands) {
+            fields.put(fieldName, fieldType);
         }
     }
 
@@ -30,6 +39,13 @@ public class Command {
             ClassPool classPool = ClassPool.getDefault();
             classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
             CtClass ctClass = classPool.get("com.threerings.crowd.chat.client.a");
+
+            for (Map.Entry<String, String> entry : fields.entrySet()) {
+                CtField ctField = new CtField(classPool.get(entry.getValue()), entry.getKey(), ctClass);
+                ctField.setModifiers(Modifier.PUBLIC);
+                ctClass.addField(ctField);
+            }
+
             CtMethod ctMethod = ctClass.getDeclaredMethod("a", classPool.get(new String[]{"com.threerings.crowd.chat.client.m", "java.lang.String", "boolean"}));
             if (commands.isEmpty()) {
                 ctMethod.insertBefore("if ($2.equalsIgnoreCase(\"/xhelp\")) { \nreturn \"No available commands.\"; }");

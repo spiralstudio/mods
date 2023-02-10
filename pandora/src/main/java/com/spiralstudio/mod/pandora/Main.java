@@ -221,10 +221,18 @@ public class Main {
     }
 
     static void addPandoraChatCommand() throws Exception {
-        Method add = Class.forName("com.spiralstudio.mod.command.Command")
-                .getDeclaredMethod("add", String.class, String.class);
-        add.invoke(null, "pandora", "\n" +
-                "            com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;\n" +
+        Method addField = Class.forName("com.spiralstudio.mod.command.Command")
+                .getDeclaredMethod("addField", String.class, String.class);
+        Method addCommand = Class.forName("com.spiralstudio.mod.command.Command")
+                .getDeclaredMethod("addCommand", String.class, String.class);
+        // Add a field for caching the window
+        addField.invoke(null, "_pandora", "com.threerings.opengl.gui.aE");
+        // Add a command "/pandora"
+        addCommand.invoke(null, "pandora", "\n" +
+                "        com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;\n" +
+                "        if (this._pandora != null) {\n" +
+                "            ctxxx.getRoot().addWindow(this._pandora);\n" +
+                "        } else {\n" +
                 "            com.threerings.projectx.client.aC hud = com.threerings.projectx.client.aC.h(ctxxx);\n" +
                 "            com.threerings.projectx.shop.data.ShopDialogInfo sdi = new com.threerings.projectx.shop.data.ShopDialogInfo();\n" +
                 "            sdi.level = 0;\n" +
@@ -278,10 +286,14 @@ public class Main {
                 "            } catch (Exception e) {\n" +
                 "                throw new RuntimeException(e);\n" +
                 "            }\n" +
-                "            ctxxx.getRoot().addWindow(shopDialog);\n");
+                "            this._pandora = shopDialog;\n" +
+                "            ctxxx.getRoot().addWindow(shopDialog);\n" +
+                "        }");
 
-        /*if ($2.equals("/pandora")) {
-            com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;
+        /*com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;
+        if (this._pandora != null) {
+            ctxxx.getRoot().addWindow(this._pandora);
+        } else {
             com.threerings.projectx.client.aC hud = com.threerings.projectx.client.aC.h(ctxxx);
             com.threerings.projectx.shop.data.ShopDialogInfo sdi = new com.threerings.projectx.shop.data.ShopDialogInfo();
             sdi.level = 0;
@@ -335,8 +347,8 @@ public class Main {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+            this._pandora = shopDialog;
             ctxxx.getRoot().addWindow(shopDialog);
-            return "success";
         }*/
     }
 

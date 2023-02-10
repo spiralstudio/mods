@@ -48,16 +48,16 @@ public class Main {
     }
 
     static void addShopChatCommands() throws Exception {
-        Method add = Class.forName("com.spiralstudio.mod.command.Command")
-                .getDeclaredMethod("add", String.class, String.class);
+        Method addCommand = Class.forName("com.spiralstudio.mod.command.Command")
+                .getDeclaredMethod("addCommand", String.class, String.class);
         // Auction House
-        add.invoke(null, "ah", "\n" +
+        addCommand.invoke(null, "ah", "\n" +
                 "com.threerings.projectx.auction.data.AuctionDialogInfo di = new com.threerings.projectx.auction.data.AuctionDialogInfo();\n" +
                 "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
         // UV - Punch
-        add.invoke(null, "uv|punch", "\n" +
+        addCommand.invoke(null, "uv|punch", "\n" +
                 "com.threerings.projectx.craft.data.VariantMakerDialogInfo di = new com.threerings.projectx.craft.data.VariantMakerDialogInfo();\n" +
                 "di.name = \"m.haven_punch\";\n" +
                 "di.title = \"t.haven_punch\";\n" +
@@ -65,7 +65,7 @@ public class Main {
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
         // Unbind - Vice
-        add.invoke(null, "unbind|vice", "\n" +
+        addCommand.invoke(null, "unbind|vice", "\n" +
                 "com.threerings.projectx.craft.data.UnbindDialogInfo di = new com.threerings.projectx.craft.data.UnbindDialogInfo();\n" +
                 "di.name = \"m.haven_vice\";\n" +
                 "di.title = \"t.haven_vice\";\n" +
@@ -73,7 +73,7 @@ public class Main {
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
         // Accessory - Bechamel
-        add.invoke(null, "accessory", "\n" +
+        addCommand.invoke(null, "accessory", "\n" +
                 "com.threerings.projectx.craft.data.AccessoryDialogInfo di = new com.threerings.projectx.craft.data.AccessoryDialogInfo();\n" +
                 "di.name = \"m.accessory\";\n" +
                 "di.title = \"t.accessory\";\n" +
@@ -81,7 +81,7 @@ public class Main {
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
         // Harness
-        add.invoke(null, "harness", "\n" +
+        addCommand.invoke(null, "harness", "\n" +
                 "com.threerings.projectx.sprites.data.HarnessDialogInfo di = new com.threerings.projectx.sprites.data.HarnessDialogInfo();\n" +
                 "di.name = \"m.harness_vendor\";\n" +
                 "di.title = \"t.harness_vendor\";\n" +
@@ -89,13 +89,13 @@ public class Main {
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
         // Craft
-        add.invoke(null, "craft", "\n" +
+        addCommand.invoke(null, "craft", "\n" +
                 "com.threerings.projectx.craft.data.CrafterDialogInfo di = new com.threerings.projectx.craft.data.CrafterDialogInfo();\n" +
                 "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
         // Forge
-        add.invoke(null, "forge|heat", "\n" +
+        addCommand.invoke(null, "forge|heat", "\n" +
                 "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "com.threerings.projectx.item.client.q win__ = new com.threerings.projectx.item.client.q(ctx__, null);\n");
     }
