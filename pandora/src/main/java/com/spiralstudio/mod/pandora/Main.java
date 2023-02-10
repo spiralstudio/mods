@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 
 /**
  * Enter "/pandora" to call the Pandora.
+ * Enter "/clearpandora" to help GC.
  *
  * @author Leego Yih
  * @see com.threerings.projectx.item.client.ArsenalPanel
@@ -227,6 +228,8 @@ public class Main {
                 .getDeclaredMethod("addCommand", String.class, String.class);
         // Add a field for caching the window
         addField.invoke(null, "_pandora", "com.threerings.opengl.gui.aE");
+        // Add a command "/clearpandora" to help GC
+        addCommand.invoke(null, "clearpandora", "this._pandora = null;");
         // Add a command "/pandora"
         addCommand.invoke(null, "pandora", "\n" +
                 "        com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;\n" +
