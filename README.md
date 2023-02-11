@@ -11,7 +11,8 @@ All mods need to be loaded using [projectx-hazard](https://github.com/spiralstud
 - [ShowPing](showping) enhances minimap to show ping value.
 - [StayOnline](stayonline) guarantees not to be kicked out even after long idle time.
 - [Pandora](pandora) is a full items arsenal, no hacking, preview only.
-- [PocketShop](pocketshop) can call the Auction House anytime and anywhere.
+- [PocketShop](pocketshop) enters commands to call shops anytime and anywhere.
+- [Teleport](teleport)enters commands to go somewhere.
 - [SimplifiedChinese](simplifiedchinese) is a pluggable Simplified Chinese language pack.
 
 ## License

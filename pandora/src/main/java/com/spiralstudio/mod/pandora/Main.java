@@ -228,8 +228,6 @@ public class Main {
                 .getDeclaredMethod("addCommand", String.class, String.class);
         // Add a field for caching the window
         addField.invoke(null, "_pandora", "com.threerings.opengl.gui.aE");
-        // Add a command "/clearpandora" to help GC
-        addCommand.invoke(null, "clearpandora", "this._pandora = null;");
         // Add a command "/pandora"
         addCommand.invoke(null, "pandora", "\n" +
                 "        com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;\n" +
@@ -292,6 +290,8 @@ public class Main {
                 "            this._pandora = shopDialog;\n" +
                 "            ctxxx.getRoot().addWindow(shopDialog);\n" +
                 "        }");
+        // Add a command "/clearpandora" to help GC
+        addCommand.invoke(null, "clearpandora", "this._pandora = null;");
 
         /*com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;
         if (this._pandora != null) {
