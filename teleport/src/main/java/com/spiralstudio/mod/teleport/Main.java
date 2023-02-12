@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
  * @see com.threerings.projectx.client.aC HudWindow
  * @see com.threerings.projectx.client.hud.a Activities
  * @see com.threerings.projectx.mission.client.MissionPanel
- * @see com.threerings.projectx.mission.client.u
+ * @see com.threerings.projectx.mission.client.u MissionWindow I guess?
  */
 public class Main {
     static {
@@ -31,11 +31,11 @@ public class Main {
     static void addTeleportChatCommands() throws Exception {
         Method addCommand = Class.forName("com.spiralstudio.mod.command.Command")
                 .getDeclaredMethod("addCommand", String.class, String.class);
-        // Return Haven
+        // Go to Haven
         addCommand.invoke(null, "haven|hh", "\n" +
                 "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "((com.threerings.projectx.client.bh)ctx__.rq().aR(com.threerings.projectx.client.bh.class)).vG();\n");
-        // Return Ready Room
+        // Go to Ready Room
         addCommand.invoke(null, "readyroom|rr", "\n" +
                 "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
@@ -48,6 +48,16 @@ public class Main {
                 "Class.forName(\"com.threerings.opengl.gui.e.a\")\n" +
                 "    .getDeclaredMethod(\"postAction\", new Class[]{com.threerings.opengl.gui.q.class, java.lang.String.class})\n" +
                 "    .invoke(null, new Object[]{rr__, \"readyroom\"});");
+
+        // Go to Town Square
+        addCommand.invoke(null, "townsquare|ts", doPlace("1"));
+        // Go to Bazaar
+        addCommand.invoke(null, "bazaar|ba", doPlace("2"));
+        // Go to Garrison
+        addCommand.invoke(null, "garrison|ga", doPlace("445"));
+        // Go to Arcade
+        addCommand.invoke(null, "arcade|ar", doPlace("3"));
+
         // Go to FSC
         addCommand.invoke(null, "fsc|vana", doMission("king_of_ashes"));
         // Go to Jelly King
@@ -91,6 +101,15 @@ com.threerings.presents.client.D di = (com.threerings.presents.client.D) constru
                 "com.threerings.presents.client.D di = (com.threerings.presents.client.D) constructor\n" +
                 "        .newInstance(new Object[]{missionPanel__, ctx__, \"board\", com.threerings.projectx.client.ProjectXPrefs.ConfirmPrompt.AUTO_CREATE, mission, difficulty});\n" +
                 "((com.threerings.projectx.mission.client.t) ctx__.rq().aR(com.threerings.projectx.mission.client.t.class)).a(mission, difficulty, true, false, false, di);\n";
+    }
+
+    static String doPlace(String name) {
+/*com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;
+ctx__.ru().au(1);*/
+
+        return "\n" +
+                "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
+                "ctx__.ru().au(" + name + ");\n";
     }
 
     public static void main(String[] args) {
