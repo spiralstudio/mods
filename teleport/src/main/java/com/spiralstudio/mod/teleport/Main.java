@@ -61,7 +61,9 @@ public class Main {
         // Go to FSC
         addCommand.invoke(null, "fsc|vana", doMission("king_of_ashes"));
         // Go to Jelly King
-        addCommand.invoke(null, "jk", doMission("sovereign_slime"));
+        addCommand.invoke(null, "jk|rjp", doMission("sovereign_slime"));
+        // Go to Built to Destroy
+        addCommand.invoke(null, "imf|twins", doMission("built_to_destroy"));
         // Go to DaN
         addCommand.invoke(null, "dan", doMission("dreams_and_nightmares"));
         // Go to Axes of Evil
