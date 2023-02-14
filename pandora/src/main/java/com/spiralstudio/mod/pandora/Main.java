@@ -244,7 +244,7 @@ public class Main {
                 "            sdi.model = null;\n" +
                 "            sdi.animation = null;\n" +
                 "            sdi.name = \"Pandora\";\n" +
-                "            sdi.title = \"Pandora's Box\";\n" +
+                "            sdi.title = \"Pandora\";\n" +
                 "            sdi.sourceKey = new com.threerings.tudey.data.EntityKey.Actor(12);\n" +
                 "            sdi.sourceTranslation = new com.threerings.math.Vector2f(11.377774F, 11.8713F);\n" +
                 "            sdi.sourceRotation = -2.1118479F;\n" +
@@ -307,7 +307,7 @@ public class Main {
             sdi.model = null;
             sdi.animation = null;
             sdi.name = "Pandora";
-            sdi.title = "Pandora's Box";
+            sdi.title = "Pandora";
             sdi.sourceKey = new com.threerings.tudey.data.EntityKey.Actor(12);
             sdi.sourceTranslation = new com.threerings.math.Vector2f(11.377774F, 11.8713F);
             sdi.sourceRotation = -2.1118479F;
