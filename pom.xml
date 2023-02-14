@@ -46,6 +46,7 @@
         <module>teleport</module>
         <module>kozmabot</module>
         <module>simplifiedchinese</module>
+        <module>test</module>
     </modules>
 
     <properties>
