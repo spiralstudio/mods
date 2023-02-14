@@ -1,6 +1,6 @@
 # StayOnline
 
-Make knights never sleep!
+Keep knights awake.
 
 ## How it works
 

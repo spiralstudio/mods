@@ -5,7 +5,7 @@ Full items arsenal, no hacking, preview only.
 ## Usage
 
 1. Install the 'Pandora' mod and open SK.
-2. Type "/pandora".
+2. Enter `/pandora`.
 3. After waiting for a while the panel will be displayed.
    Because it needs to load a lot of resource files, the game will be blocked for a while.
    The waiting time depends on your computer performance.

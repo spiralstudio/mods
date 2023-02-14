@@ -1,9 +1,9 @@
 {
   "mod": {
     "name": "$Command",
-    "description": "Enter \"/xhelp\" to learn more about each command. \\nDO NOT RENAME IT! Keep its filename as \"~command.jar\"",
+    "description": "Enter \"/xhelp\" to learn more about each command. Keep its filename as \"~command.jar\"!",
     "author": "Leego",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "compatibility": "Yes"
   }
 }

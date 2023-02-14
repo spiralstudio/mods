@@ -1,9 +1,9 @@
 {
   "mod": {
     "name": "Teleport",
-    "description": "Available commands: /haven /hh /readyroom /rr /fsc /vana /jk /dan /aoe /sp",
+    "description": "Available commands: /haven /hh /readyroom /rr /fsc /vana /jk /rjp /imf /twins /dan /aoe /sp",
     "author": "Leego",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "compatibility": "Yes"
   }
 }

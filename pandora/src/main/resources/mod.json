@@ -1,7 +1,7 @@
 {
   "mod": {
     "name": "Pandora",
-    "description": "Full items arsenal, no hacking, preview only.\nEnter \"/pandora\" to call Pandora.",
+    "description": "A full item arsenal, preview only. \nUsage: enter \"/pandora\".",
     "author": "Leego",
     "version": "1.0.0",
     "compatibility": "Yes"
