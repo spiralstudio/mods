@@ -56,7 +56,7 @@ public class Main {
                 "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
-        // UV - Punch
+        /*// UV - Punch
         addCommand.invoke(null, "uv|punch", "\n" +
                 "com.threerings.projectx.craft.data.VariantMakerDialogInfo di = new com.threerings.projectx.craft.data.VariantMakerDialogInfo();\n" +
                 "di.name = \"m.haven_punch\";\n" +
@@ -80,14 +80,14 @@ public class Main {
                 "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
-        // Harness TODO It doesn't work
-        /*addCommand.invoke(null, "harness", "\n" +
+        // Harness
+        addCommand.invoke(null, "harness", "\n" +
                 "com.threerings.projectx.sprites.data.HarnessDialogInfo di = new com.threerings.projectx.sprites.data.HarnessDialogInfo();\n" +
                 "di.name = \"m.harness_vendor\";\n" +
                 "di.title = \"t.harness_vendor\";\n" +
                 "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
-                "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");*/
+                "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
         // Craft
         addCommand.invoke(null, "craft", "\n" +
                 "com.threerings.projectx.craft.data.CrafterDialogInfo di = new com.threerings.projectx.craft.data.CrafterDialogInfo();\n" +
@@ -97,7 +97,7 @@ public class Main {
         // Forge
         addCommand.invoke(null, "forge|heat", "\n" +
                 "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
-                "com.threerings.projectx.item.client.q win__ = new com.threerings.projectx.item.client.q(ctx__, null);\n");
+                "com.threerings.projectx.item.client.q win__ = new com.threerings.projectx.item.client.q(ctx__, null);\n");*/
     }
 
     public static void main(String[] args) {
