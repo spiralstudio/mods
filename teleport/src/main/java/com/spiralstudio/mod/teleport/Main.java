@@ -60,9 +60,9 @@ public class Main {
         addCommand.invoke(null, "arcade|ar", doScene("3"));
 
         // Go to FSC
-        addCommand.invoke(null, "fsc|vana", doMission("king_of_ashes"));
+        addCommand.invoke(null, "v|fsc|vana", doMission("king_of_ashes"));
         // Go to Jelly King
-        addCommand.invoke(null, "jk|rjp", doMission("sovereign_slime"));
+        addCommand.invoke(null, "jj|slime|jelly", doMission("sovereign_slime"));
         // Go to Built to Destroy
         addCommand.invoke(null, "imf|twins", doMission("built_to_destroy"));
         // Go to DaN
