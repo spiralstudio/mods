@@ -59,59 +59,6 @@ public class Main {
         // Go to Arcade
         addCommand.invoke(null, "arcade|ar", doScene("3"));
 
-        // Go to FSC1
-        addCommand.invoke(null, "fsc1", "\n" +
-                "        com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
-                "        com.threerings.projectx.dungeon.data.LevelPartyObject lpo__ = ctx__.xk().aW(com.threerings.projectx.dungeon.data.LevelPartyObject.class);\n" +
-                "        java.lang.reflect.Field lpmField = com.threerings.projectx.dungeon.data.LevelPartyObject.class.getDeclaredField(\"levelPartyService\");\n" +
-                "        lpmField.setAccessible(true);\n" +
-                "        com.threerings.projectx.dungeon.data.LevelPartyMarshaller lpm__ = (com.threerings.projectx.dungeon.data.LevelPartyMarshaller) lpmField.get(lpo__);\n" +
-                "        lpm__.bD(true);\n" +doZone("33554687","264"));
-/*        com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;
-        com.threerings.projectx.dungeon.data.LevelPartyObject lpo__ = ctx__.xk().aW(com.threerings.projectx.dungeon.data.LevelPartyObject.class);
-        java.lang.reflect.Field lpmField = com.threerings.projectx.dungeon.data.LevelPartyObject.class.getDeclaredField("levelPartyService");
-        lpmField.setAccessible(true);
-        com.threerings.projectx.dungeon.data.LevelPartyMarshaller lpm__ = (com.threerings.projectx.dungeon.data.LevelPartyMarshaller) lpmField.get(lpo__);
-        lpm__.bD(true);*/
-
-        // Go to FSC2
-        addCommand.invoke(null, "fsc2", "\n" +
-                "        com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
-                "        com.threerings.projectx.dungeon.data.LevelPartyObject lpo__ = ctx__.xk().aW(com.threerings.projectx.dungeon.data.LevelPartyObject.class);\n" +
-                "        java.lang.reflect.Field lpmField = com.threerings.projectx.dungeon.data.LevelPartyObject.class.getDeclaredField(\"levelPartyService\");\n" +
-                "        lpmField.setAccessible(true);\n" +
-                "        com.threerings.projectx.dungeon.data.LevelPartyMarshaller lpm__ = (com.threerings.projectx.dungeon.data.LevelPartyMarshaller) lpmField.get(lpo__);\n" +
-                "        lpm__.a(true, new com.threerings.projectx.client.chat.a(ctx__, \"dungeon\"));\n");
-
-/*        com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;
-        com.threerings.projectx.dungeon.data.LevelPartyObject lpo__ = ctx__.xk().aW(com.threerings.projectx.dungeon.data.LevelPartyObject.class);
-        java.lang.reflect.Field lpmField = com.threerings.projectx.dungeon.data.LevelPartyObject.class.getDeclaredField("levelPartyService");
-        lpmField.setAccessible(true);
-        com.threerings.projectx.dungeon.data.LevelPartyMarshaller lpm__ = (com.threerings.projectx.dungeon.data.LevelPartyMarshaller) lpmField.get(lpo__);
-        lpm__.a(true, new com.threerings.projectx.client.chat.a(ctx__, "dungeon"));*/
-
-/*        com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;
-        com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);
-        System.out.println(hud__.toString());
-        System.out.println(hud__.getClass().toString());
-        com.threerings.projectx.dungeon.client.EndOfLevelWindow eolw__ = new com.threerings.projectx.dungeon.client.EndOfLevelWindow(ctx__, hud__.vk());
-        com.threerings.projectx.dungeon.client.Q q__ = new com.threerings.projectx.dungeon.client.Q(ctx__, hud__.vk(), eolw__);
-        ctx__.getRoot().addWindow(eolw__);
-        ctx__.xa().addWindow(q__);
-        q__.by(true);
-        java.lang.reflect.Field _interfaceField = com.threerings.opengl.gui.aC.class.getDeclaredField("_interface");
-        _interfaceField.setAccessible(true);
-        ((com.threerings.opengl.gui.ay) _interfaceField.get(q__)).runScript("Clicked-Advance");*/
-
-        /*System.out.println(hud__.toString());
-        System.out.println(hud__ instanceof com.threerings.projectx.dungeon.client.i);
-        com.threerings.projectx.dungeon.client.i dhud = com.threerings.projectx.dungeon.client.i.A(ctx__);
-        System.out.println(dhud.toString());
-        ((com.threerings.projectx.dungeon.client.B) dhud).bw(true);
-        ctx__.getRoot().addWindow(dhud);
-        ctx__.getRoot().addWindow(new com.threerings.projectx.dungeon.client.H(ctx__));
-        ctx__.getRoot().addWindow(new com.threerings.projectx.dungeon.client.al(ctx__));*/
-
         // Go to FSC
         addCommand.invoke(null, "fsc|vana", doMission("king_of_ashes"));
         // Go to Jelly King
