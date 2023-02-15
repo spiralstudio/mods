@@ -1,10 +1,6 @@
 package com.spiralstudio.mod.teleport;
 
 import com.threerings.projectx.client.ProjectXApp;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.LoaderClassPath;
 
 import java.lang.reflect.Method;
 
@@ -22,7 +18,6 @@ import java.lang.reflect.Method;
 public class Main {
     static {
         try {
-            redefineSomethingToPrintLogs();
             addTeleportChatCommands();
         } catch (Throwable cause) {
             throw new Error(cause);
@@ -72,41 +67,6 @@ public class Main {
         // Go to Shadowplay
         addCommand.invoke(null, "sp", doMission("shadowplay"));
 
-
-    }
-
-    static void redefineSomethingToPrintLogs() throws Exception {
-        ClassPool classPool = ClassPool.getDefault();
-        classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
-        CtClass ctClass = classPool.get("com.threerings.projectx.mission.client.MissionPanel");
-        CtMethod ctMethod = ctClass.getDeclaredMethod("actionPerformed", classPool.get(new String[]{"com.threerings.opengl.gui.event.ActionEvent"}));
-        ctMethod.insertBefore("com.threerings.projectx.mission.a.log.f(\"Mission \"+$1.toString(),new Object[0]);\n");
-        ctClass.toClass();
-        ctClass.detach();
-
-        CtClass ctClass2 = classPool.get("com.threerings.projectx.client.ex");
-        CtMethod ctMethod2 = ctClass2.getDeclaredMethod("e", classPool.get(new String[]{"java.lang.String", "int[]", "int[]"}));
-        ctMethod2.insertBefore("System.out.println(\"hostname=\" + $1 + \", ports=\" + java.util.Arrays.toString($2) + \", datagramPorts=\" + java.util.Arrays.toString($3) + \", _postponeMove=\" + this.amh);\n\n");
-        ctClass2.toClass();
-        ctClass2.detach();
-
-        CtClass ctClass3 = classPool.get("com.threerings.projectx.dungeon.data.LevelPartyMarshaller");
-        CtMethod ctMethod31 = ctClass3.getDeclaredMethod("g");
-        ctMethod31.insertBefore("System.out.println(\"LevelPartyMarshaller.g: \" + Integer.valueOf($1) + \", var2=\" + $2.toString());\n");
-        CtMethod ctMethod32 = ctClass3.getDeclaredMethod("h");
-        ctMethod32.insertBefore("System.out.println(\"LevelPartyMarshaller.h: \" + Integer.valueOf($1) + \", var2=\" + $2.toString());\n");
-        CtMethod ctMethod33 = ctClass3.getDeclaredMethod("bD");
-        ctMethod33.insertBefore("System.out.println(\"LevelPartyMarshaller.bD: \" + $1);\n");
-        CtMethod ctMethod34 = ctClass3.getDeclaredMethod("a", classPool.get(new String[]{"boolean", "com.threerings.presents.client.D"}));
-        ctMethod34.insertBefore("System.out.println(\"LevelPartyMarshaller.a: \" + $1 + \", var2=\" + $2.toString());\n");
-        CtMethod ctMethod35 = ctClass3.getDeclaredMethod("b");
-        ctMethod35.insertBefore("System.out.println(\"LevelPartyMarshaller.b: \" + $1 + \", var2=\" + $2.toString());\n");
-        CtMethod ctMethod36 = ctClass3.getDeclaredMethod("c");
-        ctMethod36.insertBefore("System.out.println(\"LevelPartyMarshaller.c: \" + $1 + \", var2=\" + $2.toString());\n");
-        CtMethod ctMethod37 = ctClass3.getDeclaredMethod("a", classPool.get(new String[]{"java.util.List", "boolean", "com.threerings.presents.client.D"}));
-        ctMethod37.insertBefore("System.out.println(\"LevelPartyMarshaller.a: \" + $1.toString() + \", var2=\" + $2 + \", var3=\" + $3.toString());\n");
-        ctClass3.toClass();
-        ctClass3.detach();
     }
 
     static String doMission(String name) {
