@@ -43,6 +43,7 @@
         <module>pandora</module>
         <module>pocketshop</module>
         <module>teleport</module>
+        <module>camera</module>
         <module>kozmabot</module>
         <module>test</module>
     </modules>
