@@ -4,13 +4,14 @@ A full item arsenal, preview only.
 
 ## Usage
 
-1. Install the 'Pandora' mod and open SK.
-2. Enter `/pandora`.
-3. After waiting for a while the panel will be displayed.
-   Because it needs to load a lot of resource files, the game will be blocked for a while.
-   The waiting time depends on your computer performance.
+- Enter `/pandora` to open the window.
+- Enter `/clearpandora` to clear cache help GC if you no longer use it.
 
 ![pandora.png](pandora.png)
+
+After waiting for a while the window will be displayed.
+Because it needs to load a lot of resource files, the game will be blocked for a while.
+The waiting time depends on your computer performance.
 
 **You can preview and search, but can't buy anything.**
 
