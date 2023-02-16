@@ -1,3 +1,0 @@
-# NoLoading
-
-Remove loading window.

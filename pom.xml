@@ -40,12 +40,10 @@
         <module>command</module>
         <module>showping</module>
         <module>stayonline</module>
-        <module>noloading</module>
         <module>pandora</module>
         <module>pocketshop</module>
         <module>teleport</module>
         <module>kozmabot</module>
-        <module>simplifiedchinese</module>
         <module>test</module>
     </modules>
 
