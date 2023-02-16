@@ -1,6 +1,6 @@
 # Pandora
 
-Full items arsenal, no hacking, preview only.
+A full item arsenal, preview only.
 
 ## Usage
 

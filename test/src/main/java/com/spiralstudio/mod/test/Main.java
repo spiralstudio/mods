@@ -30,7 +30,19 @@ public class Main {
     }
 
     static void testAdminChatCommand() throws Exception {
-        // ProjectXChatDirector
+        // Does anyone have a token greater than zero?
+        ClassPool classPool = ClassPool.getDefault();
+        classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
+        CtClass ctClass = classPool.get("com.threerings.crowd.data.TokenRing");
+        ctClass.getDeclaredConstructors()[0].insertBefore("System.out.println(\"token :\" + $1);");
+        CtMethod ctMethod1 = ctClass.getDeclaredMethod("aw");
+        ctMethod1.setBody("{return true;}");
+        CtMethod ctMethod2 = ctClass.getDeclaredMethod("ax");
+        ctMethod2.setBody("{return true;}");
+        CtMethod ctMethod3 = ctClass.getDeclaredMethod("iD");
+        ctMethod3.setBody("{return true;}");
+        ctClass.toClass();
+        ctClass.detach();
     }
 
     public static void main(String[] args) {
