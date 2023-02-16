@@ -70,19 +70,7 @@ public class Main {
     }
 
     static String doMission(String name) {
-/*com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;
-com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);
-com.threerings.projectx.mission.client.MissionPanel missionPanel__ = new com.threerings.projectx.mission.client.MissionPanel(ctx__, null);
-java.lang.String mission = "king_of_ashes";
-com.threerings.projectx.dungeon.data.DungeonCodes.Difficulty difficulty = com.threerings.projectx.dungeon.data.DungeonCodes.Difficulty.HARD;
-java.lang.reflect.Constructor constructor = Class.forName("com.threerings.projectx.mission.client.f").getDeclaredConstructors()[0];
-constructor.setAccessible(true);
-com.threerings.presents.client.D di = (com.threerings.presents.client.D) constructor
-        .newInstance(new Object[]{missionPanel__, ctx__, "board", com.threerings.projectx.client.ProjectXPrefs.ConfirmPrompt.AUTO_CREATE, mission, difficulty});
-((com.threerings.projectx.mission.client.t) ctx__.rq().aR(com.threerings.projectx.mission.client.t.class)).a(mission, difficulty, true, false, false, di);*/
-
-        return "\n" +
-                "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
+        return "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "com.threerings.projectx.mission.client.MissionPanel missionPanel__ = new com.threerings.projectx.mission.client.MissionPanel(ctx__, null);\n" +
                 "java.lang.String mission = \"" + name + "\";\n" +
@@ -95,20 +83,15 @@ com.threerings.presents.client.D di = (com.threerings.presents.client.D) constru
     }
 
     static String doScene(String sceneId) {
-/*com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;
-ctx__.ru().au(1);*/
-
-        return "\n" +
-                "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
+        return "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "ctx__.ru().au(" + sceneId + ");\n";
     }
 
+    /**
+     * @deprecated access denied
+     */
     static String doZone(String zoneId, String sceneId) {
-/*com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;
-ctx__.xd().ad(1, 1);*/
-
-        return "\n" +
-                "com.threerings.projectx.util.A ctx___ = (com.threerings.projectx.util.A) this._ctx;\n" +
+        return "com.threerings.projectx.util.A ctx___ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "ctx___.xd().ad(" + zoneId + ", " + sceneId + ");\n";
     }
 

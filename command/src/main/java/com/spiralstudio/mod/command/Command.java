@@ -19,8 +19,14 @@ import java.util.Map;
  * @see com.threerings.crowd.chat.client.a.c CommandHandler
  */
 public class Command {
-    private static Map<String, String> commands = new LinkedHashMap<>();
     private static Map<String, String> fields = new LinkedHashMap<>();
+    private static Map<String, String> commands = new LinkedHashMap<>();
+
+    public static void addField(String fieldName, String fieldType) {
+        synchronized (fields) {
+            fields.put(fieldName, fieldType);
+        }
+    }
 
     public static void addCommand(String cmd, String action) {
         synchronized (commands) {
@@ -28,13 +34,10 @@ public class Command {
         }
     }
 
-    public static void addField(String fieldName, String fieldType) {
-        synchronized (commands) {
-            fields.put(fieldName, fieldType);
-        }
-    }
-
     public static void mount() {
+        if (fields.isEmpty() && commands.isEmpty()) {
+            return;
+        }
         try {
             ClassPool classPool = ClassPool.getDefault();
             classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
