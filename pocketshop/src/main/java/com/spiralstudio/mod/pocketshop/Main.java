@@ -1,6 +1,10 @@
 package com.spiralstudio.mod.pocketshop;
 
 import com.threerings.projectx.client.ProjectXApp;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.LoaderClassPath;
 
 import java.lang.reflect.Method;
 
@@ -22,10 +26,33 @@ import java.lang.reflect.Method;
 public class Main {
     static {
         try {
+            // TODO It doesn't work
+            //redefineForgeDialogToEnableButton();
+            //redefineCrafterDialogToEnableButton();
             addShopChatCommands();
         } catch (Throwable cause) {
             throw new Error(cause);
         }
+    }
+
+    static void redefineForgeDialogToEnableButton() throws Exception {
+        ClassPool classPool = ClassPool.getDefault();
+        classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
+        CtClass ctClass = classPool.get("com.threerings.projectx.item.client.n");
+        CtMethod ctMethod = ctClass.getDeclaredMethod("HX");
+        ctMethod.insertAfter("this.aJN.setEnabled(true);\n");
+        ctClass.toClass();
+        ctClass.detach();
+    }
+
+    static void redefineCrafterDialogToEnableButton() throws Exception {
+        ClassPool classPool = ClassPool.getDefault();
+        classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
+        CtClass ctClass = classPool.get("com.threerings.projectx.craft.a.s");
+        CtMethod ctMethod = ctClass.getDeclaredMethod("sA");
+        ctMethod.insertAfter("this.atz.setEnabled(true);\nthis.atz.setVisible(true);\n");
+        ctClass.toClass();
+        ctClass.detach();
     }
 
     static void addShopChatCommands() throws Exception {
