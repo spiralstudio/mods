@@ -1,12 +1,9 @@
 package com.spiralstudio.mod.pandora;
 
-import com.threerings.projectx.client.ProjectXApp;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.LoaderClassPath;
-
-import java.lang.reflect.Method;
+import com.spiralstudio.mod.core.Commands;
+import com.spiralstudio.mod.core.Registers;
+import com.spiralstudio.mod.core.util.ClassBuilder;
+import com.spiralstudio.mod.core.util.MethodModifier;
 
 /**
  * Enter "/pandora" to call the Pandora.
@@ -19,112 +16,112 @@ import java.lang.reflect.Method;
  * @see com.threerings.projectx.shop.data.UniqueShopInfo
  */
 public class Main {
+    private static boolean mounted = false;
+
     static {
-        try {
-            ClassPool classPool = ClassPool.getDefault();
-            classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
-            redefineGoodSlotToIgnoreException(classPool);
-            redefineVendorListPanelToIgnoreException(classPool);
-            redefineShopDialogToCacheAndRenameTitle(classPool);
-            addPandoraChatCommand();
-        } catch (Throwable cause) {
-            throw new Error(cause);
+        Registers.add(Main.class);
+    }
+
+    public static void mount() throws Exception {
+        if (mounted) {
+            return;
         }
+        mounted = true;
+        redefineGoodSlotToIgnoreException();
+        redefineVendorListPanelToIgnoreException();
+        redefineShopDialogToCacheAndRenameTitle();
+        addPandoraCommand();
     }
 
-    static void redefineGoodSlotToIgnoreException(ClassPool classPool) throws Exception {
-        CtClass ctClass = classPool.get("com.threerings.projectx.shop.client.GoodSlot");
-        CtMethod ctMethod = ctClass.getDeclaredMethod("KC");
-        ctMethod.setBody("{\n" +
-                "            boolean var1 = false;\n" +
-                "            boolean var2 = false;\n" +
-                "            com.threerings.projectx.util.A ctx = $0._ctx;\n" +
-                "            com.threerings.projectx.shop.config.GoodConfig aQs = $0.aQs;\n" +
-                "            com.threerings.projectx.shop.util.ItemPreparer aQu = $0.aQu;\n" +
-                "            if (aQs != null) {\n" +
-                "                try {\n" +
-                "                    com.threerings.config.ConfigReference var3 = aQu.prepareItem(ctx, aQs);\n" +
-                "                    com.threerings.projectx.item.config.ItemConfig.Original original = com.threerings.projectx.item.data.Item.j(ctx.getConfigManager(), var3);\n" +
-                "                    com.threerings.projectx.item.data.Item var4 = original.b((com.threerings.projectx.item.b.a) ctx, var3);\n" +
-                "                    var1 = var4.isLocked();\n" +
-                "                    var2 = var4 instanceof com.threerings.projectx.item.data.LevelItem;\n" +
-                "                } catch (Throwable e) {\n" +
-                "                }\n" +
-                "            }\n" +
-                "            com.threerings.opengl.gui.q var5 = $0.getComponent(\"bound\");\n" +
-                "            var5.setEnabled(var1);\n" +
-                "            var5.setVisible(var1 || var2);\n" +
-                "        }");
-        ctClass.toClass();
-        ctClass.detach();
+    static void redefineGoodSlotToIgnoreException() throws Exception {
+        ClassBuilder.fromClass("com.threerings.projectx.shop.client.GoodSlot")
+                .modifyMethod(new MethodModifier()
+                        .methodName("KC")
+                        .body("{\n" +
+                                "    boolean var1 = false;\n" +
+                                "    boolean var2 = false;\n" +
+                                "    com.threerings.projectx.util.A ctx = $0._ctx;\n" +
+                                "    com.threerings.projectx.shop.config.GoodConfig aQs = $0.aQs;\n" +
+                                "    com.threerings.projectx.shop.util.ItemPreparer aQu = $0.aQu;\n" +
+                                "    if (aQs != null) {\n" +
+                                "        try {\n" +
+                                "            com.threerings.config.ConfigReference var3 = aQu.prepareItem(ctx, aQs);\n" +
+                                "            com.threerings.projectx.item.config.ItemConfig.Original original = com.threerings.projectx.item.data.Item.j(ctx.getConfigManager(), var3);\n" +
+                                "            com.threerings.projectx.item.data.Item var4 = original.b((com.threerings.projectx.item.b.a) ctx, var3);\n" +
+                                "            var1 = var4.isLocked();\n" +
+                                "            var2 = var4 instanceof com.threerings.projectx.item.data.LevelItem;\n" +
+                                "        } catch (Throwable e) {\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "    com.threerings.opengl.gui.q var5 = $0.getComponent(\"bound\");\n" +
+                                "    var5.setEnabled(var1);\n" +
+                                "    var5.setVisible(var1 || var2);\n" +
+                                "}"))
+                .build();
     }
 
-    static void redefineVendorListPanelToIgnoreException(ClassPool classPool) throws Exception {
-        CtClass ctClass = classPool.get("com.threerings.projectx.shop.client.u");
-        CtMethod ctMethod = ctClass.getDeclaredMethod("j");
-        ctMethod.setBody("{\n" +
-                "            java.lang.reflect.Field configMapField = com.threerings.projectx.shop.client.e.class.getDeclaredField(\"aQk\");\n" +
-                "            configMapField.setAccessible(true);\n" +
-                "            java.util.Map configMap = configMapField.get((com.threerings.projectx.shop.client.e) $0);\n" +
-                "            com.threerings.projectx.shop.data.UniqueShopInfo usi = $0.aQj.KD();\n" +
-                "            int i = 0;\n" +
-                "            int size = usi.goodCounts.size();\n" +
-                "            for (; i < size; ++i) {\n" +
-                "                com.threerings.projectx.shop.data.UniqueShopInfo.GoodCount goodCount = (com.threerings.projectx.shop.data.UniqueShopInfo.GoodCount) usi.goodCounts.get(i);\n" +
-                "                try {\n" +
-                "                    com.threerings.config.ConfigReference itemConfigRef = goodCount.good.FX();\n" +
-                "                    com.threerings.projectx.item.config.ItemConfig.Original itemConfigOriginal = com.threerings.projectx.item.data.Item.j($0._ctx.getConfigManager(), itemConfigRef);\n" +
-                "                    com.threerings.projectx.client.d.c groupInfo = (com.threerings.projectx.client.d.c) $0.aEL.get(itemConfigOriginal.BA());\n" +
-                "                    if (groupInfo != null && $0.bY(itemConfigOriginal.a((com.threerings.projectx.util.A) $0._ctx, itemConfigRef))) {\n" +
-                "                        Object goodInfo = configMap.get(goodCount.good);\n" +
-                "                        if (goodInfo == null) {\n" +
-                "                            goodInfo = new com.threerings.projectx.shop.client.e.a($0,goodCount.good, goodCount.count, i);\n" +
-                "                            configMap.put(goodCount.good, goodInfo);\n" +
-                "                        }\n" +
-                "                        groupInfo.abG.put(Integer.valueOf(i), goodInfo);\n" +
-                "                    } else {\n" +
-                "                        groupInfo.abG.remove(Integer.valueOf(i));\n" +
-                "                    }\n" +
-                "                } catch (Exception e) {\n" +
-                "                    System.out.println(\"[VendorListPanel] Failed to add item to pandora \" + goodCount.good.toString() + \"\\n\" + e.getMessage());\n" +
-                "                }\n" +
-                "            }\n" +
-                "        }");
-        ctClass.toClass();
-        ctClass.detach();
+    static void redefineVendorListPanelToIgnoreException() throws Exception {
+        ClassBuilder.fromClass("com.threerings.projectx.shop.client.u")
+                .modifyMethod(new MethodModifier()
+                        .methodName("j")
+                        .body("{\n" +
+                                "    java.lang.reflect.Field configMapField = com.threerings.projectx.shop.client.e.class.getDeclaredField(\"aQk\");\n" +
+                                "    configMapField.setAccessible(true);\n" +
+                                "    java.util.Map configMap = configMapField.get((com.threerings.projectx.shop.client.e) $0);\n" +
+                                "    com.threerings.projectx.shop.data.UniqueShopInfo usi = $0.aQj.KD();\n" +
+                                "    int i = 0;\n" +
+                                "    int size = usi.goodCounts.size();\n" +
+                                "    for (; i < size; ++i) {\n" +
+                                "        com.threerings.projectx.shop.data.UniqueShopInfo.GoodCount goodCount = (com.threerings.projectx.shop.data.UniqueShopInfo.GoodCount) usi.goodCounts.get(i);\n" +
+                                "        try {\n" +
+                                "            com.threerings.config.ConfigReference itemConfigRef = goodCount.good.FX();\n" +
+                                "            com.threerings.projectx.item.config.ItemConfig.Original itemConfigOriginal = com.threerings.projectx.item.data.Item.j($0._ctx.getConfigManager(), itemConfigRef);\n" +
+                                "            com.threerings.projectx.client.d.c groupInfo = (com.threerings.projectx.client.d.c) $0.aEL.get(itemConfigOriginal.BA());\n" +
+                                "            if (groupInfo != null && $0.bY(itemConfigOriginal.a((com.threerings.projectx.util.A) $0._ctx, itemConfigRef))) {\n" +
+                                "                Object goodInfo = configMap.get(goodCount.good);\n" +
+                                "                if (goodInfo == null) {\n" +
+                                "                    goodInfo = new com.threerings.projectx.shop.client.e.a($0,goodCount.good, goodCount.count, i);\n" +
+                                "                    configMap.put(goodCount.good, goodInfo);\n" +
+                                "                }\n" +
+                                "                groupInfo.abG.put(Integer.valueOf(i), goodInfo);\n" +
+                                "            } else {\n" +
+                                "                groupInfo.abG.remove(Integer.valueOf(i));\n" +
+                                "            }\n" +
+                                "        } catch (Exception e) {\n" +
+                                "            System.out.println(\"[VendorListPanel] Failed to add item to pandora \" + goodCount.good.toString() + \"\\n\" + e.getMessage());\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "}"))
+                .build();
     }
 
-    static void redefineShopDialogToCacheAndRenameTitle(ClassPool classPool) throws Exception {
-        CtClass ctClass = classPool.get("com.threerings.projectx.shop.client.l");
-        CtMethod ctMethod = ctClass.getDeclaredMethod("Bp");
-        ctMethod.setBody("{\n" +
-                "            if (this.aQw.name != null && this.aQw.name.toLowerCase().contains(\"pandora\")) {\n" +
-                "                if (this.atS != null) {\n" +
-                "                    System.out.println(\"[Pandora] Use Cached VendorPanel\");\n" +
-                "                    this._ctx.getRoot().addWindow(this.atS, true);\n" +
-                "                } else {\n" +
-                "                    System.out.println(\"[Pandora] Create New VendorPanel\");\n" +
-                "                    this.atS = new com.threerings.projectx.shop.client.p(this, this._ctx, false);\n" +
-                "                    com.threerings.projectx.shop.client.e abM = (com.threerings.projectx.shop.client.e) this.atS.tH();\n" +
-                "                    ((com.threerings.opengl.gui.Label) abM.getComponent(\"title\")).setText(this.aQw.title);\n" +
-                "                }\n" +
-                "            } else {\n" +
-                "                this.atS = new com.threerings.projectx.shop.client.p(this, this._ctx, false);\n" +
-                "            }\n" +
-                "        }");
-        ctClass.toClass();
-        ctClass.detach();
+    static void redefineShopDialogToCacheAndRenameTitle() throws Exception {
+        ClassBuilder.fromClass("com.threerings.projectx.shop.client.l")
+                .modifyMethod(new MethodModifier()
+                        .methodName("Bp")
+                        .body("{\n" +
+                                "    if (this.aQw.name != null && this.aQw.name.toLowerCase().contains(\"pandora\")) {\n" +
+                                "        if (this.atS != null) {\n" +
+                                "            System.out.println(\"[Pandora] Use Cached VendorPanel\");\n" +
+                                "            this._ctx.getRoot().addWindow(this.atS, true);\n" +
+                                "        } else {\n" +
+                                "            System.out.println(\"[Pandora] Create New VendorPanel\");\n" +
+                                "            this.atS = new com.threerings.projectx.shop.client.p(this, this._ctx, false);\n" +
+                                "            com.threerings.projectx.shop.client.e abM = (com.threerings.projectx.shop.client.e) this.atS.tH();\n" +
+                                "            ((com.threerings.opengl.gui.Label) abM.getComponent(\"title\")).setText(this.aQw.title);\n" +
+                                "        }\n" +
+                                "    } else {\n" +
+                                "        this.atS = new com.threerings.projectx.shop.client.p(this, this._ctx, false);\n" +
+                                "    }\n" +
+                                "}"))
+                .build();
     }
 
-    static void addPandoraChatCommand() throws Exception {
-        Method addField = Class.forName("com.spiralstudio.mod.command.Command")
-                .getDeclaredMethod("addField", String.class, String.class);
-        Method addCommand = Class.forName("com.spiralstudio.mod.command.Command")
-                .getDeclaredMethod("addCommand", String.class, String.class);
+    static void addPandoraCommand() {
         // Add a field for caching the window
-        addField.invoke(null, "_pandora", "com.threerings.opengl.gui.aE");
+        Commands.addField("_pandora", "com.threerings.opengl.gui.aE");
         // Add a command "/pandora"
-        addCommand.invoke(null, "pandora", "\n" +
+        Commands.addCommand("pandora", "\n" +
                 "        com.threerings.projectx.util.A ctxxx = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "        if (this._pandora != null) {\n" +
                 "            ctxxx.getRoot().addWindow(this._pandora);\n" +
@@ -186,10 +183,9 @@ public class Main {
                 "            ctxxx.getRoot().addWindow(shopDialog);\n" +
                 "        }");
         // Add a command "/clearpandora" to help GC
-        addCommand.invoke(null, "clearpandora", "this._pandora = null;");
+        Commands.addCommand("clearpandora", "this._pandora = null;");
     }
 
     public static void main(String[] args) {
-        ProjectXApp.main(args);
     }
 }

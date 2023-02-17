@@ -1,12 +1,9 @@
 package com.spiralstudio.mod.pocketshop;
 
-import com.threerings.projectx.client.ProjectXApp;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.LoaderClassPath;
-
-import java.lang.reflect.Method;
+import com.spiralstudio.mod.core.Commands;
+import com.spiralstudio.mod.core.Registers;
+import com.spiralstudio.mod.core.util.ClassBuilder;
+import com.spiralstudio.mod.core.util.MethodModifier;
 
 /**
  * Enter commands to call shops anytime and anywhere.
@@ -24,48 +21,48 @@ import java.lang.reflect.Method;
  * @see com.threerings.crowd.chat.client.a.c CommandHandler
  */
 public class Main {
+    private static boolean mounted = false;
+
     static {
-        try {
-            // TODO It doesn't work
-            //redefineForgeDialogToEnableButton();
-            //redefineCrafterDialogToEnableButton();
-            addShopChatCommands();
-        } catch (Throwable cause) {
-            throw new Error(cause);
+        Registers.add(Main.class);
+    }
+
+    public static void mount() throws Exception {
+        if (mounted) {
+            return;
         }
+        mounted = true;
+        // TODO It doesn't work
+        //redefineForgeDialogToEnableButton();
+        //redefineCrafterDialogToEnableButton();
+        addShopCommands();
     }
 
     static void redefineForgeDialogToEnableButton() throws Exception {
-        ClassPool classPool = ClassPool.getDefault();
-        classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
-        CtClass ctClass = classPool.get("com.threerings.projectx.item.client.n");
-        CtMethod ctMethod = ctClass.getDeclaredMethod("HX");
-        ctMethod.insertAfter("this.aJN.setEnabled(true);\n");
-        ctClass.toClass();
-        ctClass.detach();
+        ClassBuilder.fromClass("com.threerings.projectx.item.client.n")
+                .modifyMethod(new MethodModifier()
+                        .methodName("HX")
+                        .insertAfter("this.aJN.setEnabled(true);\n"))
+                .build();
     }
 
     static void redefineCrafterDialogToEnableButton() throws Exception {
-        ClassPool classPool = ClassPool.getDefault();
-        classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
-        CtClass ctClass = classPool.get("com.threerings.projectx.craft.a.s");
-        CtMethod ctMethod = ctClass.getDeclaredMethod("sA");
-        ctMethod.insertAfter("this.atz.setEnabled(true);\nthis.atz.setVisible(true);\n");
-        ctClass.toClass();
-        ctClass.detach();
+        ClassBuilder.fromClass("com.threerings.projectx.craft.a.s")
+                .modifyMethod(new MethodModifier()
+                        .methodName("sA")
+                        .insertAfter("this.atz.setEnabled(true);\nthis.atz.setVisible(true);\n"))
+                .build();
     }
 
-    static void addShopChatCommands() throws Exception {
-        Method addCommand = Class.forName("com.spiralstudio.mod.command.Command")
-                .getDeclaredMethod("addCommand", String.class, String.class);
+    static void addShopCommands() {
         // Auction House
-        addCommand.invoke(null, "ah", "\n" +
+        Commands.addCommand("ah", "\n" +
                 "com.threerings.projectx.auction.data.AuctionDialogInfo di = new com.threerings.projectx.auction.data.AuctionDialogInfo();\n" +
                 "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
         /*// UV - Punch
-        addCommand.invoke(null, "uv|punch", "\n" +
+        Command.addCommand("uv|punch", "\n" +
                 "com.threerings.projectx.craft.data.VariantMakerDialogInfo di = new com.threerings.projectx.craft.data.VariantMakerDialogInfo();\n" +
                 "di.name = \"m.haven_punch\";\n" +
                 "di.title = \"t.haven_punch\";\n" +
@@ -73,7 +70,7 @@ public class Main {
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
         // Unbind - Vice
-        addCommand.invoke(null, "unbind|vice", "\n" +
+        Command.addCommand("unbind|vice", "\n" +
                 "com.threerings.projectx.craft.data.UnbindDialogInfo di = new com.threerings.projectx.craft.data.UnbindDialogInfo();\n" +
                 "di.name = \"m.haven_vice\";\n" +
                 "di.title = \"t.haven_vice\";\n" +
@@ -81,7 +78,7 @@ public class Main {
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
         // Accessory - Bechamel
-        addCommand.invoke(null, "accessory", "\n" +
+        Command.addCommand("accessory", "\n" +
                 "com.threerings.projectx.craft.data.AccessoryDialogInfo di = new com.threerings.projectx.craft.data.AccessoryDialogInfo();\n" +
                 "di.name = \"m.accessory\";\n" +
                 "di.title = \"t.accessory\";\n" +
@@ -89,7 +86,7 @@ public class Main {
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
         // Harness
-        addCommand.invoke(null, "harness", "\n" +
+        Command.addCommand("harness", "\n" +
                 "com.threerings.projectx.sprites.data.HarnessDialogInfo di = new com.threerings.projectx.sprites.data.HarnessDialogInfo();\n" +
                 "di.name = \"m.harness_vendor\";\n" +
                 "di.title = \"t.harness_vendor\";\n" +
@@ -97,18 +94,17 @@ public class Main {
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
         // Craft
-        addCommand.invoke(null, "craft", "\n" +
+        Command.addCommand("craft", "\n" +
                 "com.threerings.projectx.craft.data.CrafterDialogInfo di = new com.threerings.projectx.craft.data.CrafterDialogInfo();\n" +
                 "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "ctx__.getRoot().addWindow(di.a(ctx__, hud__.vk()));\n");
         // Forge
-        addCommand.invoke(null, "forge|heat", "\n" +
+        Command.addCommand("forge|heat", "\n" +
                 "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "com.threerings.projectx.item.client.q win__ = new com.threerings.projectx.item.client.q(ctx__, null);\n");*/
     }
 
     public static void main(String[] args) {
-        ProjectXApp.main(args);
     }
 }

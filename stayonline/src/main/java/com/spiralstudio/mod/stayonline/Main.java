@@ -1,10 +1,7 @@
 package com.spiralstudio.mod.stayonline;
 
-import com.threerings.projectx.client.ProjectXApp;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.LoaderClassPath;
+import com.spiralstudio.mod.core.util.ClassBuilder;
+import com.spiralstudio.mod.core.util.MethodModifier;
 
 /**
  * Overrides the `start` method of the class `IdleTracker` to disable it.
@@ -13,21 +10,23 @@ import javassist.LoaderClassPath;
  * @see com.threerings.projectx.client.ProjectXApp.c IdleTracker
  */
 public class Main {
+    private static boolean mounted = false;
+
     static {
-        try {
-            ClassPool classPool = ClassPool.getDefault();
-            classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
-            CtClass ctClass = classPool.get("com.threerings.projectx.client.ProjectXApp$c");
-            CtMethod ctMethod = ctClass.getDeclaredMethod("start");
-            ctMethod.setBody("{System.out.println(\"[StayOnline] Never Idle\");}");
-            ctClass.toClass();
-            ctClass.detach();
-        } catch (Throwable cause) {
-            throw new Error(cause);
+    }
+
+    public static void mount() throws Exception {
+        if (mounted) {
+            return;
         }
+        mounted = true;
+        ClassBuilder.fromClass("com.threerings.projectx.client.ProjectXApp$c")
+                .modifyMethod(new MethodModifier()
+                        .methodName("start")
+                        .body("{System.out.println(\"[StayOnline] Never Idle\");}"))
+                .build();
     }
 
     public static void main(String[] args) {
-        ProjectXApp.main(args);
     }
 }

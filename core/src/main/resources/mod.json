@@ -1,0 +1,9 @@
+{
+  "mod": {
+    "name": "Core",
+    "description": "The basis of all mods. Enter \"/xhelp\" to learn more about each command.",
+    "author": "Leego",
+    "version": "1.0.0",
+    "compatibility": "Yes"
+  }
+}

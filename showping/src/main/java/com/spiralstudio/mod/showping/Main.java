@@ -1,10 +1,7 @@
 package com.spiralstudio.mod.showping;
 
-import com.threerings.projectx.client.ProjectXApp;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.LoaderClassPath;
+import com.spiralstudio.mod.core.util.ClassBuilder;
+import com.spiralstudio.mod.core.util.MethodModifier;
 
 /**
  * Overrides the `notePing` method of the class `Minimap` to show ping value.
@@ -13,21 +10,23 @@ import javassist.LoaderClassPath;
  * @see com.threerings.projectx.client.hud.Minimap
  */
 public class Main {
+    private static boolean mounted = false;
+
     static {
-        try {
-            ClassPool classPool = ClassPool.getDefault();
-            classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
-            CtClass ctClass = classPool.get("com.threerings.projectx.client.hud.Minimap");
-            CtMethod ctMethod = ctClass.getDeclaredMethod("bG");
-            ctMethod.setBody("{$0.aoQ.setIcon(null);$0.aoQ.setText(Integer.toString($1));}");
-            ctClass.toClass();
-            ctClass.detach();
-        } catch (Throwable cause) {
-            throw new Error(cause);
+    }
+
+    public static void mount() throws Exception {
+        if (mounted) {
+            return;
         }
+        mounted = true;
+        ClassBuilder.fromClass("com.threerings.projectx.client.hud.Minimap")
+                .modifyMethod(new MethodModifier()
+                        .methodName("bG")
+                        .body("{$0.aoQ.setIcon(null);$0.aoQ.setText(Integer.toString($1));}"))
+                .build();
     }
 
     public static void main(String[] args) {
-        ProjectXApp.main(args);
     }
 }

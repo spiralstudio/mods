@@ -7,8 +7,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.spiralstudio</groupId>
-        <artifactId>mods</artifactId>
+        <groupId>com.spiralstudio.mod</groupId>
+        <artifactId>root</artifactId>
         <version>1.0.0</version>
     </parent>
 
@@ -21,18 +21,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.threerings</groupId>
-            <artifactId>projectx-config</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/../lib/projectx-config.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.threerings</groupId>
-            <artifactId>projectx-pcode</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/../lib/projectx-pcode.jar</systemPath>
+            <groupId>com.spiralstudio.mod</groupId>
+            <artifactId>core</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.javassist</groupId>
@@ -65,7 +57,6 @@
                         </manifest>
                         <manifestEntries>
                             <Name>${project.name}</Name>
-                            <Author>${author}</Author>
                             <Version>${project.version}</Version>
                         </manifestEntries>
                     </archive>
@@ -81,7 +72,6 @@
                         </manifest>
                         <manifestEntries>
                             <Name>${project.name}</Name>
-                            <Author>${author}</Author>
                             <Version>${project.version}</Version>
                         </manifestEntries>
                     </archive>

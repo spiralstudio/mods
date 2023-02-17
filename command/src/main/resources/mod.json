@@ -1,9 +1,0 @@
-{
-  "mod": {
-    "name": "$Command",
-    "description": "Enter \"/xhelp\" to learn more about each command. Keep its filename as \"~command.jar\"!",
-    "author": "Leego",
-    "version": "1.0.0",
-    "compatibility": "Yes"
-  }
-}

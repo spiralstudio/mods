@@ -1,6 +1,5 @@
 package com.spiralstudio.mod.kozmabot;
 
-import com.threerings.projectx.client.ProjectXApp;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -62,6 +61,5 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        ProjectXApp.main(args);
     }
 }

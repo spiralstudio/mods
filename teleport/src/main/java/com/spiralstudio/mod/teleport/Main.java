@@ -1,8 +1,7 @@
 package com.spiralstudio.mod.teleport;
 
-import com.threerings.projectx.client.ProjectXApp;
-
-import java.lang.reflect.Method;
+import com.spiralstudio.mod.core.Commands;
+import com.spiralstudio.mod.core.Registers;
 
 /**
  * Enter commands to go somewhere.
@@ -16,23 +15,27 @@ import java.lang.reflect.Method;
  * @see com.threerings.projectx.mission.client.u MissionWindow I guess?
  */
 public class Main {
+    private static boolean mounted = false;
+
     static {
-        try {
-            addTeleportChatCommands();
-        } catch (Throwable cause) {
-            throw new Error(cause);
-        }
+        Registers.add(Main.class);
     }
 
-    static void addTeleportChatCommands() throws Exception {
-        Method addCommand = Class.forName("com.spiralstudio.mod.command.Command")
-                .getDeclaredMethod("addCommand", String.class, String.class);
+    public static void mount() throws Exception {
+        if (mounted) {
+            return;
+        }
+        mounted = true;
+        addTeleportChatCommands();
+    }
+
+    static void addTeleportChatCommands() {
         // Go to Haven
-        addCommand.invoke(null, "haven|hh", "\n" +
+        Commands.addCommand("haven|hh", "\n" +
                 "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "((com.threerings.projectx.client.bh)ctx__.rq().aR(com.threerings.projectx.client.bh.class)).vG();\n");
         // Go to Ready Room
-        addCommand.invoke(null, "readyroom|rr", "\n" +
+        Commands.addCommand("readyroom|rr", "\n" +
                 "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
                 "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
                 "java.lang.reflect.Field afuField = com.threerings.projectx.client.aC.class.getDeclaredField(\"afu\");\n" +
@@ -46,26 +49,26 @@ public class Main {
                 "    .invoke(null, new Object[]{rr__, \"readyroom\"});");
 
         // Go to Town Square
-        addCommand.invoke(null, "townsquare|ts", doScene("1"));
+        Commands.addCommand("townsquare|ts", doScene("1"));
         // Go to Bazaar
-        addCommand.invoke(null, "bazaar|ba", doScene("2"));
+        Commands.addCommand("bazaar|ba", doScene("2"));
         // Go to Garrison
-        addCommand.invoke(null, "garrison|ga", doScene("445"));
+        Commands.addCommand("garrison|ga", doScene("445"));
         // Go to Arcade
-        addCommand.invoke(null, "arcade|ar", doScene("3"));
+        Commands.addCommand("arcade|ar", doScene("3"));
 
         // Go to FSC
-        addCommand.invoke(null, "fsc|vana", doMission("king_of_ashes"));
+        Commands.addCommand("fsc|vana", doMission("king_of_ashes"));
         // Go to Jelly King
-        addCommand.invoke(null, "jk|rjp", doMission("sovereign_slime"));
+        Commands.addCommand("jk|rjp", doMission("sovereign_slime"));
         // Go to Built to Destroy
-        addCommand.invoke(null, "imf|twins", doMission("built_to_destroy"));
+        Commands.addCommand("imf|twins", doMission("built_to_destroy"));
         // Go to DaN
-        addCommand.invoke(null, "dan", doMission("dreams_and_nightmares"));
+        Commands.addCommand("dan", doMission("dreams_and_nightmares"));
         // Go to Axes of Evil
-        addCommand.invoke(null, "aoe", doMission("axes_of_evil"));
+        Commands.addCommand("aoe", doMission("axes_of_evil"));
         // Go to Shadowplay
-        addCommand.invoke(null, "sp", doMission("shadowplay"));
+        Commands.addCommand("sp", doMission("shadowplay"));
 
     }
 
@@ -96,6 +99,5 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        ProjectXApp.main(args);
     }
 }

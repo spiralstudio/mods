@@ -6,8 +6,8 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.spiralstudio</groupId>
-    <artifactId>mods</artifactId>
+    <groupId>com.spiralstudio.mod</groupId>
+    <artifactId>root</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>Spiral Mods</name>
@@ -37,14 +37,14 @@
     </developers>
 
     <modules>
-        <module>command</module>
+        <module>core</module>
         <module>showping</module>
         <module>stayonline</module>
         <module>pandora</module>
         <module>pocketshop</module>
         <module>teleport</module>
         <module>camera</module>
-        <module>kozmabot</module>
+        <!--<module>kozmabot</module>-->
         <module>test</module>
     </modules>
 
@@ -62,7 +62,7 @@
         <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
         <javassist.version>3.29.2-GA</javassist.version>
         <bytebuddy.version>1.12.21</bytebuddy.version>
-        <author>Leego Yih</author>
+        <core.version>1.0.0</core.version>
     </properties>
 
     <dependencyManagement>
@@ -81,6 +81,11 @@
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy-agent</artifactId>
                 <version>${bytebuddy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.spiralstudio.mod</groupId>
+                <artifactId>core</artifactId>
+                <version>${core.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
