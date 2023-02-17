@@ -8,12 +8,13 @@ All mods need to be loaded using [projectx-hazard](https://github.com/spiralstud
 
 ## Mods
 
-- [Command](command) is the basis of the command-based mods.
+- [Core](core) is the basis of all mods.
 - [ShowPing](showping) enhances minimap to show ping value.
 - [StayOnline](stayonline) guarantees not to be kicked out even after long idle time.
-- [Pandora](pandora) is a full item arsenal, preview only. (command-based)
-- [PocketShop](pocketshop) calls shops anytime and anywhere. (command-based)
-- [Teleport](teleport) sends you to somewhere. (command-based)
+- [Pandora](pandora) is a full item arsenal, preview only.
+- [PocketShop](pocketshop) calls shops anytime and anywhere.
+- [Teleport](teleport) sends you to somewhere.
+- [Camera](camera) allows you moving and rotating the camera.
 
 ## License
 
