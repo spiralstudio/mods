@@ -76,24 +76,34 @@ public class Main {
                                 "    int dx = 0;\n" +
                                 "    int dy = 0;\n" +
                                 "    int dz = 0;\n" +
+                                "    boolean ctrl = org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_LCONTROL)\n" +
+                                "            || org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_RCONTROL);\n" +
                                 "    boolean up = org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_UP);\n" +
                                 "    boolean down = org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_DOWN);\n" +
                                 "    boolean left = org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_LEFT);\n" +
                                 "    boolean right = org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_RIGHT);\n" +
                                 "    if (up != down) {\n" +
-                                "        if (up) {\n" +
-                                "            dy += 1;\n" +
+                                "        if (!ctrl) {\n" +
+                                "            if (up) {\n" +
+                                "                dy += 1;\n" +
+                                "            } else {\n" +
+                                "                dy -= 1;\n" +
+                                "            }\n" +
                                 "        } else {\n" +
-                                "            dy -= 1;\n" +
+                                "            if (up) {\n" +
+                                "                dz += 1;\n" +
+                                "            } else {\n" +
+                                "                dz -= 1;\n" +
+                                "            }\n" +
                                 "        }\n" +
                                 "    }\n" +
-                                "    if (left != right) {\n" +
-                                "        if (left) {\n" +
-                                "            dx -= 1;\n" +
-                                "        } else {\n" +
-                                "            dx += 1;\n" +
+                                "        if (left != right) {\n" +
+                                "            if (left) {\n" +
+                                "                dx -= 1;\n" +
+                                "            } else {\n" +
+                                "                dx += 1;\n" +
+                                "            }\n" +
                                 "        }\n" +
-                                "    }\n" +
                                 "    if (dx == 0 && dy == 0 && dz == 0) {\n" +
                                 "        return;\n" +
                                 "    }\n" +
@@ -102,9 +112,9 @@ public class Main {
                                 "    _old.z += dz;\n" +
                                 "    System.out.println(\"[CameraKeyListener] Move: dx=\" + Integer.toString(dx) + \", dy=\" + Integer.toString(dy) + \", dz=\" + Integer.toString(dz));\n" +
                                 "    com.threerings.opengl.a.b.a offset = (com.threerings.opengl.a.b.a)\n" +
-                                "    java.lang.Class.forName(\"com.spiralstudio.mod.camera.OffsetImpl\")\n" +
-                                "            .getDeclaredConstructor(new Class[]{float.class, float.class, float.class})\n" +
-                                "            .newInstance(new java.lang.Object[]{java.lang.Float.valueOf((float) dx), java.lang.Float.valueOf((float) dy), java.lang.Float.valueOf(0F)});\n" +
+                                "            java.lang.Class.forName(\"com.spiralstudio.mod.camera.OffsetImpl\")\n" +
+                                "                    .getDeclaredConstructor(new Class[]{float.class, float.class, float.class})\n" +
+                                "                    .newInstance(new java.lang.Object[]{java.lang.Float.valueOf((float) dx), java.lang.Float.valueOf((float) dy), java.lang.Float.valueOf((float) dz)});\n" +
                                 "    com.threerings.opengl.e glapp = (com.threerings.opengl.e) this._ctx;\n" +
                                 "    glapp.getCameraHandler().addOffset(offset);\n" +
                                 "}"))
@@ -180,75 +190,85 @@ if (this._cameraKeyListener != null) {
 }*/
     }
 
-    /*class CameraKeyListener implements com.threerings.opengl.gui.event.e {
-        public com.threerings.projectx.util.A _ctx;
-        public com.threerings.math.Vector3f _old;
+/*class CameraKeyListener implements com.threerings.opengl.gui.event.e {
+    public com.threerings.projectx.util.A _ctx;
+    public com.threerings.math.Vector3f _old;
 
-        public CameraKeyListener(com.threerings.projectx.util.A a) {
-            this._ctx = a;
-            this._old = new com.threerings.math.Vector3f();
-        }
+public CameraKeyListener(com.threerings.projectx.util.A a) {
+    this._ctx = a;
+    this._old = new com.threerings.math.Vector3f();
+}
 
-        public void keyPressed(com.threerings.opengl.gui.event.KeyEvent event) {
-            int code = event.getKeyCode();
-            boolean repeat = event.isRepeat();
-            System.out.println("keyPressed: code=" + Integer.toString(code) + ", repeat=" + repeat);
-            int dx = 0;
-            int dy = 0;
-            int dz = 0;
-            boolean up = org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_UP);
-            boolean down = org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_DOWN);
-            boolean left = org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_LEFT);
-            boolean right = org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_RIGHT);
-            if (up != down) {
-                if (up) {
-                    dy += 1;
-                } else {
-                    dy -= 1;
-                }
+public void keyPressed(com.threerings.opengl.gui.event.KeyEvent event) {
+    int code = event.getKeyCode();
+    boolean repeat = event.isRepeat();
+    System.out.println("keyPressed: code=" + Integer.toString(code) + ", repeat=" + repeat);
+    int dx = 0;
+    int dy = 0;
+    int dz = 0;
+    boolean ctrl = org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_LCONTROL)
+            || org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_RCONTROL);
+    boolean up = org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_UP);
+    boolean down = org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_DOWN);
+    boolean left = org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_LEFT);
+    boolean right = org.lwjgl.input.Keyboard.isKeyDown(org.lwjgl.input.Keyboard.KEY_RIGHT);
+    if (up != down) {
+        if (!ctrl) {
+            if (up) {
+                dy += 1;
+            } else {
+                dy -= 1;
             }
-            if (left != right) {
-                if (left) {
-                    dx -= 1;
-                } else {
-                    dx += 1;
-                }
+        } else {
+            if (up) {
+                dz += 1;
+            } else {
+                dz -= 1;
             }
-            if (dx == 0 && dy == 0 && dz == 0) {
-                return;
-            }
-            _old.x += dx;
-            _old.y += dy;
-            _old.z += dz;
-            System.out.println("[CameraKeyListener] Move: dx=" + Float.toString(dx) + ", dy=" + Float.toString(dy) + ", dz=" + Float.toString(dz));
-            com.threerings.opengl.a.b.a offset = (com.threerings.opengl.a.b.a)
-                    java.lang.Class.forName("com.spiralstudio.mod.camera.OffsetImpl")
-                            .getDeclaredConstructor(new Class[]{float.class, float.class, float.class})
-                            .newInstance(new java.lang.Object[]{java.lang.Float.valueOf((float) dx), java.lang.Float.valueOf((float) dy), java.lang.Float.valueOf(0F)});
-            com.threerings.opengl.e glapp = (com.threerings.opengl.e) this._ctx;
-            glapp.getCameraHandler().addOffset(offset);
         }
+    }
+    if (left != right) {
+        if (left) {
+            dx -= 1;
+        } else {
+            dx += 1;
+        }
+    }
+    if (dx == 0 && dy == 0 && dz == 0) {
+        return;
+    }
+    _old.x += dx;
+    _old.y += dy;
+    _old.z += dz;
+    System.out.println("[CameraKeyListener] Move: dx=" + Integer.toString(dx) + ", dy=" + Integer.toString(dy) + ", dz=" + Integer.toString(dz));
+    com.threerings.opengl.a.b.a offset = (com.threerings.opengl.a.b.a)
+            java.lang.Class.forName("com.spiralstudio.mod.camera.OffsetImpl")
+                    .getDeclaredConstructor(new Class[]{float.class, float.class, float.class})
+                    .newInstance(new java.lang.Object[]{java.lang.Float.valueOf((float) dx), java.lang.Float.valueOf((float) dy), java.lang.Float.valueOf((float) dz)});
+    com.threerings.opengl.e glapp = (com.threerings.opengl.e) this._ctx;
+    glapp.getCameraHandler().addOffset(offset);
+}
 
-        public void keyReleased(com.threerings.opengl.gui.event.KeyEvent event) {
-        }
+public void keyReleased(com.threerings.opengl.gui.event.KeyEvent event) {
+}
 
-        public void rollback() {
-            float dx = -this._old.x;
-            float dy = -this._old.y;
-            float dz = -this._old.z;
-            System.out.println("[CameraKeyListener] Rollback: dx=" + Float.toString(dx) + ", dy=" + Float.toString(dy) + ", dz=" + Float.toString(dz));
-            if (dx == 0 && dy == 0 && dz == 0) {
-                return;
-            }
-            com.threerings.opengl.a.b.a offset = (com.threerings.opengl.a.b.a)
-                    java.lang.Class.forName("com.spiralstudio.mod.camera.OffsetImpl")
-                            .getDeclaredConstructor(new Class[]{float.class, float.class, float.class})
-                            .newInstance(new java.lang.Object[]{java.lang.Float.valueOf(dx), java.lang.Float.valueOf(dy), java.lang.Float.valueOf(dz)});
-            com.threerings.opengl.e glapp = (com.threerings.opengl.e) this._ctx;
-            glapp.getCameraHandler().addOffset(offset);
-            this._old = new com.threerings.math.Vector3f();
-        }
-    }*/
+public void rollback() {
+    float dx = -this._old.x;
+    float dy = -this._old.y;
+    float dz = -this._old.z;
+    System.out.println("[CameraKeyListener] Rollback: dx=" + Float.toString(dx) + ", dy=" + Float.toString(dy) + ", dz=" + Float.toString(dz));
+    if (dx == 0 && dy == 0 && dz == 0) {
+        return;
+    }
+    com.threerings.opengl.a.b.a offset = (com.threerings.opengl.a.b.a)
+            java.lang.Class.forName("com.spiralstudio.mod.camera.OffsetImpl")
+                    .getDeclaredConstructor(new Class[]{float.class, float.class, float.class})
+                    .newInstance(new java.lang.Object[]{java.lang.Float.valueOf(dx), java.lang.Float.valueOf(dy), java.lang.Float.valueOf(dz)});
+    com.threerings.opengl.e glapp = (com.threerings.opengl.e) this._ctx;
+    glapp.getCameraHandler().addOffset(offset);
+    this._old = new com.threerings.math.Vector3f();
+}
+}*/
 
     public static void main(String[] args) {
     }
