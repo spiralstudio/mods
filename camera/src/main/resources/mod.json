@@ -1,7 +1,7 @@
 {
   "mod": {
     "name": "Camera",
-    "description": "",
+    "description": "It allows you moving and rotating the camera.",
     "author": "Leego",
     "version": "0.0.1",
     "compatibility": "Yes"

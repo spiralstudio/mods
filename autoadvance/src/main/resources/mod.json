@@ -1,0 +1,9 @@
+{
+  "mod": {
+    "name": "Auto Advance",
+    "description": "It automatically clicks the \"Advance Now\" button.",
+    "author": "Leego",
+    "version": "0.0.1",
+    "compatibility": "Yes"
+  }
+}
