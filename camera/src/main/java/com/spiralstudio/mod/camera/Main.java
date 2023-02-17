@@ -168,6 +168,16 @@ public class Main {
                 "            .invoke(this._cameraKeyListener, new Object[0]);\n" +
                 "    this._cameraKeyListener = null;\n" +
                 "}\n");
+        // Add a command "/hudon"
+        Commands.addCommand("hudon", "" +
+                "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
+                "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
+                "hud__.uG();\n");
+        // Add a command "/hudoff"
+        Commands.addCommand("hudoff", "" +
+                "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
+                "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
+                "hud__.uH();\n");
 
 /*System.out.println("Camera On");
 com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;
