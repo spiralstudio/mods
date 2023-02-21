@@ -221,6 +221,30 @@ public class Main {
                                 "            }\n" +
                                 "        }\n" +
                                 "        com.threerings.projectx.data.PlayerObject playerObject = this._ctx.uk();\n" +
+                                "\n" +
+                                "        java.lang.reflect.Field aLsField = com.threerings.projectx.item.data.Item.class.getDeclaredField(\"aLs\");\n" +
+                                "        java.lang.reflect.Field aLtField = com.threerings.projectx.item.data.Item.class.getDeclaredField(\"aLt\");\n" +
+                                "        java.lang.reflect.Field aLuField = com.threerings.projectx.item.data.Item.class.getDeclaredField(\"aLu\");\n" +
+                                "        aLsField.setAccessible(true);\n" +
+                                "        aLtField.setAccessible(true);\n" +
+                                "        aLuField.setAccessible(true);\n" +
+                                "        java.lang.reflect.Field poEquipmentField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"equipment\");\n" +
+                                "        poEquipmentField.setAccessible(true);\n" +
+                                "        java.lang.reflect.Field poItemsField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"items\");\n" +
+                                "        poItemsField.setAccessible(true);\n" +
+                                "        long[] equipment = (long[]) poEquipmentField.get(playerObject);\n" +
+                                "        com.threerings.presents.dobj.DSet items = (com.threerings.presents.dobj.DSet) poItemsField.get(playerObject);\n" +
+                                "        for (int i = 0; i < equipment.length; i++) {\n" +
+                                "            if (previewItems[i] != null) {\n" +
+                                "                java.lang.Object item = items.f(Long.valueOf(equipment[i]));\n" +
+                                "                if (item != null) {\n" +
+                                "                    aLsField.set(previewItems[i], aLsField.get(item));\n" +
+                                "                    aLtField.set(previewItems[i], aLtField.get(item));\n" +
+                                "                }\n" +
+                                "                previewItems[i].setDirty(true);\n" +
+                                "            }\n" +
+                                "        }\n" +
+                                "\n" +
                                 "        com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_equipmentPreview\").set(playerObject, previewItems);\n" +
                                 "        com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_previewing\").set(playerObject, Boolean.valueOf(true));\n" +
                                 "    } else {\n" +
@@ -259,6 +283,30 @@ public class Main {
             }
         }
         com.threerings.projectx.data.PlayerObject playerObject = this._ctx.uk();
+
+        java.lang.reflect.Field aLsField = com.threerings.projectx.item.data.Item.class.getDeclaredField("aLs");
+        java.lang.reflect.Field aLtField = com.threerings.projectx.item.data.Item.class.getDeclaredField("aLt");
+        java.lang.reflect.Field aLuField = com.threerings.projectx.item.data.Item.class.getDeclaredField("aLu");
+        aLsField.setAccessible(true);
+        aLtField.setAccessible(true);
+        aLuField.setAccessible(true);
+        java.lang.reflect.Field poEquipmentField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField("equipment");
+        poEquipmentField.setAccessible(true);
+        java.lang.reflect.Field poItemsField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField("items");
+        poItemsField.setAccessible(true);
+        long[] equipment = (long[]) poEquipmentField.get(playerObject);
+        com.threerings.presents.dobj.DSet items = (com.threerings.presents.dobj.DSet) poItemsField.get(playerObject);
+        for (int i = 0; i < equipment.length; i++) {
+            if (previewItems[i] != null) {
+                java.lang.Object item = items.f(Long.valueOf(equipment[i]));
+                if (item != null) {
+                    aLsField.set(previewItems[i], aLsField.get(item));
+                    aLtField.set(previewItems[i], aLtField.get(item));
+                }
+                previewItems[i].setDirty(true);
+            }
+        }
+
         com.threerings.projectx.data.PlayerObject.class.getDeclaredField("_equipmentPreview").set(playerObject, previewItems);
         com.threerings.projectx.data.PlayerObject.class.getDeclaredField("_previewing").set(playerObject, Boolean.valueOf(true));
     } else {
