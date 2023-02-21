@@ -3,7 +3,9 @@ package com.spiralstudio.mod.pandora;
 import com.spiralstudio.mod.core.Commands;
 import com.spiralstudio.mod.core.Registers;
 import com.spiralstudio.mod.core.util.ClassBuilder;
+import com.spiralstudio.mod.core.util.ConstructorBuilder;
 import com.spiralstudio.mod.core.util.FieldBuilder;
+import com.spiralstudio.mod.core.util.MethodBuilder;
 import com.spiralstudio.mod.core.util.MethodModifier;
 
 import java.lang.reflect.Modifier;
@@ -14,6 +16,7 @@ import java.lang.reflect.Modifier;
  *
  * @author Leego Yih
  * @see com.threerings.projectx.item.client.ArsenalPanel
+ * @see com.threerings.projectx.shop.client.u VendorListPanel
  * @see com.threerings.projectx.shop.client.l ShopDialog
  * @see com.threerings.projectx.shop.data.ShopDialogInfo
  * @see com.threerings.projectx.shop.data.UniqueShopInfo
@@ -31,6 +34,7 @@ public class Main {
             return;
         }
         mounted = true;
+        addPreviewApplyListenerClass();
         redefineGoodSlotToIgnoreException();
         redefineVendorListPanelToIgnoreException();
         redefineShopDialogToCacheAndRenameTitle();
@@ -105,58 +109,220 @@ public class Main {
                 .modifyMethod(new MethodModifier()
                         .methodName("Bp")
                         .body("{\n" +
-                                "    if (this.aQw.name != null && this.aQw.name.toLowerCase().contains(\"pandora\")) {\n" +
-                                "        if (this.atS != null) {\n" +
-                                "            System.out.println(\"[Pandora] Use Cached VendorPanel\");\n" +
-                                "            this._ctx.getRoot().addWindow(this.atS, true);\n" +
-                                "        } else {\n" +
-                                "            System.out.println(\"[Pandora] Create New VendorPanel\");\n" +
-                                "            this.atS = new com.threerings.projectx.shop.client.p(this, this._ctx, false);\n" +
-                                "            com.threerings.projectx.shop.client.e abM = (com.threerings.projectx.shop.client.e) this.atS.tH();\n" +
-                                "            ((com.threerings.opengl.gui.Label) abM.getComponent(\"title\")).setText(this.aQw.title);\n" +
-                                "        }\n" +
-                                "    } else {\n" +
+                                "    if (this.aQw.name == null || !this.aQw.name.toLowerCase().contains(\"pandora\")) {\n" +
                                 "        this.atS = new com.threerings.projectx.shop.client.p(this, this._ctx, false);\n" +
+                                "        return;\n" +
+                                "    }\n" +
+                                "    if (this.atS != null) {\n" +
+                                "        System.out.println(\"[Pandora] Use Cached VendorPanel\");\n" +
+                                "        this._ctx.getRoot().addWindow(this.atS, true);\n" +
+                                "        return;\n" +
+                                "    }\n" +
+                                "    System.out.println(\"[Pandora] Create New VendorPanel\");\n" +
+                                "    this.atS = new com.threerings.projectx.shop.client.p(this, this._ctx, false);\n" +
+                                "    com.threerings.projectx.shop.client.e abM = (com.threerings.projectx.shop.client.e) this.atS.tH();\n" +
+                                "    ((com.threerings.opengl.gui.Label) abM.getComponent(\"title\")).setText(this.aQw.title);\n" +
+                                "    com.threerings.opengl.gui.av btnPreview = ((com.threerings.opengl.gui.av) abM.getComponent(\"preview\"));\n" +
+                                "    java.lang.reflect.Method registerComponentMethod = com.threerings.opengl.gui.ay.class.getDeclaredMethod(\"registerComponent\",\n" +
+                                "            new Class[]{String.class, com.threerings.opengl.gui.q.class});\n" +
+                                "    registerComponentMethod.setAccessible(true);\n" +
+                                "    com.threerings.opengl.gui.av btnApply = new com.threerings.opengl.gui.av(this._ctx, \"Apply\");\n" +
+                                "    btnApply.setStyleConfigs(btnPreview.getStyleConfigs());\n" +
+                                "    btnApply.setSize(btnPreview.getWidth(), btnPreview.getHeight());\n" +
+                                "    registerComponentMethod.invoke(abM, new Object[]{\"apply\", btnApply});\n" +
+                                "    com.threerings.opengl.gui.event.a btnApplyListener =\n" +
+                                "            (com.threerings.opengl.gui.event.a) Class.forName(\"com.spiralstudio.mod.pandora.PreviewApplyListener\")\n" +
+                                "                    .getConstructors()[0].newInstance(new Object[]{this._ctx});\n" +
+                                "    btnApply.addListener$2eebd3b8(btnApplyListener);\n" +
+                                "    abM.add(btnApply, (Object) new Integer(1));\n" +
+                                "    System.out.println(\"[Pandora] Add Apply Button\");\n" +
+                                "}"))
+                .build();
+/*{
+    if (this.aQw.name == null || !this.aQw.name.toLowerCase().contains("pandora")) {
+        this.atS = new com.threerings.projectx.shop.client.p(this, this._ctx, false);
+        return;
+    }
+    if (this.atS != null) {
+        System.out.println("[Pandora] Use Cached VendorPanel");
+        this._ctx.getRoot().addWindow(this.atS, true);
+        return;
+    }
+    System.out.println("[Pandora] Create New VendorPanel");
+    this.atS = new com.threerings.projectx.shop.client.p(this, this._ctx, false);
+    com.threerings.projectx.shop.client.e abM = (com.threerings.projectx.shop.client.e) this.atS.tH();
+    ((com.threerings.opengl.gui.Label) abM.getComponent("title")).setText(this.aQw.title);
+    com.threerings.opengl.gui.av btnPreview = ((com.threerings.opengl.gui.av) abM.getComponent("preview"));
+    java.lang.reflect.Method registerComponentMethod = com.threerings.opengl.gui.ay.class.getDeclaredMethod("registerComponent",
+            new Class[]{String.class, com.threerings.opengl.gui.q.class});
+    registerComponentMethod.setAccessible(true);
+    com.threerings.opengl.gui.av btnApply = new com.threerings.opengl.gui.av(this._ctx, "Apply");
+    btnApply.setStyleConfigs(btnPreview.getStyleConfigs());
+    btnApply.setSize(btnPreview.getWidth(), btnPreview.getHeight());
+    registerComponentMethod.invoke(abM, new Object[]{"apply", btnApply});
+    com.threerings.opengl.gui.event.a btnApplyListener =
+            (com.threerings.opengl.gui.event.a) Class.forName("com.spiralstudio.mod.pandora.PreviewApplyListener")
+                    .getConstructors()[0].newInstance(new Object[]{this._ctx});
+    btnApply.addListener$2eebd3b8(btnApplyListener);
+    abM.add(btnApply, (Object) new Integer(1));
+    System.out.println("[Pandora] Add Apply Button");
+}*/
+
+        ClassBuilder.fromClass("com.threerings.projectx.item.client.ap")
+                .modifyMethod(new MethodModifier()
+                        .methodName("a")
+                        .paramTypeNames(new String[]{"com.threerings.projectx.item.client.j$b"})
+                        .insertAfter("System.out.println(\"com.threerings.projectx.item.client.ap: \" + String.valueOf($1));"))
+                .build();
+        ClassBuilder.fromClass("com.threerings.projectx.client.dj")
+                .modifyMethod(new MethodModifier()
+                        .methodName("d")
+                        .paramTypeNames(new String[]{"com.threerings.projectx.item.data.Item"})
+                        .insertAfter("System.out.println(\"com.threerings.projectx.client.dj: \" + String.valueOf($1));"))
+                .build();
+    }
+
+    static void addPreviewApplyListenerClass() throws Exception {
+        ClassBuilder.makeClass("com.spiralstudio.mod.pandora.PreviewApplyListener")
+                .interfaceClassName("com.threerings.opengl.gui.event.a")
+                .addField(new FieldBuilder()
+                        .fieldName("_ctx")
+                        .typeName("com.threerings.projectx.util.A")
+                        .modifiers(java.lang.reflect.Modifier.PUBLIC))
+                .addConstructor(new ConstructorBuilder()
+                        .parameters(new String[]{"com.threerings.projectx.util.A"})
+                        .body("{this._ctx=$1; System.out.println(\"PreviewApplyListener New\");}")
+                        .modifiers(Modifier.PUBLIC))
+                .addMethod(new MethodBuilder()
+                        .body("" +
+                                "public void actionPerformed(com.threerings.opengl.gui.event.ActionEvent actionEvent) {\n" +
+                                "    System.out.println(\"[Pandora] Apply actionPerformed:\" + actionEvent.toString());\n" +
+                                "    com.threerings.opengl.gui.av _btn = (com.threerings.opengl.gui.av) actionEvent.getSource();\n" +
+                                "    System.out.println(\"[Pandora] Apply\" + Boolean.toString(_btn.isSelected()));\n" +
+                                "    if (_btn.isSelected()) {\n" +
+                                "        System.out.println(\"Selected\");\n" +
+                                "        com.threerings.projectx.client.dj whatever = this._ctx.xl();\n" +
+                                "        java.lang.reflect.Field agdField = com.threerings.projectx.client.dj.class.getDeclaredField(\"agd\");\n" +
+                                "        agdField.setAccessible(true);\n" +
+                                "        com.threerings.projectx.data.PlayerEquipment playerEquipment = (com.threerings.projectx.data.PlayerEquipment) agdField.get(whatever);\n" +
+                                "        java.lang.reflect.Field itemsField = com.threerings.projectx.data.PlayerEquipment.class.getDeclaredField(\"items\");\n" +
+                                "        itemsField.setAccessible(true);\n" +
+                                "        java.lang.Object itemsObject = itemsField.get(playerEquipment);\n" +
+                                "        if (itemsObject == null) {\n" +
+                                "            return;\n" +
+                                "        }\n" +
+                                "        java.util.Map itemsMap = (java.util.Map) itemsObject;\n" +
+                                "        com.threerings.projectx.item.data.LevelItem[] previewItems = new com.threerings.projectx.item.data.LevelItem[16];\n" +
+                                "        for (int i = 0; i < previewItems.length; i++) {\n" +
+                                "            java.lang.Object itemObj = itemsMap.get(Integer.valueOf(i));\n" +
+                                "            if (itemObj != null) {\n" +
+                                "                previewItems[i] = (com.threerings.projectx.item.data.LevelItem) itemObj;\n" +
+                                "                System.out.println(\"Item key=\" + Integer.valueOf(i) + \", value=\" + itemObj.toString());\n" +
+                                "            }\n" +
+                                "        }\n" +
+                                "        com.threerings.projectx.data.PlayerObject playerObject = this._ctx.uk();\n" +
+                                "        com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_equipmentPreview\").set(playerObject, previewItems);\n" +
+                                "        com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_previewing\").set(playerObject, Boolean.valueOf(true));\n" +
+                                "    } else {\n" +
+                                "        System.out.println(\"Not Selected\");\n" +
+                                "        com.threerings.projectx.data.PlayerObject playerObject = this._ctx.uk();\n" +
+                                "        com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_equipmentPreview\").set(playerObject, null);\n" +
+                                "        com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_previewing\").set(playerObject, Boolean.valueOf(false));\n" +
                                 "    }\n" +
                                 "}"))
                 .build();
     }
 
+/*public void actionPerformed(com.threerings.opengl.gui.event.ActionEvent actionEvent) {
+    System.out.println("[Pandora] Apply actionPerformed:" + actionEvent.toString());
+    com.threerings.opengl.gui.av _btn = (com.threerings.opengl.gui.av) actionEvent.getSource();
+    System.out.println("[Pandora] Apply" + Boolean.toString(_btn.isSelected()));
+    if (_btn.isSelected()) {
+        System.out.println("Selected");
+        com.threerings.projectx.client.dj whatever = this._ctx.xl();
+        java.lang.reflect.Field agdField = com.threerings.projectx.client.dj.class.getDeclaredField("agd");
+        agdField.setAccessible(true);
+        com.threerings.projectx.data.PlayerEquipment playerEquipment = (com.threerings.projectx.data.PlayerEquipment) agdField.get(whatever);
+        java.lang.reflect.Field itemsField = com.threerings.projectx.data.PlayerEquipment.class.getDeclaredField("items");
+        itemsField.setAccessible(true);
+        java.lang.Object itemsObject = itemsField.get(playerEquipment);
+        if (itemsObject == null) {
+            return;
+        }
+        java.util.Map itemsMap = (java.util.Map) itemsObject;
+        com.threerings.projectx.item.data.LevelItem[] previewItems = new com.threerings.projectx.item.data.LevelItem[16];
+        for (int i = 0; i < previewItems.length; i++) {
+            java.lang.Object itemObj = itemsMap.get(Integer.valueOf(i));
+            if (itemObj != null) {
+                previewItems[i] = (com.threerings.projectx.item.data.LevelItem) itemObj;
+                System.out.println("Item key=" + Integer.valueOf(i) + ", value=" + itemObj.toString());
+            }
+        }
+        com.threerings.projectx.data.PlayerObject playerObject = this._ctx.uk();
+        com.threerings.projectx.data.PlayerObject.class.getDeclaredField("_equipmentPreview").set(playerObject, previewItems);
+        com.threerings.projectx.data.PlayerObject.class.getDeclaredField("_previewing").set(playerObject, Boolean.valueOf(true));
+    } else {
+        System.out.println("Not Selected");
+        com.threerings.projectx.data.PlayerObject playerObject = this._ctx.uk();
+        com.threerings.projectx.data.PlayerObject.class.getDeclaredField("_equipmentPreview").set(playerObject, null);
+        com.threerings.projectx.data.PlayerObject.class.getDeclaredField("_previewing").set(playerObject, Boolean.valueOf(false));
+    }
+}*/
+
     static void redefinePlayerObjectToPreview() throws Exception {
         ClassBuilder.fromClass("com.threerings.projectx.data.PlayerObject")
                 .addField(new FieldBuilder()
+                        .fieldName("_equipmentOriginal")
+                        .typeName("long[]")
+                        .modifiers(Modifier.PUBLIC | Modifier.TRANSIENT))
+                .addField(new FieldBuilder()
                         .fieldName("_equipmentPreview")
                         .typeName("com.threerings.projectx.item.data.LevelItem[]")
-                        .modifiers(Modifier.PUBLIC))
+                        .modifiers(Modifier.PUBLIC | Modifier.TRANSIENT))
                 .addField(new FieldBuilder()
                         .fieldName("_previewing")
                         .typeName("boolean")
-                        .modifiers(Modifier.PUBLIC))
+                        .modifiers(Modifier.PUBLIC | Modifier.TRANSIENT))
                 .modifyMethod(new MethodModifier()
                         .methodName("cg")
-                        .body("" +
-                                "if (this._previewing) {\n" +
-                                "    return this._equipmentPreview[$1];\n" +
-                                "}\n" +
-                                "long id = this.equipment[$1];\n" +
-                                "if (id == 0L) {\n" +
+                        .paramTypeNames(new String[]{"int"})
+                        .body("{\n" +
+                                "    if (this._previewing && this._equipmentPreview != null) {\n" +
+                                "        System.out.println(\"[PlayerObject] _equipmentPreview: \" + java.util.Arrays.toString(this._equipmentPreview));\n" +
+                                "        com.threerings.projectx.item.data.LevelItem item = this._equipmentPreview[$1];\n" +
+                                "        System.out.println(\"[PlayerObject] getEquipmentItem preview: \" + String.valueOf(item));\n" +
+                                "        return item;\n" +
+                                "    }\n" +
+                                "    long id = this.equipment[$1];\n" +
+                                "    if (id == 0L) {\n" +
+                                "        return null;\n" +
+                                "    }\n" +
+                                "    com.threerings.projectx.item.data.Item item = (com.threerings.projectx.item.data.Item) this.items.f(Long.valueOf(id));\n" +
+                                "    System.out.println(\"[PlayerObject] getEquipmentItem original: \" + item.toString());\n" +
+                                "    if (item instanceof com.threerings.projectx.item.data.LevelItem) {\n" +
+                                "        return (com.threerings.projectx.item.data.LevelItem) item;\n" +
+                                "    }\n" +
                                 "    return null;\n" +
-                                "}\n" +
-                                "com.threerings.projectx.item.data.Item item = (com.threerings.projectx.item.data.Item) this.items.f(id);\n" +
-                                "System.out.println(item.toString());\n" +
-                                "return item instanceof com.threerings.projectx.item.data.LevelItem ? (com.threerings.projectx.item.data.LevelItem) item : null;"))
+                                "}"))
                 .build();
-        // TODO support preview replacing
-/*if (this._previewing) {
-    return this._equipmentPreview[$1];
-}
-long id = this.equipment[$1];
-if (id == 0L) {
+/*{
+    if (this._previewing && this._equipmentPreview != null) {
+        System.out.println("[PlayerObject] _equipmentPreview: " + java.util.Arrays.toString(this._equipmentPreview));
+        com.threerings.projectx.item.data.LevelItem item = this._equipmentPreview[$1];
+        System.out.println("[PlayerObject] getEquipmentItem preview: " + String.valueOf(item));
+        return item;
+    }
+    long id = this.equipment[$1];
+    if (id == 0L) {
+        return null;
+    }
+    com.threerings.projectx.item.data.Item item = (com.threerings.projectx.item.data.Item) this.items.f(Long.valueOf(id));
+    System.out.println("[PlayerObject] getEquipmentItem original: " + item.toString());
+    if (item instanceof com.threerings.projectx.item.data.LevelItem) {
+        return (com.threerings.projectx.item.data.LevelItem) item;
+    }
     return null;
-}
-com.threerings.projectx.item.data.Item item = (com.threerings.projectx.item.data.Item) this.items.f(id);
-System.out.println(item.toString());
-return item instanceof com.threerings.projectx.item.data.LevelItem ? (com.threerings.projectx.item.data.LevelItem) item : null;*/
+}*/
     }
 
     static void addPandoraCommand() {

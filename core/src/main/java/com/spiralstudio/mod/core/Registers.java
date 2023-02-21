@@ -29,7 +29,8 @@ public class Registers {
                 Method method = clazz.getDeclaredMethod("mount");
                 method.setAccessible(true);
                 method.invoke(null);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

@@ -264,6 +264,7 @@ public class Main {
     static void addCameraCommands() {
         // Add a field for caching KeyListener
         Commands.addField("_cameraKeyListener", "com.threerings.opengl.gui.event.e");
+        Commands.addField("_cameraHudHidden", "boolean");
         // Add a command "/camon"
         Commands.addCommand("camon", "" +
                 "System.out.println(\"Photo Mode On\");\n" +
@@ -278,14 +279,20 @@ public class Main {
                 "com.threerings.opengl.a.b.class.getDeclaredMethod(\"disablePhotoMode\", new Class[0]).invoke(hud__.vk().Og(), new Object[0]);\n");
         // Add a command "/hudon"
         Commands.addCommand("hudon", "" +
-                "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
-                "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
-                "hud__.uG();\n");
+                "if (this._cameraHudHidden == true) {\n" +
+                "    this._cameraHudHidden = false;\n" +
+                "    com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
+                "    com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
+                "    hud__.uG();\n" +
+                "}\n");
         // Add a command "/hudoff"
         Commands.addCommand("hudoff", "" +
-                "com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
-                "com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
-                "hud__.uH();\n");
+                "if (this._cameraHudHidden == false) {\n" +
+                "    this._cameraHudHidden = true;\n" +
+                "    com.threerings.projectx.util.A ctx__ = (com.threerings.projectx.util.A) this._ctx;\n" +
+                "    com.threerings.projectx.client.aC hud__ = com.threerings.projectx.client.aC.h(ctx__);\n" +
+                "    hud__.uH();\n" +
+                "}\n");
     }
 
     public static void main(String[] args) {
