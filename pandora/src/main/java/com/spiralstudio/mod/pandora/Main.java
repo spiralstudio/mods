@@ -3,7 +3,10 @@ package com.spiralstudio.mod.pandora;
 import com.spiralstudio.mod.core.Commands;
 import com.spiralstudio.mod.core.Registers;
 import com.spiralstudio.mod.core.util.ClassBuilder;
+import com.spiralstudio.mod.core.util.FieldBuilder;
 import com.spiralstudio.mod.core.util.MethodModifier;
+
+import java.lang.reflect.Modifier;
 
 /**
  * Enter "/pandora" to call the Pandora.
@@ -14,6 +17,7 @@ import com.spiralstudio.mod.core.util.MethodModifier;
  * @see com.threerings.projectx.shop.client.l ShopDialog
  * @see com.threerings.projectx.shop.data.ShopDialogInfo
  * @see com.threerings.projectx.shop.data.UniqueShopInfo
+ * @see com.threerings.projectx.data.PlayerObject
  */
 public class Main {
     private static boolean mounted = false;
@@ -30,6 +34,7 @@ public class Main {
         redefineGoodSlotToIgnoreException();
         redefineVendorListPanelToIgnoreException();
         redefineShopDialogToCacheAndRenameTitle();
+        redefinePlayerObjectToPreview();
         addPandoraCommand();
     }
 
@@ -115,6 +120,43 @@ public class Main {
                                 "    }\n" +
                                 "}"))
                 .build();
+    }
+
+    static void redefinePlayerObjectToPreview() throws Exception {
+        ClassBuilder.fromClass("com.threerings.projectx.data.PlayerObject")
+                .addField(new FieldBuilder()
+                        .fieldName("_equipmentPreview")
+                        .typeName("com.threerings.projectx.item.data.LevelItem[]")
+                        .modifiers(Modifier.PUBLIC))
+                .addField(new FieldBuilder()
+                        .fieldName("_previewing")
+                        .typeName("boolean")
+                        .modifiers(Modifier.PUBLIC))
+                .modifyMethod(new MethodModifier()
+                        .methodName("cg")
+                        .body("" +
+                                "if (this._previewing) {\n" +
+                                "    return this._equipmentPreview[$1];\n" +
+                                "}\n" +
+                                "long id = this.equipment[$1];\n" +
+                                "if (id == 0L) {\n" +
+                                "    return null;\n" +
+                                "}\n" +
+                                "com.threerings.projectx.item.data.Item item = (com.threerings.projectx.item.data.Item) this.items.f(id);\n" +
+                                "System.out.println(item.toString());\n" +
+                                "return item instanceof com.threerings.projectx.item.data.LevelItem ? (com.threerings.projectx.item.data.LevelItem) item : null;"))
+                .build();
+        // TODO support preview replacing
+/*if (this._previewing) {
+    return this._equipmentPreview[$1];
+}
+long id = this.equipment[$1];
+if (id == 0L) {
+    return null;
+}
+com.threerings.projectx.item.data.Item item = (com.threerings.projectx.item.data.Item) this.items.f(id);
+System.out.println(item.toString());
+return item instanceof com.threerings.projectx.item.data.LevelItem ? (com.threerings.projectx.item.data.LevelItem) item : null;*/
     }
 
     static void addPandoraCommand() {
