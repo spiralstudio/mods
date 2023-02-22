@@ -80,7 +80,7 @@ public class Commands {
                         .map(e -> new FieldBuilder()
                                 .fieldName(e.getKey())
                                 .typeName(e.getValue())
-                                .modifiers(Modifier.PUBLIC))
+                                .modifiers(Modifier.PUBLIC | Modifier.TRANSIENT))
                         .collect(Collectors.toList()))
                 // Add custom commands, override method 'com.threerings.crowd.chat.client.ChatDirector.requestChat'
                 .modifyMethod(new MethodModifier()
