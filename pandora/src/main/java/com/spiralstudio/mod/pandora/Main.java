@@ -128,10 +128,12 @@ public class Main {
                                 "                com.threerings.tudey.a.b.a _actorSprite = _hud.vk().Eq();\n" +
                                 "                com.threerings.projectx.client.sprite.KnightSprite _knightSprite = (com.threerings.projectx.client.sprite.KnightSprite) _actorSprite.OJ();\n" +
                                 "                java.lang.reflect.Field _actorField = com.threerings.projectx.client.sprite.KnightSprite.class.getDeclaredField(\"_actor\");\n" +
+                                "                java.lang.reflect.Field _configPreviewField = com.threerings.projectx.client.sprite.KnightSprite.class.getDeclaredField(\"_configPreview\");\n" +
                                 "                _actorField.setAccessible(true);\n" +
+                                "                _configPreviewField.setAccessible(true);\n" +
                                 "                com.threerings.projectx.data.actor.Knight _knightActor = (com.threerings.projectx.data.actor.Knight) _actorField.get(_knightSprite);\n" +
                                 "                com.threerings.config.ConfigReference _previewConfigRef = com.threerings.projectx.data.PlayerObject.a(\"Character/PC/Default\", playerObject.a(this._ctx.getConfigManager(), true, true, -1), new Object[0]);\n" +
-                                "                _knightActor.setConfig(_previewConfigRef);\n" +
+                                "                _configPreviewField.set(_knightSprite, _previewConfigRef);\n" +
                                 "            }\n" +
                                 "            System.out.println(\"Recreate model 3\");\n" +
                                 "        }\n" +
@@ -140,10 +142,18 @@ public class Main {
                                 "        com.threerings.projectx.data.PlayerObject playerObject = this._ctx.uk();\n" +
                                 "        com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_equipmentPreview\").set(playerObject, null);\n" +
                                 "        com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_previewing\").set(playerObject, Boolean.valueOf(false));\n" +
+                                "\n" +
+                                "        com.threerings.projectx.client.aC _hud = com.threerings.projectx.client.aC.h(this._ctx);\n" +
+                                "        com.threerings.tudey.a.b.a _actorSprite = _hud.vk().Eq();\n" +
+                                "        com.threerings.projectx.client.sprite.KnightSprite _knightSprite = (com.threerings.projectx.client.sprite.KnightSprite) _actorSprite.OJ();\n" +
+                                "        java.lang.reflect.Field _configPreviewField = com.threerings.projectx.client.sprite.KnightSprite.class.getDeclaredField(\"_configPreview\");\n" +
+                                "        _configPreviewField.setAccessible(true);\n" +
+                                "        _configPreviewField.set(_knightSprite, null);\n" +
                                 "    }\n" +
                                 "}"))
                 .build();
     }
+
 
     static void redefineGoodSlotToIgnoreException() throws Exception {
         ClassBuilder.fromClass("com.threerings.projectx.shop.client.GoodSlot")
@@ -173,17 +183,262 @@ public class Main {
     }
 
     static void redefineKnightSpriteToReplacePreviewItems() throws Exception {
+        ClassBuilder.fromClass("com.threerings.tudey.a.b.a")
+                /*.addField(new FieldBuilder()
+                        .fieldName("_configPreview")
+                        .typeName("com.threerings.config.ConfigReference")
+                        .modifiers(Modifier.PUBLIC | Modifier.TRANSIENT | Modifier.VOLATILE))*/
+                .modifyMethod(new MethodModifier()
+                        .methodName("configUpdated")
+                        .insertBefore("" +
+                                "     System.out.println(\"ActorSprite configUpdated\");\n"))
+                .modifyMethod(new MethodModifier()
+                        .methodName("updateFromConfig")
+                        .insertBefore("" +
+                                "     System.out.println(\"ActorSprite updateFromConfig\");\n"))
+                /*.modifyMethod(new MethodModifier()
+                        .methodName("update")
+                        .insertBefore("" +
+                                "if (this._configPreview == null) {\n" +
+                                "    com.threerings.config.ConfigReference var2 = this._actor.ES();\n" +
+                                "    com.threerings.tudey.config.ActorConfig var3 = (com.threerings.tudey.config.ActorConfig) this.aqE.getConfigManager().a(com.threerings.tudey.config.ActorConfig.class, var2);\n" +
+                                "    if (this.aZo != var3) {\n" +
+                                "        if (this.aZo != null) {\n" +
+                                "            this.aZo.removeListener(this);\n" +
+                                "        }\n" +
+                                "        if ((this.aZo = var3) != null) {\n" +
+                                "            this.aZo.addListener(this);\n" +
+                                "        }\n" +
+                                "        System.out.println(\"ActorSprite update _configPreview == null\");\n" +
+                                "        this.updateFromConfig();\n" +
+                                "    }\n" +
+                                "    this.aZs.c(this._actor);\n" +
+                                "} else {\n" +
+                                "    System.out.println(\"ActorSprite update _configPreview != null\");\n" +
+                                "    com.threerings.config.ConfigReference _old = this._actor.ES();\n" +
+                                "    this._actor.setConfig(this._configPreview);\n" +
+                                "    this.aZs.c(this._actor);\n" +
+                                "    this._actor.setConfig(_old);\n" +
+                                "}\n" +
+                                "this.aZr.PV().b(this._actor.mH(), this._actor.mI(), 1.0F);\n" +
+                                "this.aZr.a(this._actor.Pu().s(this.aqE.getConfigManager()));"))*/
+                .build();
+
+
         ClassBuilder.fromClass("com.threerings.projectx.client.sprite.KnightSprite")
                 .addField(new FieldBuilder()
                         .fieldName("_configPreview")
                         .typeName("com.threerings.config.ConfigReference")
-                        .modifiers(Modifier.PUBLIC | Modifier.TRANSIENT))
+                        .modifiers(Modifier.PUBLIC | Modifier.TRANSIENT | Modifier.VOLATILE))
+                /*.modifyMethod(new MethodModifier()
+                        .methodName("c")
+                        .paramTypeNames(new String[]{"com.threerings.tudey.data.actor.Actor"})
+                        .insertBefore("if (this._configPreview != null) {$1.setConfig(this._configPreview);}"))*/
                 .modifyMethod(new MethodModifier()
                         .methodName("c")
                         .paramTypeNames(new String[]{"com.threerings.tudey.data.actor.Actor"})
                         .insertBefore("if (this._configPreview != null) {$1.setConfig(this._configPreview);}"))
+                /*.addMethod(new MethodBuilder()
+                        .body("public void setPreviewConfig(com.threerings.config.ConfigReference config) {\n" +
+                                "        Object cloned = this._actor.clone();\n" +
+                                "        com.threerings.projectx.data.actor.Knight var2 = (com.threerings.projectx.data.actor.Knight) cloned;\n" +
+                                "        var2.setConfig(config);\n" +
+                                "        com.threerings.projectx.config.ActionDesc var3 = var2.Co();\n" +
+                                "        boolean var4 = var2.Cr();\n" +
+                                "        if (!com.samskivert.util.N.equals(var3, this._actionDesc) || var4 != this.apW) {\n" +
+                                "            com.threerings.config.ConfigReference var5 = var3 == null ? null : var3.bn(!var4);\n" +
+                                "            if (this.OP()) {\n" +
+                                "                if (var5 != null) {\n" +
+                                "                    if (this.apY == null) {\n" +
+                                "                        this._model.attach(\"%ROOT%\", this.apY = new com.threerings.opengl.model.h(this.aqE, var5), false);\n" +
+                                "                    } else {\n" +
+                                "                        this.apY.setConfig(var5);\n" +
+                                "                    }\n" +
+                                "                } else if (this.apY != null) {\n" +
+                                "                    this._model.detach(this.apY);\n" +
+                                "                    this.apY = null;\n" +
+                                "                }\n" +
+                                "                if (var3 instanceof com.threerings.projectx.config.ActionDesc.Energy) {\n" +
+                                "                    ((com.threerings.projectx.client.et) this._view).yO().b(this, 0L);\n" +
+                                "                } else {\n" +
+                                "                    ((com.threerings.projectx.client.et) this._view).yO().aR(this);\n" +
+                                "                }\n" +
+                                "            }\n" +
+                                "            this._actionDesc = var3;\n" +
+                                "            this.apW = var4;\n" +
+                                "            if (this._actionDesc != null) {\n" +
+                                "                int var6 = this._actionDesc.c(this.aqE.getConfigManager());\n" +
+                                "                this.aZz.put(2, var6 == 2 ? this.aqg : (com.threerings.tudey.a.b.a.a.a) this.aZz.get(var6));\n" +
+                                "            }\n" +
+                                "        }\n" +
+                                "    }"))*/
                 .build();
+
+        /*if (this._configPreview != null) {
+            com.threerings.projectx.data.actor.Knight _tmp = (com.threerings.projectx.data.actor.Knight) $1.clone();
+            _tmp.setConfig(this._configPreview);
+            super.c(_tmp);
+        }*/
+
+        /*{
+            super.c($1);
+            com.threerings.projectx.data.actor.Knight var2 = (com.threerings.projectx.data.actor.Knight) $1;
+            if (this._configPreview != null) {
+                var2 = var2.clone();
+            }
+            com.threerings.projectx.config.ActionDesc var3 = (var2).Co();
+            boolean var4 = var2.Cr();
+            com.threerings.config.ConfigReference var5 = null;
+            if (var3 != null) {
+                var5 = var3.bn(var4==false);
+            }
+            int var6 = 0;
+            if (!com.samskivert.util.N.equals(var3, this._actionDesc) || var4 != this.apW) {
+                if (this.OP()) {
+                    if (var5 != null) {
+                        if (this.apY == null) {
+                            this._model.attach("%ROOT%", this.apY = new com.threerings.opengl.model.h(this.aqE, var5), false);
+                        } else {
+                            this.apY.setConfig(var5);
+                        }
+                    } else if (this.apY != null) {
+                        this._model.detach(this.apY);
+                        this.apY = null;
+                    }
+
+                    if (var3 instanceof com.threerings.projectx.config.ActionDesc.Energy) {
+                        ((com.threerings.projectx.client.et) this._view).yO().b(this, 0L);
+                    } else {
+                        ((com.threerings.projectx.client.et) this._view).yO().aR(this);
+                    }
+                }
+
+                this._actionDesc = var3;
+                this.apW = var4;
+                if (this._actionDesc != null) {
+                    var6 = this._actionDesc.c(this.aqE.getConfigManager());
+                    if (var6 == 2) {
+                        this.aZz.put(2, this.aqg);
+                    } else {
+                        this.aZz.put(2, (com.threerings.tudey.a.b.a.a.a) this.aZz.get(var6));
+                    }
+                }
+            }
+
+            if (this.OP()) {
+                if (this.apY != null) {
+                    var5 = var2.Cq();
+                }
+                ((com.threerings.projectx.client.et) this._view).yO().h(var5);
+            }
+
+            boolean var12 = this.d(var2);
+            if (this.aqb != var12) {
+                if (this.aqb = var12) {
+                    this._model.setRenderScheme("Translucent");
+                    this.aqd.add(avk);
+                } else {
+                    this._model.setRenderScheme((String) null);
+                    this.aqd.remove(avk);
+                }
+
+                this._colorState.getColor().set(this.Ak());
+                this._colorState.setDirty(true);
+            }
+
+            this.Ag();
+            this.vT();
+            if ((var6 = var2.Cs()) != this.aqh) {
+                if ((var4 = this.aqi != null) && this.aqh != 0) {
+                    this.Ai();
+                }
+
+                this.aqh = var6;
+                if (var4 && var6 != 0) {
+                    this.a((com.threerings.projectx.data.actor.Lift) this._view.dV(var6).OK());
+                }
+            }
+
+            if (var6 > 0) {
+                com.threerings.math.Transform3D var7;
+                com.threerings.tudey.a.b.a var9;
+                if ((var9 = this._view.dV(var6)) != null && (var7 = this.b(var9)) != null) {
+                    java.util.Iterator var13 = var9.OI().entrySet().iterator();
+
+                    while (var13.hasNext()) {
+                        java.util.Map.Entry var11;
+                        if ((java.lang.Boolean) (var11 = (java.util.Map.Entry) var13.next()).getValue()) {
+                            ((h) var11.getKey()).getLocalTransform().j(var7);
+                            ((h) var11.getKey()).updateBounds();
+                        }
+                    }
+                }
+
+                if (this.aqi != null) {
+                    boolean var8 = null == var2.Co();
+                    this.bg(var8);
+                    if (var8) {
+                        this.o(this.p(com.threerings.math.Vector2f.OW));
+                    }
+                }
+            }
+
+            if (this.OP()) {
+                this.a(var2);
+            }
+
+            var4 = var2.isSet(2);
+            if (this.aqt == null || this.aqt != var4) {
+                java.util.Iterator var10 = this.aqe.get(-1001).iterator();
+
+                while (var10.hasNext()) {
+                    com.threerings.opengl.model.a var14 = (com.threerings.opengl.model.a) var10.next();
+                    if (var4) {
+                        var14.start();
+                    } else {
+                        var14.stop();
+                    }
+                }
+
+                this.aqt = var4;
+            }
+
+        }*/
     }
+
+    /*public void setPreviewConfig(com.threerings.config.ConfigReference config) {
+        Object cloned = this._actor.clone();
+        com.threerings.projectx.data.actor.Knight var2 = (com.threerings.projectx.data.actor.Knight) cloned;
+        var2.setConfig(config);
+        com.threerings.projectx.config.ActionDesc var3 = var2.Co();
+        boolean var4 = var2.Cr();
+        if (!com.samskivert.util.N.equals(var3, this._actionDesc) || var4 != this.apW) {
+            com.threerings.config.ConfigReference var5 = var3 == null ? null : var3.bn(!var4);
+            if (this.OP()) {
+                if (var5 != null) {
+                    if (this.apY == null) {
+                        this._model.attach("%ROOT%", this.apY = new com.threerings.opengl.model.h(this.aqE, var5), false);
+                    } else {
+                        this.apY.setConfig(var5);
+                    }
+                } else if (this.apY != null) {
+                    this._model.detach(this.apY);
+                    this.apY = null;
+                }
+                if (var3 instanceof com.threerings.projectx.config.ActionDesc.Energy) {
+                    ((com.threerings.projectx.client.et) this._view).yO().b(this, 0L);
+                } else {
+                    ((com.threerings.projectx.client.et) this._view).yO().aR(this);
+                }
+            }
+            this._actionDesc = var3;
+            this.apW = var4;
+            if (this._actionDesc != null) {
+                int var6 = this._actionDesc.c(this.aqE.getConfigManager());
+                this.aZz.put(2, var6 == 2 ? this.aqg : (com.threerings.tudey.a.b.a.a.a) this.aZz.get(var6));
+            }
+        }
+    }*/
 
     static void redefineVendorListPanelToIgnoreException() throws Exception {
         ClassBuilder.fromClass("com.threerings.projectx.shop.client.u")
