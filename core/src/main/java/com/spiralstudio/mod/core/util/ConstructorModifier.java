@@ -11,6 +11,7 @@ import javassist.NotFoundException;
  */
 public class ConstructorModifier {
     private CtClass declaring;
+    private boolean first;
     private String[] paramTypeNames;
     private String body;
     private String insertBefore;
@@ -22,6 +23,11 @@ public class ConstructorModifier {
 
     public ConstructorModifier declaring(CtClass declaring) {
         this.declaring = declaring;
+        return this;
+    }
+
+    public ConstructorModifier first() {
+        this.first = first;
         return this;
     }
 
@@ -52,7 +58,9 @@ public class ConstructorModifier {
 
     public CtConstructor build(ClassPool classPool) throws NotFoundException, CannotCompileException {
         CtConstructor constructor;
-        if (paramTypeNames != null) {
+        if (first) {
+            constructor = declaring.getDeclaredConstructors()[0];
+        } else if (paramTypeNames != null) {
             if (paramTypeNames.length > 0) {
                 constructor = declaring.getDeclaredConstructor(classPool.get(paramTypeNames));
             } else {
