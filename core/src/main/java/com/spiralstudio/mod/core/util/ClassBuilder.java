@@ -24,6 +24,7 @@ public class ClassBuilder {
     private List<ConstructorBuilder> constructorBuilders;
     private List<ConstructorModifier> constructorModifiers;
     private List<FieldBuilder> fieldBuilders;
+    private List<FieldModifier> fieldModifiers;
     private List<MethodBuilder> methodBuilders;
     private List<MethodModifier> methodModifiers;
 
@@ -114,6 +115,22 @@ public class ClassBuilder {
         return this;
     }
 
+    public ClassBuilder modifyField(FieldModifier fm) {
+        if (fieldModifiers == null) {
+            fieldModifiers = new ArrayList<>();
+        }
+        fieldModifiers.add(fm);
+        return this;
+    }
+
+    public ClassBuilder modifyFields(List<FieldModifier> fms) {
+        if (fieldModifiers == null) {
+            fieldModifiers = new ArrayList<>();
+        }
+        fieldModifiers.addAll(fms);
+        return this;
+    }
+
     public ClassBuilder addMethod(MethodBuilder mb) {
         if (methodBuilders == null) {
             methodBuilders = new ArrayList<>();
@@ -172,6 +189,11 @@ public class ClassBuilder {
         if (fieldBuilders != null) {
             for (FieldBuilder fb : fieldBuilders) {
                 ctClass.addField(fb.declaring(ctClass).build(classPool));
+            }
+        }
+        if (fieldModifiers != null) {
+            for (FieldModifier fm : fieldModifiers) {
+                fm.declaring(ctClass).build(classPool);
             }
         }
         if (constructorBuilders != null) {

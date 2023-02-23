@@ -45,6 +45,7 @@
         <module>teleport</module>
         <module>camera</module>
         <module>autoadvance</module>
+        <module>noloading</module>
         <!--<module>kozmabot</module>-->
         <module>test</module>
     </modules>
