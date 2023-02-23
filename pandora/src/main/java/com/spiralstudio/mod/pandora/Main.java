@@ -133,8 +133,16 @@ public class Main {
                                 "        }\n" +
                                 "    }\n" +
                                 "\n" +
+                                "    java.lang.reflect.Field poColorField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"color\");\n" +
+                                "    java.lang.reflect.Field poEyeField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"eye\");\n" +
+                                "    java.lang.reflect.Field poHeightField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"height\");\n" +
                                 "    java.lang.reflect.Field poItemsField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"items\");\n" +
                                 "    java.lang.reflect.Field poEquipmentField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"equipment\");\n" +
+                                "    java.lang.reflect.Field poEquipmentPreviewField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_equipmentPreview\");\n" +
+                                "    java.lang.reflect.Field poPreviewingField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_previewing\");\n" +
+                                "    poColorField.setAccessible(true);\n" +
+                                "    poEyeField.setAccessible(true);\n" +
+                                "    poHeightField.setAccessible(true);\n" +
                                 "    poItemsField.setAccessible(true);\n" +
                                 "    poEquipmentField.setAccessible(true);\n" +
                                 "\n" +
@@ -157,9 +165,11 @@ public class Main {
                                 "            previewItems[i].setDirty(true);\n" +
                                 "        }\n" +
                                 "    }\n" +
-                                "\n" +
-                                "    com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_equipmentPreview\").set(playerObject, previewItems);\n" +
-                                "    com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_previewing\").set(playerObject, Boolean.valueOf(true));\n" +
+                                "    poColorField.set(playerObject, _colorObject);\n" +
+                                "    poEyeField.set(playerObject, _eyeObject);\n" +
+                                "    poHeightField.set(playerObject, _heightObject);\n" +
+                                "    poEquipmentPreviewField.set(playerObject, previewItems);\n" +
+                                "    poPreviewingField.set(playerObject, Boolean.valueOf(true));\n" +
                                 "\n" +
                                 "    java.lang.reflect.Method _createPlayerModelMethod = com.threerings.projectx.data.PlayerObject.class.getDeclaredMethod(\"a\", new java.lang.Class[]{\n" +
                                 "            com.threerings.config.ConfigManager.class, boolean.class, boolean.class, int.class, boolean.class, Boolean.class, int.class,\n" +
