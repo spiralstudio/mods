@@ -58,96 +58,137 @@ public class Main {
                 .addMethod(new MethodBuilder()
                         .body("" +
                                 "public void actionPerformed(com.threerings.opengl.gui.event.ActionEvent actionEvent) {\n" +
-                                "    System.out.println(\"[Pandora] Apply actionPerformed:\" + actionEvent.toString());\n" +
                                 "    com.threerings.opengl.gui.av _btn = (com.threerings.opengl.gui.av) actionEvent.getSource();\n" +
                                 "    System.out.println(\"[Pandora] Apply\" + Boolean.toString(_btn.isSelected()));\n" +
-                                "    if (_btn.isSelected()) {\n" +
-                                "        System.out.println(\"Selected\");\n" +
-                                "        com.threerings.projectx.client.dj whatever = this._ctx.xl();\n" +
-                                "        java.lang.reflect.Field agdField = com.threerings.projectx.client.dj.class.getDeclaredField(\"agd\");\n" +
-                                "        agdField.setAccessible(true);\n" +
-                                "        com.threerings.projectx.data.PlayerEquipment playerEquipment = (com.threerings.projectx.data.PlayerEquipment) agdField.get(whatever);\n" +
-                                "        java.lang.reflect.Field itemsField = com.threerings.projectx.data.PlayerEquipment.class.getDeclaredField(\"items\");\n" +
-                                "        itemsField.setAccessible(true);\n" +
-                                "        java.lang.Object itemsObject = itemsField.get(playerEquipment);\n" +
-                                "        if (itemsObject == null) {\n" +
-                                "            return;\n" +
-                                "        }\n" +
-                                "        java.util.Map itemsMap = (java.util.Map) itemsObject;\n" +
-                                "        com.threerings.projectx.item.data.LevelItem[] previewItems = new com.threerings.projectx.item.data.LevelItem[16];\n" +
-                                "        for (int i = 0; i < previewItems.length; i++) {\n" +
-                                "            java.lang.Object itemObj = itemsMap.get(Integer.valueOf(i));\n" +
-                                "            if (itemObj != null) {\n" +
-                                "                previewItems[i] = (com.threerings.projectx.item.data.LevelItem) itemObj;\n" +
-                                "                System.out.println(\"Item key=\" + Integer.valueOf(i) + \", value=\" + itemObj.toString());\n" +
-                                "            }\n" +
-                                "        }\n" +
-                                "        com.threerings.projectx.data.PlayerObject playerObject = this._ctx.uk();\n" +
-                                "\n" +
-                                "        java.lang.reflect.Field aLsField = com.threerings.projectx.item.data.Item.class.getDeclaredField(\"aLs\");\n" +
-                                "        java.lang.reflect.Field aLtField = com.threerings.projectx.item.data.Item.class.getDeclaredField(\"aLt\");\n" +
-                                "        java.lang.reflect.Field aLuField = com.threerings.projectx.item.data.Item.class.getDeclaredField(\"aLu\");\n" +
-                                "        aLsField.setAccessible(true);\n" +
-                                "        aLtField.setAccessible(true);\n" +
-                                "        aLuField.setAccessible(true);\n" +
-                                "        java.lang.reflect.Field poEquipmentField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"equipment\");\n" +
-                                "        java.lang.reflect.Field poItemsField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"items\");\n" +
-                                "        poEquipmentField.setAccessible(true);\n" +
-                                "        poItemsField.setAccessible(true);\n" +
-                                "        long[] equipment = (long[]) poEquipmentField.get(playerObject);\n" +
-                                "        com.threerings.presents.dobj.DSet items = (com.threerings.presents.dobj.DSet) poItemsField.get(playerObject);\n" +
-                                "        for (int i = 0; i < equipment.length; i++) {\n" +
-                                "            if (previewItems[i] != null) {\n" +
-                                "                java.lang.Object item = items.f(Long.valueOf(equipment[i]));\n" +
-                                "                if (item != null) {\n" +
-                                "                    aLsField.set(previewItems[i], aLsField.get(item));\n" +
-                                "                    aLtField.set(previewItems[i], aLtField.get(item));\n" +
-                                "                }\n" +
-                                "                previewItems[i].setDirty(true);\n" +
-                                "            }\n" +
-                                "        }\n" +
-                                "\n" +
-                                "        com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_equipmentPreview\").set(playerObject, previewItems);\n" +
-                                "        com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_previewing\").set(playerObject, Boolean.valueOf(true));\n" +
-                                "\n" +
-                                "        System.out.println(\"Recreate model 1\");\n" +
-                                "        com.threerings.crowd.client.d _d = this._ctx.rr();\n" +
-                                "        java.lang.reflect.Field _FvField = com.threerings.crowd.client.d.class.getDeclaredField(\"Fv\");\n" +
-                                "        _FvField.setAccessible(true);\n" +
-                                "        java.lang.Object _FvObj = _FvField.get(_d);\n" +
-                                "        if (_FvObj != null) {\n" +
-                                "            System.out.println(\"Recreate model 2\");\n" +
-                                "            com.threerings.crowd.client.t _t = (com.threerings.crowd.client.t) _FvObj;\n" +
-                                "            if (_t instanceof com.threerings.projectx.client.eL) {\n" +
-                                "                com.threerings.projectx.client.eL _el = (com.threerings.projectx.client.eL) _t;\n" +
-                                "                java.lang.reflect.Method _hgMethod = com.threerings.projectx.client.eL.class.getDeclaredMethod(\"hg\", new java.lang.Class[0]);\n" +
-                                "                _hgMethod.setAccessible(true);\n" +
-                                "                _hgMethod.invoke(_el, new Object[0]);\n" +
-                                "            } else {\n" +
-                                "                com.threerings.projectx.client.aC _hud = com.threerings.projectx.client.aC.h(this._ctx);\n" +
-                                "                com.threerings.tudey.a.b.a _actorSprite = _hud.vk().Eq();\n" +
-                                "                com.threerings.projectx.client.sprite.KnightSprite _knightSprite = (com.threerings.projectx.client.sprite.KnightSprite) _actorSprite.OJ();\n" +
-                                "                java.lang.reflect.Field _actorField = com.threerings.projectx.client.sprite.KnightSprite.class.getDeclaredField(\"_actor\");\n" +
-                                "                java.lang.reflect.Field _configPreviewField = com.threerings.projectx.client.sprite.KnightSprite.class.getDeclaredField(\"_configPreview\");\n" +
-                                "                _actorField.setAccessible(true);\n" +
-                                "                _configPreviewField.setAccessible(true);\n" +
-                                "                com.threerings.config.ConfigReference _previewConfigRef = com.threerings.projectx.data.PlayerObject.a(\"Character/PC/Default\", playerObject.a(this._ctx.getConfigManager(), true, true, -1), new Object[0]);\n" +
-                                "                _configPreviewField.set(_knightSprite, _previewConfigRef);\n" +
-                                "            }\n" +
-                                "            System.out.println(\"Recreate model 3\");\n" +
-                                "        }\n" +
-                                "    } else {\n" +
+                                "    com.threerings.projectx.util.A _ctx = this._ctx;\n" +
+                                "    if (!_btn.isSelected()) {\n" +
                                 "        System.out.println(\"Not Selected\");\n" +
-                                "        com.threerings.projectx.data.PlayerObject playerObject = this._ctx.uk();\n" +
+                                "        com.threerings.projectx.data.PlayerObject playerObject = _ctx.uk();\n" +
                                 "        com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_equipmentPreview\").set(playerObject, null);\n" +
                                 "        com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_previewing\").set(playerObject, Boolean.valueOf(false));\n" +
                                 "\n" +
-                                "        com.threerings.projectx.client.aC _hud = com.threerings.projectx.client.aC.h(this._ctx);\n" +
+                                "        com.threerings.projectx.client.aC _hud = com.threerings.projectx.client.aC.h(_ctx);\n" +
                                 "        com.threerings.tudey.a.b.a _actorSprite = _hud.vk().Eq();\n" +
                                 "        com.threerings.projectx.client.sprite.KnightSprite _knightSprite = (com.threerings.projectx.client.sprite.KnightSprite) _actorSprite.OJ();\n" +
                                 "        java.lang.reflect.Field _configPreviewField = com.threerings.projectx.client.sprite.KnightSprite.class.getDeclaredField(\"_configPreview\");\n" +
                                 "        _configPreviewField.setAccessible(true);\n" +
                                 "        _configPreviewField.set(_knightSprite, null);\n" +
+                                "        return;\n" +
+                                "    }\n" +
+                                "    System.out.println(\"Selected\");\n" +
+                                "    com.threerings.projectx.client.dj _whatever = _ctx.xl();\n" +
+                                "    if (_whatever == null) {\n" +
+                                "        _btn.setSelected(false);\n" +
+                                "        return;\n" +
+                                "    }\n" +
+                                "    com.threerings.projectx.data.PlayerObject playerObject = _ctx.uk();\n" +
+                                "    if (playerObject == null) {\n" +
+                                "        _btn.setSelected(false);\n" +
+                                "        return;\n" +
+                                "    }\n" +
+                                "    java.lang.reflect.Field _agdField = com.threerings.projectx.client.dj.class.getDeclaredField(\"agd\");\n" +
+                                "    _agdField.setAccessible(true);\n" +
+                                "    java.lang.Object _agdObject = _agdField.get(_whatever);\n" +
+                                "    if (_agdObject == null) {\n" +
+                                "        _btn.setSelected(false);\n" +
+                                "        return;\n" +
+                                "    }\n" +
+                                "    com.threerings.projectx.data.PlayerEquipment playerEquipment = (com.threerings.projectx.data.PlayerEquipment) _agdObject;\n" +
+                                "    java.lang.reflect.Field _colorField = com.threerings.projectx.data.PlayerEquipment.class.getDeclaredField(\"color\");\n" +
+                                "    java.lang.reflect.Field _eyeField = com.threerings.projectx.data.PlayerEquipment.class.getDeclaredField(\"eye\");\n" +
+                                "    java.lang.reflect.Field _heightField = com.threerings.projectx.data.PlayerEquipment.class.getDeclaredField(\"height\");\n" +
+                                "    java.lang.reflect.Field _itemsField = com.threerings.projectx.data.PlayerEquipment.class.getDeclaredField(\"items\");\n" +
+                                "    java.lang.reflect.Field _accessoriesField = com.threerings.projectx.data.PlayerEquipment.class.getDeclaredField(\"accessories\");\n" +
+                                "    _colorField.setAccessible(true);\n" +
+                                "    _eyeField.setAccessible(true);\n" +
+                                "    _heightField.setAccessible(true);\n" +
+                                "    _itemsField.setAccessible(true);\n" +
+                                "    _accessoriesField.setAccessible(true);\n" +
+                                "    java.lang.Object _colorObject = _colorField.get(playerEquipment);\n" +
+                                "    java.lang.Object _eyeObject = _eyeField.get(playerEquipment);\n" +
+                                "    java.lang.Object _heightObject = _heightField.get(playerEquipment);\n" +
+                                "    java.lang.Object _itemsObject = _itemsField.get(playerEquipment);\n" +
+                                "    java.lang.Object _accessoriesObject = _accessoriesField.get(playerEquipment);\n" +
+                                "\n" +
+                                "    java.util.Map itemsMap = (java.util.Map) _itemsObject;\n" +
+                                "    java.util.Set accessoriesSet = (java.util.Set) _accessoriesObject;\n" +
+                                "    com.threerings.projectx.item.data.LevelItem[] previewItems = new com.threerings.projectx.item.data.LevelItem[16];\n" +
+                                "    for (int i = 0; i < previewItems.length; i++) {\n" +
+                                "        Object itemObj = itemsMap.get(Integer.valueOf(i));\n" +
+                                "        if (itemObj != null) {\n" +
+                                "            previewItems[i] = (com.threerings.projectx.item.data.LevelItem) itemObj;\n" +
+                                "            System.out.println(\"Item key=\" + Integer.valueOf(i) + \", value=\" + itemObj.toString());\n" +
+                                "\n" +
+                                "\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "    int HELM_COSTUME_SLOT = 3;\n" +
+                                "    int ARMOR_COSTUME_SLOT = 4;\n" +
+                                "    java.util.Iterator accessoriesIterator = accessoriesSet.iterator();\n" +
+                                "    while (accessoriesIterator.hasNext()) {\n" +
+                                "        com.threerings.config.ConfigReference _accessoryConfigRef = (com.threerings.config.ConfigReference) accessoriesIterator.next();\n" +
+                                "        boolean _added = previewItems[HELM_COSTUME_SLOT].k(_ctx.getConfigManager(), _accessoryConfigRef);\n" +
+                                "        if (!_added) {\n" +
+                                "            previewItems[ARMOR_COSTUME_SLOT].k(_ctx.getConfigManager(), _accessoryConfigRef);\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "\n" +
+                                "    java.lang.reflect.Field poItemsField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"items\");\n" +
+                                "    java.lang.reflect.Field poEquipmentField = com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"equipment\");\n" +
+                                "    poItemsField.setAccessible(true);\n" +
+                                "    poEquipmentField.setAccessible(true);\n" +
+                                "\n" +
+                                "    java.lang.reflect.Field aLsField = com.threerings.projectx.item.data.Item.class.getDeclaredField(\"aLs\");\n" +
+                                "    java.lang.reflect.Field aLtField = com.threerings.projectx.item.data.Item.class.getDeclaredField(\"aLt\");\n" +
+                                "    java.lang.reflect.Field aLuField = com.threerings.projectx.item.data.Item.class.getDeclaredField(\"aLu\");\n" +
+                                "    aLsField.setAccessible(true);\n" +
+                                "    aLtField.setAccessible(true);\n" +
+                                "    aLuField.setAccessible(true);\n" +
+                                "\n" +
+                                "    long[] equipment = (long[]) poEquipmentField.get(playerObject);\n" +
+                                "    com.threerings.presents.dobj.DSet items = (com.threerings.presents.dobj.DSet) poItemsField.get(playerObject);\n" +
+                                "    for (int i = 0; i < equipment.length; i++) {\n" +
+                                "        if (previewItems[i] != null) {\n" +
+                                "            Object item = items.f(Long.valueOf(equipment[i]));\n" +
+                                "            if (item != null) {\n" +
+                                "                aLsField.set(previewItems[i], aLsField.get(item));\n" +
+                                "                aLtField.set(previewItems[i], aLtField.get(item));\n" +
+                                "            }\n" +
+                                "            previewItems[i].setDirty(true);\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "\n" +
+                                "    com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_equipmentPreview\").set(playerObject, previewItems);\n" +
+                                "    com.threerings.projectx.data.PlayerObject.class.getDeclaredField(\"_previewing\").set(playerObject, Boolean.valueOf(true));\n" +
+                                "\n" +
+                                "    java.lang.reflect.Method _createPlayerModelMethod = com.threerings.projectx.data.PlayerObject.class.getDeclaredMethod(\"a\", new java.lang.Class[]{\n" +
+                                "            com.threerings.config.ConfigManager.class, boolean.class, boolean.class, int.class, boolean.class, Boolean.class, int.class,\n" +
+                                "            com.threerings.projectx.data.ProjectXCodes.EyeType.class, com.threerings.projectx.data.ProjectXCodes.KnightHeight.class});\n" +
+                                "    _createPlayerModelMethod.setAccessible(true);\n" +
+                                "    com.threerings.config.ConfigReference _modelConfigRef = (com.threerings.config.ConfigReference) _createPlayerModelMethod.invoke(playerObject,\n" +
+                                "            new java.lang.Object[]{_ctx.getConfigManager(), Boolean.valueOf(true), Boolean.valueOf(true), Integer.valueOf(-1),\n" +
+                                "                    Boolean.valueOf(false), (Boolean) null, _colorObject, _eyeObject, _heightObject});\n" +
+                                "    com.threerings.config.ConfigReference _previewConfigRef = com.threerings.projectx.data.PlayerObject.a(\"Character/PC/Default\", _modelConfigRef, new java.lang.Object[0]);\n" +
+                                "\n" +
+                                "    com.threerings.crowd.client.d _d = _ctx.rr();\n" +
+                                "    java.lang.reflect.Field _FvField = com.threerings.crowd.client.d.class.getDeclaredField(\"Fv\");\n" +
+                                "    _FvField.setAccessible(true);\n" +
+                                "    Object _FvObj = _FvField.get(_d);\n" +
+                                "    if (_FvObj != null) {\n" +
+                                "        com.threerings.crowd.client.t _t = (com.threerings.crowd.client.t) _FvObj;\n" +
+                                "        if (_t instanceof com.threerings.projectx.client.eL) {\n" +
+                                "            com.threerings.projectx.client.eL _el = (com.threerings.projectx.client.eL) _t;\n" +
+                                "            java.lang.reflect.Method _hgMethod = com.threerings.projectx.client.eL.class.getDeclaredMethod(\"hg\", new Class[0]);\n" +
+                                "            _hgMethod.setAccessible(true);\n" +
+                                "            _hgMethod.invoke(_el, new Object[0]);\n" +
+                                "        } else {\n" +
+                                "            com.threerings.projectx.client.aC _hud = com.threerings.projectx.client.aC.h(_ctx);\n" +
+                                "            com.threerings.tudey.a.b.a _actorSprite = _hud.vk().Eq();\n" +
+                                "            com.threerings.projectx.client.sprite.KnightSprite _knightSprite = (com.threerings.projectx.client.sprite.KnightSprite) _actorSprite.OJ();\n" +
+                                "            java.lang.reflect.Field _configPreviewField = com.threerings.projectx.client.sprite.KnightSprite.class.getDeclaredField(\"_configPreview\");\n" +
+                                "            _configPreviewField.setAccessible(true);\n" +
+                                "            _configPreviewField.set(_knightSprite, _previewConfigRef);\n" +
+                                "        }\n" +
                                 "    }\n" +
                                 "}"))
                 .build();
