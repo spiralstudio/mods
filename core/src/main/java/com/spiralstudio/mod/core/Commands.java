@@ -3,10 +3,19 @@ package com.spiralstudio.mod.core;
 import com.spiralstudio.mod.core.util.ClassBuilder;
 import com.spiralstudio.mod.core.util.FieldBuilder;
 import com.spiralstudio.mod.core.util.MethodModifier;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -72,6 +81,8 @@ public class Commands {
         if (fields.isEmpty() && commands.isEmpty()) {
             return;
         }
+        // Read custom configuration
+        Config config = readConfig();
         // Override class 'com.threerings.crowd.chat.client.ChatDirector'
         ClassBuilder.fromClass("com.threerings.crowd.chat.client.a")
                 // Add custom fields
@@ -86,34 +97,43 @@ public class Commands {
                 .modifyMethod(new MethodModifier()
                         .methodName("a")
                         .paramTypeNames("com.threerings.crowd.chat.client.m", "java.lang.String", "boolean")
-                        .insertBefore(buildCommandBody(commands)))
+                        .insertBefore(buildCommands(commands, config)))
                 .build();
     }
 
-    static String buildCommandBody(Map<String, String> commands) {
+    static String buildCommands(Map<String, String> commands, Config config) {
+        Map<String, String> aliasMap = config.getAlias() != null ? config.getAlias() : Collections.emptyMap();
+        Set<String> disableSet = config.getDisable() != null ? config.getDisable() : Collections.emptySet();
         StringBuilder body = new StringBuilder();
         StringBuilder help = new StringBuilder();
         for (Map.Entry<String, String> entry : commands.entrySet()) {
             String name = entry.getKey();
             String value = entry.getValue();
+            List<String> cmds = new ArrayList<>();
             if (name.indexOf('|') > 0) {
-                StringBuilder condition = new StringBuilder();
-                String[] alias = name.split("\\|");
-                for (int i = 0; i < alias.length; i++) {
-                    String cmd = alias[i].replace("/", "");
-                    condition.append("$2.equalsIgnoreCase(\"/").append(cmd).append("\")");
-                    if (i < alias.length - 1) {
-                        condition.append(" || ");
+                for (String s : name.split("\\|")) {
+                    String cmd = s.replace("/", "");
+                    if (!disableSet.contains(cmd)) {
+                        cmds.add(cmd);
                     }
-                    help.append("/").append(cmd).append(" ");
+                    String alias = aliasMap.get(cmd);
+                    if (alias != null) {
+                        cmds.add(alias);
+                    }
                 }
-                body.append("if (").append(condition).append(") ");
             } else {
                 String cmd = name.replace("/", "");
-                help.append("/").append(cmd).append(" ");
-                body.append("if ($2.equalsIgnoreCase(\"/").append(cmd).append("\")) ");
+                if (!disableSet.contains(cmd)) {
+                    cmds.add(cmd);
+                }
+                String alias = aliasMap.get(cmd);
+                if (alias != null) {
+                    cmds.add(alias);
+                }
             }
-            body.append("\n{ ").append(value).append("\nreturn \"success\"; }\n");
+            if (!cmds.isEmpty()) {
+                buildCommand(body, help, cmds, value);
+            }
         }
         // Add '/xhelp'
         body.append("if ($2.equalsIgnoreCase(\"/xhelp\")) { \nreturn \"Available commands: ").append(help.toString()).append("\"; }\n");
@@ -122,5 +142,73 @@ public class Commands {
         System.out.println(body.toString());
         System.out.println("\n[Commands] End: ---------------------------------------------------\n");*/
         return body.toString();
+    }
+
+    static void buildCommand(StringBuilder body, StringBuilder help, List<String> cmds, String src) {
+        if (cmds.size() == 1) {
+            String cmd = cmds.get(0);
+            help.append("/").append(cmd).append(" ");
+            body.append("if ($2.equalsIgnoreCase(\"/").append(cmd).append("\")) \n")
+                    .append("{ ").append(src).append(" return \"success\"; }\n");
+        } else if (cmds.size() > 1) {
+            StringBuilder condition = new StringBuilder();
+            for (int i = 0; i < cmds.size(); i++) {
+                String cmd = cmds.get(i).replace("/", "");
+                condition.append("$2.equalsIgnoreCase(\"/").append(cmd).append("\")");
+                if (i < cmds.size() - 1) {
+                    condition.append(" || ");
+                }
+                help.append("/").append(cmd).append(" ");
+            }
+            body.append("if (").append(condition).append(") \n")
+                    .append("{ ").append(src).append(" return \"success\"; }\n");
+        }
+    }
+
+    static Config readConfig() throws IOException {
+        String dir = System.getProperty("user.dir");
+        File file = new File(dir + "/code-mods/cmd.yml");
+        if (!file.exists()) {
+            file = new File(dir + "/cmd.yml");
+        }
+        if (!file.exists()) {
+            return new Config();
+        }
+        try (InputStream is = new FileInputStream(file)) {
+            Yaml yaml = new Yaml();
+            return yaml.loadAs(is, Config.class);
+        }
+    }
+
+    public static class Config {
+        private Map<String, String> alias;
+        private Set<String> disable;
+
+        public Config() {
+        }
+
+        public Config(Map<String, String> alias, Set<String> disable) {
+            this.alias = alias;
+            this.disable = disable;
+        }
+
+        public Map<String, String> getAlias() {
+            return alias;
+        }
+
+        public void setAlias(Map<String, String> alias) {
+            this.alias = alias;
+        }
+
+        public Set<String> getDisable() {
+            return disable;
+        }
+
+        public void setDisable(Set<String> disable) {
+            this.disable = disable;
+        }
+    }
+
+    public static void main(String[] args) {
     }
 }
