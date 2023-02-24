@@ -51,7 +51,7 @@ public class Main {
                         .insertAfter("" +
                                 "java.lang.Object _ve = com.threerings.projectx.dungeon.client.Q.class.getDeclaredField(\"_variableElapsed\").get(null);\n" +
                                 "if (_ve == null) {\n" +
-                                "    this._elapsed = 0F;\n" +
+                                (enableAutoAdv() ? "this._elapsed = 100F;\n" : "this._elapsed = 0F;\n") +
                                 "} else {\n" +
                                 "    this._elapsed = ((java.lang.Float) _ve).floatValue();\n" +
                                 "}\n"))
@@ -69,14 +69,14 @@ public class Main {
                 "java.lang.Class.forName(\"com.threerings.projectx.dungeon.client.Q\").getDeclaredField(\"_variableElapsed\").set(null, Float.valueOf(0F));\n");
     }
 
-    static void enableAutoAdv() throws Exception {
+    static boolean enableAutoAdv() throws Exception {
         String dir = System.getProperty("user.dir");
         File file = new File(dir + "/code-mods/autoadvance.yml");
         if (!file.exists()) {
             file = new File(dir + "/autoadvance.yml");
         }
         if (!file.exists()) {
-            return;
+            return false;
         }
         try (InputStream is = new FileInputStream(file)) {
             Yaml yaml = new Yaml();
@@ -84,9 +84,10 @@ public class Main {
             Map<String, String> autoadv = config.getAutoadv();
             if (autoadv != null && autoadv.getOrDefault("enabled", "false").equalsIgnoreCase("true")) {
                 System.out.println("Auto Advance On (Configured)");
-                java.lang.Class.forName("com.threerings.projectx.dungeon.client.Q").getDeclaredField("_variableElapsed").set(null, Float.valueOf(100F));
+                return true;
             }
         }
+        return false;
     }
 
     public static class Config {
