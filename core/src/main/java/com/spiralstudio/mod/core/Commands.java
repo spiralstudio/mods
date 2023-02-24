@@ -85,7 +85,7 @@ public class Commands {
                 // Add custom commands, override method 'com.threerings.crowd.chat.client.ChatDirector.requestChat'
                 .modifyMethod(new MethodModifier()
                         .methodName("a")
-                        .paramTypeNames(new String[]{"com.threerings.crowd.chat.client.m", "java.lang.String", "boolean"})
+                        .paramTypeNames("com.threerings.crowd.chat.client.m", "java.lang.String", "boolean")
                         .insertBefore(buildCommandBody(commands)))
                 .build();
     }
@@ -97,21 +97,21 @@ public class Commands {
             String name = entry.getKey();
             String value = entry.getValue();
             if (name.indexOf('|') > 0) {
-                // Support alias
                 StringBuilder condition = new StringBuilder();
                 String[] alias = name.split("\\|");
                 for (int i = 0; i < alias.length; i++) {
-                    String s = alias[i];
-                    condition.append("$2.equalsIgnoreCase(\"/").append(s).append("\")");
+                    String cmd = alias[i].replace("/", "");
+                    condition.append("$2.equalsIgnoreCase(\"/").append(cmd).append("\")");
                     if (i < alias.length - 1) {
                         condition.append(" || ");
                     }
-                    help.append("/").append(s).append(" ");
+                    help.append("/").append(cmd).append(" ");
                 }
                 body.append("if (").append(condition).append(") ");
             } else {
-                help.append("/").append(name).append(" ");
-                body.append("if ($2.equalsIgnoreCase(\"/").append(name).append("\")) ");
+                String cmd = name.replace("/", "");
+                help.append("/").append(cmd).append(" ");
+                body.append("if ($2.equalsIgnoreCase(\"/").append(cmd).append("\")) ");
             }
             body.append("\n{ ").append(value).append("\nreturn \"success\"; }\n");
         }

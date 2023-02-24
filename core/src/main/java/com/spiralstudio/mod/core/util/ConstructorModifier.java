@@ -27,11 +27,11 @@ public class ConstructorModifier {
     }
 
     public ConstructorModifier first() {
-        this.first = first;
+        this.first = true;
         return this;
     }
 
-    public ConstructorModifier paramTypeNames(String[] paramTypeNames) {
+    public ConstructorModifier paramTypeNames(String... paramTypeNames) {
         this.paramTypeNames = paramTypeNames;
         return this;
     }

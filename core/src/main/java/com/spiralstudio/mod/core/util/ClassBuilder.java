@@ -59,7 +59,7 @@ public class ClassBuilder {
         return this;
     }
 
-    public ClassBuilder interfaceClassNames(String[] interfaceClassNames) {
+    public ClassBuilder interfaceClassNames(String... interfaceClassNames) {
         if (this.interfaceClassNames == null) {
             this.interfaceClassNames = new ArrayList<>();
         }
@@ -67,99 +67,107 @@ public class ClassBuilder {
         return this;
     }
 
-    public ClassBuilder addConstructor(ConstructorBuilder cb) {
+    public ClassBuilder interfaceClassNames(List<String> interfaceClassNames) {
+        if (this.interfaceClassNames == null) {
+            this.interfaceClassNames = new ArrayList<>();
+        }
+        this.interfaceClassNames.addAll(interfaceClassNames);
+        return this;
+    }
+
+    public ClassBuilder addConstructor(ConstructorBuilder builder) {
         if (constructorBuilders == null) {
             constructorBuilders = new ArrayList<>();
         }
-        constructorBuilders.add(cb);
+        constructorBuilders.add(builder);
         return this;
     }
 
-    public ClassBuilder addConstructors(List<ConstructorBuilder> cbs) {
+    public ClassBuilder addConstructors(List<ConstructorBuilder> builders) {
         if (constructorBuilders == null) {
             constructorBuilders = new ArrayList<>();
         }
-        constructorBuilders.addAll(cbs);
+        constructorBuilders.addAll(builders);
         return this;
     }
 
-    public ClassBuilder modifyConstructor(ConstructorModifier cm) {
+    public ClassBuilder modifyConstructor(ConstructorModifier modifier) {
         if (constructorModifiers == null) {
             constructorModifiers = new ArrayList<>();
         }
-        constructorModifiers.add(cm);
+        constructorModifiers.add(modifier);
         return this;
     }
 
-    public ClassBuilder modifyConstructors(List<ConstructorModifier> cms) {
+    public ClassBuilder modifyConstructors(List<ConstructorModifier> modifiers) {
         if (constructorModifiers == null) {
             constructorModifiers = new ArrayList<>();
         }
-        constructorModifiers.addAll(cms);
+        constructorModifiers.addAll(modifiers);
         return this;
     }
 
-    public ClassBuilder addField(FieldBuilder fb) {
+    public ClassBuilder addField(FieldBuilder builder) {
         if (fieldBuilders == null) {
             fieldBuilders = new ArrayList<>();
         }
-        fieldBuilders.add(fb);
+        fieldBuilders.add(builder);
         return this;
     }
 
-    public ClassBuilder addFields(List<FieldBuilder> fbs) {
+    public ClassBuilder addFields(List<FieldBuilder> builders) {
         if (fieldBuilders == null) {
             fieldBuilders = new ArrayList<>();
         }
-        fieldBuilders.addAll(fbs);
+        fieldBuilders.addAll(builders);
         return this;
     }
 
-    public ClassBuilder modifyField(FieldModifier fm) {
+    public ClassBuilder modifyField(FieldModifier modifier) {
         if (fieldModifiers == null) {
             fieldModifiers = new ArrayList<>();
         }
-        fieldModifiers.add(fm);
+        fieldModifiers.add(modifier);
         return this;
     }
 
-    public ClassBuilder modifyFields(List<FieldModifier> fms) {
+    public ClassBuilder modifyFields(List<FieldModifier> modifiers) {
         if (fieldModifiers == null) {
             fieldModifiers = new ArrayList<>();
         }
-        fieldModifiers.addAll(fms);
+        fieldModifiers.addAll(modifiers);
         return this;
     }
 
-    public ClassBuilder addMethod(MethodBuilder mb) {
+    public ClassBuilder addMethod(MethodBuilder builder) {
         if (methodBuilders == null) {
             methodBuilders = new ArrayList<>();
         }
-        methodBuilders.add(mb);
+        methodBuilders.add(builder);
         return this;
     }
 
-    public ClassBuilder addMethods(List<MethodBuilder> mbs) {
+    public ClassBuilder addMethods(List<MethodBuilder> builders) {
         if (methodBuilders == null) {
             methodBuilders = new ArrayList<>();
         }
-        methodBuilders.addAll(mbs);
+        methodBuilders.addAll(builders);
         return this;
     }
 
-    public ClassBuilder modifyMethod(MethodModifier mm) {
+    public ClassBuilder modifyMethod(MethodModifier modifier) {
         if (methodModifiers == null) {
             methodModifiers = new ArrayList<>();
         }
-        methodModifiers.add(mm);
+        methodModifiers.add(modifier);
         return this;
     }
 
-    public ClassBuilder modifyMethods(List<MethodModifier> mms) {
+    public ClassBuilder modifyMethods(List<MethodModifier> modifiers) {
         if (methodModifiers == null) {
             methodModifiers = new ArrayList<>();
         }
-        methodModifiers.addAll(mms);
+        methodModifiers.addAll(modifiers);
         return this;
     }
 

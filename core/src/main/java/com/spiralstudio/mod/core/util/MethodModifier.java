@@ -31,7 +31,7 @@ public class MethodModifier {
         return this;
     }
 
-    public MethodModifier paramTypeNames(String[] paramTypeNames) {
+    public MethodModifier paramTypeNames(String... paramTypeNames) {
         this.paramTypeNames = paramTypeNames;
         return this;
     }

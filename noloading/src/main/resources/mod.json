@@ -1,9 +1,9 @@
 {
   "mod": {
-    "name": "No Loading",
+    "name": "No Loading Screen",
     "description": "Remove loading screen.",
     "author": "Leego",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "compatibility": "Yes"
   }
 }

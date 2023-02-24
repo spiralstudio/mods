@@ -23,7 +23,7 @@ public class ConstructorBuilder {
         return this;
     }
 
-    public ConstructorBuilder parameters(String[] parameters) {
+    public ConstructorBuilder parameters(String... parameters) {
         this.parameters = parameters;
         return this;
     }

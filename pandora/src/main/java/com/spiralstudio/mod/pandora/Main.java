@@ -41,7 +41,7 @@ public class Main {
         redefineVendorListPanelToIgnoreException();
         redefineShopDialogToCacheAndRenameTitle();
         redefinePlayerObjectToPreview();
-        addPandoraCommand();
+        addPandoraCommands();
     }
 
     static void addPreviewApplyListenerClass() throws Exception {
@@ -52,7 +52,7 @@ public class Main {
                         .typeName("com.threerings.projectx.util.A")
                         .modifiers(Modifier.PUBLIC | Modifier.TRANSIENT))
                 .addConstructor(new ConstructorBuilder()
-                        .parameters(new String[]{"com.threerings.projectx.util.A"})
+                        .parameters("com.threerings.projectx.util.A")
                         .body("{this._ctx=$1; System.out.println(\"PreviewApplyListener New\");}")
                         .modifiers(Modifier.PUBLIC))
                 .addMethod(new MethodBuilder()
@@ -212,7 +212,7 @@ public class Main {
                         .modifiers(Modifier.PUBLIC | Modifier.TRANSIENT | Modifier.VOLATILE))
                 .modifyMethod(new MethodModifier()
                         .methodName("c")
-                        .paramTypeNames(new String[]{"com.threerings.tudey.data.actor.Actor"})
+                        .paramTypeNames("com.threerings.tudey.data.actor.Actor")
                         .insertBefore("" +
                                 "if (this._configPreview != null) {\n" +
                                 "    if (!this._configPreview.equals(this._actor.ES())) {\n" +
@@ -332,7 +332,7 @@ public class Main {
                         .modifiers(Modifier.PUBLIC | Modifier.TRANSIENT))
                 .modifyMethod(new MethodModifier()
                         .methodName("cg")
-                        .paramTypeNames(new String[]{"int"})
+                        .paramTypeNames("int")
                         .body("{\n" +
                                 "    if (this._previewing && this._equipmentPreview != null) {\n" +
                                 "        com.threerings.projectx.item.data.LevelItem item = this._equipmentPreview[$1];\n" +
@@ -351,8 +351,8 @@ public class Main {
                 .build();
     }
 
-    static void addPandoraCommand() {
-        // Add a field for caching the window
+    static void addPandoraCommands() {
+        // Add a field to cache the window
         Commands.addField("_pandora", "com.threerings.opengl.gui.aE");
         // Add a command "/pandora"
         Commands.addCommand("pandora", "\n" +

@@ -69,7 +69,6 @@ public class Main {
         Commands.addCommand("aoe", doMission("axes_of_evil"));
         // Go to Shadowplay
         Commands.addCommand("sp", doMission("shadowplay"));
-
     }
 
     static String doMission(String name) {

@@ -42,14 +42,22 @@ public class Main {
                         .map(fieldName -> new FieldBuilder()
                                 .fieldName(fieldName)
                                 .typeName("float")
-                                .modifiers(java.lang.reflect.Modifier.PUBLIC))
+                                .modifiers(Modifier.PUBLIC))
                         .collect(Collectors.toList()))
                 .addConstructor(new ConstructorBuilder()
-                        .parameters(new String[]{"float", "float", "float", "float", "float", "float"})
-                        .body("{this._tx=$1;this._ty=$2;this._tz=$3;this._rx=$4;this._ry=$5;this._rz=$6;}")
+                        .parameters("float", "float", "float", "float", "float", "float")
+                        .body("{\n" +
+                                "    this._tx = $1;\n" +
+                                "    this._ty = $2;\n" +
+                                "    this._tz = $3;\n" +
+                                "    this._rx = $4;\n" +
+                                "    this._ry = $5;\n" +
+                                "    this._rz = $6;\n" +
+                                "}")
                         .modifiers(Modifier.PUBLIC))
                 .addMethod(new MethodBuilder()
-                        .body("public boolean apply(com.threerings.math.Transform3D o) {\n" +
+                        .body("" +
+                                "public boolean apply(com.threerings.math.Transform3D o) {\n" +
                                 "    o.mL().h(this._tx, this._ty, this._tz);\n" +
                                 "    com.threerings.math.Vector3f angles = o.mM().mv().h(this._rx, this._ry, this._rz);\n" +
                                 "    o.mM().e(angles.x,angles.y,angles.z);\n" +
@@ -63,15 +71,15 @@ public class Main {
                 .addField(new FieldBuilder()
                         .fieldName("_photomode")
                         .typeName("boolean")
-                        .modifiers(java.lang.reflect.Modifier.PUBLIC))
+                        .modifiers(Modifier.PUBLIC))
                 .addField(new FieldBuilder()
                         .fieldName("_oldt")
                         .typeName("com.threerings.math.Vector3f")
-                        .modifiers(java.lang.reflect.Modifier.PUBLIC))
+                        .modifiers(Modifier.PUBLIC))
                 .addField(new FieldBuilder()
                         .fieldName("_oldr")
                         .typeName("com.threerings.math.Vector3f")
-                        .modifiers(java.lang.reflect.Modifier.PUBLIC))
+                        .modifiers(Modifier.PUBLIC))
                 .addMethod(new MethodBuilder()
                         .body("" +
                                 "public void enablePhotoMode() {\n" +
@@ -171,99 +179,10 @@ public class Main {
                 .build();
     }
 
-/*public void enablePhotoMode() {
-    if (this._photomode) {
-        return;
-    }
-    this._photomode = true;
-    this._oldt = new com.threerings.math.Vector3f();
-    this._oldr = new com.threerings.math.Vector3f();
-}*/
-
-/*public void disablePhotoMode() {
-    if (!this._photomode) {
-        return;
-    }
-    float tx = -this._oldt.x;
-    float ty = -this._oldt.y;
-    float tz = -this._oldt.z;
-    float rx = -this._oldr.x;
-    float ry = -this._oldr.y;
-    float rz = -this._oldr.z;
-    this._photomode = false;
-    this._oldt = null;
-    this._oldr = null;
-    if (tx == 0 && ty == 0 && tz == 0 && rx == 0 && ry == 0 && rz == 0) {
-        return;
-    }
-    com.threerings.opengl.a.b.a offset = (com.threerings.opengl.a.b.a)
-            java.lang.Class.forName("com.spiralstudio.mod.camera.OffsetImpl")
-                    .getDeclaredConstructor(new Class[]{
-                            float.class, float.class, float.class,
-                            float.class, float.class, float.class})
-                    .newInstance(new java.lang.Object[]{
-                            java.lang.Float.valueOf((float) tx),
-                            java.lang.Float.valueOf((float) ty),
-                            java.lang.Float.valueOf((float) tz),
-                            java.lang.Float.valueOf((float) rx),
-                            java.lang.Float.valueOf((float) ry),
-                            java.lang.Float.valueOf((float) rz)
-                    });
-    this.addOffset(offset);
-}*/
-
-/*public void tickPhotoMode() {
-    if (!this._photomode) {
-        return;
-    }
-    float tx = 0;
-    float ty = 0;
-    float tz = 0;
-    float rx = 0;
-    float ry = 0;
-    float rz = 0;
-    int mx = org.lwjgl.input.Mouse.getDX();
-    int my = org.lwjgl.input.Mouse.getDY();
-    int mw = org.lwjgl.input.Mouse.getDWheel();
-    boolean lb = org.lwjgl.input.Mouse.isButtonDown(0);
-    boolean rb = org.lwjgl.input.Mouse.isButtonDown(1);
-    tz = mw * 0.02F;
-    if (lb) {
-        tx = -mx * 0.05F;
-        ty = -my * 0.05F;
-    } else if (rb) {
-        rz = mx * 0.005F;
-        rx = -my * 0.005F;
-    }
-    if (tx == 0 && ty == 0 && tz == 0 && rx == 0 && ry == 0 && rz == 0) {
-        return;
-    }
-    System.out.println("[CameraKeyListener] Left=" + lb + ", Right=" + rb + ", mx=" + Integer.toString(mx) + ", my=" + Integer.toString(my) + ", mw=" + Integer.toString(mw));
-    _oldt.x += tx;
-    _oldt.y += ty;
-    _oldt.z += tz;
-    _oldr.x += rx;
-    _oldr.y += ry;
-    _oldr.z += rz;
-    com.threerings.opengl.a.b.a offset = (com.threerings.opengl.a.b.a)
-            java.lang.Class.forName("com.spiralstudio.mod.camera.OffsetImpl")
-                    .getDeclaredConstructor(new Class[]{
-                            float.class, float.class, float.class,
-                            float.class, float.class, float.class})
-                    .newInstance(new java.lang.Object[]{
-                            java.lang.Float.valueOf((float) tx),
-                            java.lang.Float.valueOf((float) ty),
-                            java.lang.Float.valueOf((float) tz),
-                            java.lang.Float.valueOf((float) rx),
-                            java.lang.Float.valueOf((float) ry),
-                            java.lang.Float.valueOf((float) rz)
-                    });
-    this.addOffset(offset);
-}*/
-
     static void addCameraCommands() {
-        // Add a field for caching KeyListener
+        // Add a field to cache KeyListener
         Commands.addField("_cameraKeyListener", "com.threerings.opengl.gui.event.e");
+        // Add a field to record hud state
         Commands.addField("_cameraHudHidden", "boolean");
         // Add a command "/camon"
         Commands.addCommand("camon", "" +
