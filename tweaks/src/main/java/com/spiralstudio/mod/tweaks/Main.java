@@ -1,5 +1,6 @@
 package com.spiralstudio.mod.tweaks;
 
+import com.spiralstudio.mod.core.Registers;
 import com.spiralstudio.mod.core.util.ClassBuilder;
 import com.spiralstudio.mod.core.util.MethodModifier;
 
@@ -11,6 +12,10 @@ import com.spiralstudio.mod.core.util.MethodModifier;
  */
 public class Main {
     private static boolean mounted = false;
+
+    static {
+        Registers.add(Main.class);
+    }
 
     public static void mount() throws Exception {
         if (mounted) {
