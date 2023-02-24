@@ -5,8 +5,13 @@ import com.spiralstudio.mod.core.Registers;
 import com.spiralstudio.mod.core.util.ClassBuilder;
 import com.spiralstudio.mod.core.util.ConstructorModifier;
 import com.spiralstudio.mod.core.util.FieldBuilder;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Modifier;
+import java.util.Map;
 
 /**
  * Enter "/autoadvon" to enable.
@@ -29,6 +34,7 @@ public class Main {
         mounted = true;
         redefineElevatorChoiceWindow();
         addAutoAdvCommands();
+        enableAutoAdv();
     }
 
     /**
@@ -56,11 +62,43 @@ public class Main {
         // Add a command "/autoadvon"
         Commands.addCommand("autoadvon", "" +
                 "System.out.println(\"Auto Advance On\");\n" +
-                "java.lang.Class.forName(\"com.threerings.projectx.dungeon.client.Q\").getDeclaredField(\"_variableElapsed\").set(null,Float.valueOf(100F));\n");
+                "java.lang.Class.forName(\"com.threerings.projectx.dungeon.client.Q\").getDeclaredField(\"_variableElapsed\").set(null, Float.valueOf(100F));\n");
         // Add a command "/autoadvoff"
         Commands.addCommand("autoadvoff", "" +
                 "System.out.println(\"Auto Advance Off\");\n" +
-                "java.lang.Class.forName(\"com.threerings.projectx.dungeon.client.Q\").getDeclaredField(\"_variableElapsed\").set(null,Float.valueOf(0F));\n");
+                "java.lang.Class.forName(\"com.threerings.projectx.dungeon.client.Q\").getDeclaredField(\"_variableElapsed\").set(null, Float.valueOf(0F));\n");
+    }
+
+    static void enableAutoAdv() throws Exception {
+        String dir = System.getProperty("user.dir");
+        File file = new File(dir + "/code-mods/autoadvance.yml");
+        if (!file.exists()) {
+            file = new File(dir + "/autoadvance.yml");
+        }
+        if (!file.exists()) {
+            return;
+        }
+        try (InputStream is = new FileInputStream(file)) {
+            Yaml yaml = new Yaml();
+            Config config = yaml.loadAs(is, Config.class);
+            Map<String, String> autoadv = config.getAutoadv();
+            if (autoadv != null && autoadv.getOrDefault("enabled", "false").equalsIgnoreCase("true")) {
+                System.out.println("Auto Advance On (Configured)");
+                java.lang.Class.forName("com.threerings.projectx.dungeon.client.Q").getDeclaredField("_variableElapsed").set(null, Float.valueOf(100F));
+            }
+        }
+    }
+
+    public static class Config {
+        private Map<String, String> autoadv;
+
+        public Map<String, String> getAutoadv() {
+            return autoadv;
+        }
+
+        public void setAutoadv(Map<String, String> autoadv) {
+            this.autoadv = autoadv;
+        }
     }
 
     public static void main(String[] args) {
