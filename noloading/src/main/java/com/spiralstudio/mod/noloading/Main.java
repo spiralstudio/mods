@@ -84,33 +84,11 @@ public class Main {
     }
 
     static void redefineScriptRunner() throws Exception {
-        /*ClassBuilder.fromClass("com.threerings.opengl.gui.ay")
-                .modifyMethod(new MethodModifier()
-                        .methodName("runScript")
-                        .paramTypeNames("java.lang.String")
-                        .insertBefore("" +
-                                "{\n" +
-                                "    java.lang.String var1 = $1;\n" +
-                                "    com.threerings.opengl.gui.config.InterfaceScriptConfig var2 = (com.threerings.opengl.gui.config.InterfaceScriptConfig) this._ctx$2c98ba92.getConfigManager().c(com.threerings.opengl.gui.config.InterfaceScriptConfig.class, var1);\n" +
-                                "    System.out.println(\"runScript 0 \" + var1 + \", config=\" + var2.toString());\n" +
-                                "    this.runScript(var2);\n" +
-                                "}"))
-                .modifyMethod(new MethodModifier()
-                        .methodName("runScript")
-                        .paramTypeNames("com.threerings.opengl.gui.config.InterfaceScriptConfig")
-                        .insertBefore("" +
-                                "{\n" +
-                                "    com.threerings.opengl.gui.config.InterfaceScriptConfig var1 = $1;\n" +
-                                "    com.threerings.opengl.gui.config.InterfaceScriptConfig.Original original = var1.getOriginal(this._ctx$2c98ba92.getConfigManager());\n" +
-                                "    System.out.println(\"runScript 1 \" + var1.toString());\n" +
-                                "    System.out.println(\"runScript 2 \" + original.toString());\n" +
-                                "}"))
-                .build();*/
         ClassBuilder.fromClass("com.threerings.opengl.gui.ay$a")
                 .modifyMethod(new MethodModifier()
                         .methodName("tick")
                         .paramTypeNames("float")
-                        .insertBefore("$1=1000.0F;"))
+                        .insertBefore("$1 += 1000.0F;"))
                 .build();
     }
 

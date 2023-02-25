@@ -5,6 +5,7 @@ import com.spiralstudio.mod.core.Registers;
 import com.spiralstudio.mod.core.util.ClassBuilder;
 import com.spiralstudio.mod.core.util.ConstructorModifier;
 import com.spiralstudio.mod.core.util.FieldBuilder;
+import com.spiralstudio.mod.core.util.MethodModifier;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -33,6 +34,7 @@ public class Main {
         }
         mounted = true;
         redefineElevatorChoiceWindow();
+        redefineEndOfLevelWindow();
         addAutoAdvCommands();
         enableAutoAdv();
     }
@@ -55,6 +57,19 @@ public class Main {
                                 "} else {\n" +
                                 "    this._elapsed = ((java.lang.Float) _ve).floatValue();\n" +
                                 "}\n"))
+                .modifyMethod(new MethodModifier()
+                        .methodName("tick")
+                        .paramTypeNames("float")
+                        .insertBefore("$1 += 1000.0F;"))
+                .build();
+    }
+
+    static void redefineEndOfLevelWindow() throws Exception {
+        ClassBuilder.fromClass("com.threerings.projectx.dungeon.client.EndOfLevelWindow")
+                .modifyMethod(new MethodModifier()
+                        .methodName("tick")
+                        .paramTypeNames("float")
+                        .insertBefore("$1 += 1000.0F;"))
                 .build();
     }
 
