@@ -46,6 +46,7 @@
         <module>camera</module>
         <module>autoadvance</module>
         <module>noloading</module>
+        <module>forceautotarget</module>
         <module>tweaks</module>
         <!--<module>kozmabot</module>-->
         <module>test</module>
