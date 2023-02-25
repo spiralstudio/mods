@@ -42,7 +42,6 @@ public class Main {
                         .methodName("vK") // fadeOut
                         .body("" +
                                 "{\n" +
-                                "System.out.println(\"fadeOut\"+Long.toString(System.currentTimeMillis()));" +
                                 "    ((com.threerings.opengl.gui.Label) this.getComponent(\"progress\")).setText(\"\");\n" +
                                 "    this._ctx.xb().getStreamGain().value = 0.0F;\n" +
                                 "    if (this.afM) {\n" +
@@ -54,9 +53,6 @@ public class Main {
                                 "    this._ctx.xa().addTickParticipant(new com.threerings.projectx.client.bj(this,\n" +
                                 "            new Object[]{\"fadeBackground\", Float.valueOf(0.0F), \"linger\", Float.valueOf(0.0F), \"fadeTitle\", Float.valueOf(0.0F)}));\n" +
                                 "}"))
-                .modifyMethod(new MethodModifier()
-                        .methodName("vL") // fadeIn
-                        .insertBefore("System.out.println(\"fadeIn\"+Long.toString(System.currentTimeMillis()));"))
                 .build();
     }
 
@@ -67,7 +63,6 @@ public class Main {
                         .paramTypeNames("java.lang.Runnable")
                         .insertBefore("" +
                                 "{\n" +
-                                "    System.out.println(\"Look At me\" + Long.toString(System.currentTimeMillis()));\n" +
                                 "    if (this.alY.isAdded()) {\n" +
                                 "        this.alY.saveState();\n" +
                                 "        this.alY.uH();\n" +
