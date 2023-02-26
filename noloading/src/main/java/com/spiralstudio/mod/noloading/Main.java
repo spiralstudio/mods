@@ -17,7 +17,7 @@ public class Main {
         }
         mounted = true;
         redefineLoadingWindow();
-        redefineProjectXSceneView();
+        //redefineProjectXSceneView();
         redefineScriptRunner();
     }
 
