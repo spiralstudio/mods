@@ -188,23 +188,17 @@ public class Commands {
         // Read custom configuration
         LootMsgConfig config = readConfig("lootmsg", LootMsgConfig.class);
         if (config == null) {
-            System.out.println("no lootmsg");
             return "";
         }
         LootMsgConfig.Filter type = config.getType();
         LootMsgConfig.Filter name = config.getName();
         if (type == null && name == null) {
-            System.out.println("no lootmsg");
             return "";
         }
-        String s1 = buildLootMsgStringArray(type.getExcluded());
-        String s2 = buildLootMsgStringArray(type.getIncluded());
-        String s3 = buildLootMsgStringArray(name.getExcluded());
-        String s4 = buildLootMsgStringArray(name.getIncluded());
-        System.out.println("s1" + s1);
-        System.out.println("s2" + s2);
-        System.out.println("s3" + s3);
-        System.out.println("s4" + s4);
+        String s1 = buildLootMsgStringArray(type != null ? type.getExcluded() : null);
+        String s2 = buildLootMsgStringArray(type != null ? type.getIncluded() : null);
+        String s3 = buildLootMsgStringArray(name != null ? name.getExcluded() : null);
+        String s4 = buildLootMsgStringArray(name != null ? name.getIncluded() : null);
         return "if (\"crowd.chat\".equals($1.getName())) {\n" +
                 "    if (this.__lootMsgExcludedTypes == null) {\n" +
                 "        synchronized (this) {\n" +
@@ -227,33 +221,27 @@ public class Commands {
                 "        }\n" +
                 "    }\n" +
                 "    com.threerings.crowd.chat.data.ChatMessage _message = (com.threerings.crowd.chat.data.ChatMessage) $1.getArgs()[0];\n" +
-                "    System.out.println(\"messageReceived event:\" + $1.toString());\n" +
-                "    System.out.println(\"messageReceived ChatMessage:\" + _message.toString());\n" +
                 "    if (_message.bundle.equals(\"dungeon\") && _message.message.startsWith(\"m.item_awarded\")) {\n" +
                 "        String[] _args = _message.message.split(\"\\\\|\");\n" +
                 "        if (_args.length == 3) {\n" +
                 "            com.threerings.util.N _bundle = this._ctx.getMessageManager().dI(_message.bundle);\n" +
                 "            if (_bundle != null) {\n" +
-                "                boolean checkName = true;\n" +
-                "                String itemType = _bundle.bu(_args[1]).toLowerCase();\n" +
-                "                System.out.println(\"messageReceived itemType:\" + itemType);\n" +
-                "                if (itemType != null) {\n" +
-                "                    if (this.__lootMsgIncludedTypes.contains(itemType)) {\n" +
-                "                        checkName = false;\n" +
-                "                    } else if (this.__lootMsgExcludedTypes.contains(itemType)) {\n" +
-                "                        System.out.println(\"messageReceived itemType removed!!!!!:\" + itemType);\n" +
+                "                boolean checkNext = true;\n" +
+                "                String itemType = _bundle.bu(_args[1]);\n" +
+                "                String itemName = _bundle.bu(_args[2]);\n" +
+                "                if (itemName != null) {\n" +
+                "                    itemName = itemName.toLowerCase();\n" +
+                "                    if (this.__lootMsgIncludedNames.contains(itemName)) {\n" +
+                "                        checkNext = false;\n" +
+                "                    } else if (this.__lootMsgExcludedNames.contains(itemName)) {\n" +
                 "                        return;\n" +
                 "                    }\n" +
                 "                }\n" +
-                "                if (checkName) {\n" +
-                "                    String itemName = _bundle.bu(_args[2]);\n" +
-                "                    System.out.println(\"messageReceived itemName:\" + itemName);\n" +
-                "                    if (itemName != null) {\n" +
-                "                        if (this.__lootMsgIncludedNames.contains(itemName)) {\n" +
-                "                        } else if (this.__lootMsgExcludedNames.contains(itemName)) {\n" +
-                "                        System.out.println(\"messageReceived itemName removed!!!!!:\" + itemName);\n" +
-                "                            return;\n" +
-                "                        }\n" +
+                "                if (checkNext && itemType != null) {\n" +
+                "                    itemType = itemType.toLowerCase();\n" +
+                "                    if (this.__lootMsgIncludedTypes.contains(itemType)) {\n" +
+                "                    } else if (this.__lootMsgExcludedTypes.contains(itemType)) {\n" +
+                "                        return;\n" +
                 "                    }\n" +
                 "                }\n" +
                 "            }\n" +
@@ -272,7 +260,6 @@ public class Commands {
         }
         sb.deleteCharAt(sb.length() - 1);
         sb.append("}");
-        System.out.println(sb);
         return sb.toString();
     }
 
