@@ -20,8 +20,9 @@ public class Main {
             return;
         }
         mounted = true;
-        testMonsterHudBar();
-        testAdminCommand();
+        //testMonsterHudBar();
+        //testAdminCommand();
+        testMap();
     }
 
     static void testMonsterHudBar() throws Exception {
@@ -47,6 +48,28 @@ public class Main {
                 .modifyMethod(new MethodModifier()
                         .methodName("iD")
                         .body("{return true;}"))
+                .build();
+    }
+
+    static void testMap() throws Exception {
+        // Show monsters on map
+        ClassBuilder.fromClass("com.threerings.projectx.map.client.a")
+                .modifyConstructor(new ConstructorModifier()
+                        .paramTypeNames("com.threerings.tudey.util.m", "com.threerings.tudey.a.k")
+                        .insertAfter("" +
+                                "this.aMi.dY(ProjectXCodes.avh | MaskEditor.n(\"collision\", \"player\") | MaskEditor.n(\"collision\", \"player_barrier\") | MaskEditor.n(\"collision\", \"monster\"));\n"))
+                .build();
+        // Zoom map
+        ClassBuilder.fromClass("com.threerings.projectx.map.client.c")
+                .modifyMethod(new MethodModifier()
+                        .methodName("tick")
+                        .insertAfter("" +
+                                "if (this.aMq != null) {\n" +
+                                "    com.threerings.opengl.gui.e.c var3 = this.aMq.getPreferredSize(-1, -1);\n" +
+                                "    var3.height = this.aqE.getRoot().getDisplayHeight() * 2;\n" +
+                                "    var3.width = this.aqE.getRoot().getDisplayWidth() * 2;\n" +
+                                "    this.aMq.setPreferredSize(var3);\n" +
+                                "}"))
                 .build();
     }
 
