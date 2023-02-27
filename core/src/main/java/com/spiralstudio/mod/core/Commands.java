@@ -220,28 +220,31 @@ public class Commands {
                 "            }\n" +
                 "        }\n" +
                 "    }\n" +
-                "    com.threerings.crowd.chat.data.ChatMessage _message = (com.threerings.crowd.chat.data.ChatMessage) $1.getArgs()[0];\n" +
-                "    if (_message.bundle.equals(\"dungeon\") && _message.message.startsWith(\"m.item_awarded\")) {\n" +
-                "        String[] _args = _message.message.split(\"\\\\|\");\n" +
-                "        if (_args.length == 3) {\n" +
-                "            com.threerings.util.N _bundle = this._ctx.getMessageManager().dI(_message.bundle);\n" +
-                "            if (_bundle != null) {\n" +
-                "                boolean checkNext = true;\n" +
-                "                String itemType = _bundle.bu(_args[1]);\n" +
-                "                String itemName = _bundle.bu(_args[2]);\n" +
-                "                if (itemName != null) {\n" +
-                "                    itemName = itemName.toLowerCase();\n" +
-                "                    if (this.__lootMsgIncludedNames.contains(itemName)) {\n" +
-                "                        checkNext = false;\n" +
-                "                    } else if (this.__lootMsgExcludedNames.contains(itemName)) {\n" +
-                "                        return;\n" +
+                "    java.lang.Object[] _args = $1.getArgs();\n" +
+                "    if (_args != null && _args.length > 0 && _args[0] != null && _args[0] instanceof com.threerings.crowd.chat.data.ChatMessage) {\n" +
+                "        com.threerings.crowd.chat.data.ChatMessage _message = (com.threerings.crowd.chat.data.ChatMessage) _args[0];\n" +
+                "        if (_message.bundle != null && _message.message != null && _message.bundle.equals(\"dungeon\") && _message.message.startsWith(\"m.item_awarded\")) {\n" +
+                "            String[] _args = _message.message.split(\"\\\\|\");\n" +
+                "            if (_args.length == 3) {\n" +
+                "                com.threerings.util.N _bundle = this._ctx.getMessageManager().dI(_message.bundle);\n" +
+                "                if (_bundle != null) {\n" +
+                "                    boolean checkNext = true;\n" +
+                "                    String itemType = _bundle.bu(_args[1]);\n" +
+                "                    String itemName = _bundle.bu(_args[2]);\n" +
+                "                    if (itemName != null) {\n" +
+                "                        itemName = itemName.toLowerCase();\n" +
+                "                        if (this.__lootMsgIncludedNames.contains(itemName)) {\n" +
+                "                            checkNext = false;\n" +
+                "                        } else if (this.__lootMsgExcludedNames.contains(itemName)) {\n" +
+                "                            return;\n" +
+                "                        }\n" +
                 "                    }\n" +
-                "                }\n" +
-                "                if (checkNext && itemType != null) {\n" +
-                "                    itemType = itemType.toLowerCase();\n" +
-                "                    if (this.__lootMsgIncludedTypes.contains(itemType)) {\n" +
-                "                    } else if (this.__lootMsgExcludedTypes.contains(itemType)) {\n" +
-                "                        return;\n" +
+                "                    if (checkNext && itemType != null) {\n" +
+                "                        itemType = itemType.toLowerCase();\n" +
+                "                        if (this.__lootMsgIncludedTypes.contains(itemType)) {\n" +
+                "                        } else if (this.__lootMsgExcludedTypes.contains(itemType)) {\n" +
+                "                            return;\n" +
+                "                        }\n" +
                 "                    }\n" +
                 "                }\n" +
                 "            }\n" +
