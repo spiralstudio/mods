@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -81,8 +83,6 @@ public class Commands {
         if (fields.isEmpty() && commands.isEmpty()) {
             return;
         }
-        // Read custom configuration
-        Config config = readConfig();
         // Override class 'com.threerings.crowd.chat.client.ChatDirector'
         ClassBuilder.fromClass("com.threerings.crowd.chat.client.a")
                 // Add custom fields
@@ -93,17 +93,36 @@ public class Commands {
                                 .typeName(e.getValue())
                                 .modifiers(Modifier.PUBLIC | Modifier.TRANSIENT))
                         .collect(Collectors.toList()))
+                // Add loot msg fields
+                .addFields(Arrays.stream(new String[]{
+                                "__lootMsgExcludedTypes",
+                                "__lootMsgIncludedTypes",
+                                "__lootMsgExcludedNames",
+                                "__lootMsgIncludedNames"})
+                        .map(e -> new FieldBuilder()
+                                .fieldName(e)
+                                .typeName("java.util.HashSet")
+                                .modifiers(Modifier.PUBLIC | Modifier.TRANSIENT | Modifier.VOLATILE))
+                        .collect(Collectors.toList()))
                 // Add custom commands, override method 'com.threerings.crowd.chat.client.ChatDirector.requestChat'
                 .modifyMethod(new MethodModifier()
                         .methodName("a")
                         .paramTypeNames("com.threerings.crowd.chat.client.m", "java.lang.String", "boolean")
-                        .insertBefore(buildCommands(commands, config)))
+                        .insertBefore(buildCommands(commands)))
+                // Filter out loot messages
+                .modifyMethod(new MethodModifier()
+                        .methodName("a")
+                        .paramTypeNames("com.threerings.presents.dobj.MessageEvent")
+                        .insertBefore(buildLootMsgFilter()))
                 .build();
     }
 
-    static String buildCommands(Map<String, String> commands, Config config) {
-        Map<String, String> aliasMap = config.getAlias() != null ? config.getAlias() : Collections.emptyMap();
-        Set<String> disableSet = config.getDisable() != null ? config.getDisable() : Collections.emptySet();
+    static String buildCommands(Map<String, String> commands) throws Exception {
+        // Read custom configuration
+        CmdConfig config = readConfig("cmd", CmdConfig.class);
+        Map<String, String> aliasMap = config != null && config.getAlias() != null ? config.getAlias() : Collections.emptyMap();
+        Set<String> disableSet = config != null && config.getDisable() != null ? config.getDisable() : Collections.emptySet();
+        // Build commands body
         StringBuilder body = new StringBuilder();
         StringBuilder help = new StringBuilder();
         for (Map.Entry<String, String> entry : commands.entrySet()) {
@@ -165,29 +184,121 @@ public class Commands {
         }
     }
 
-    static Config readConfig() throws IOException {
+    static String buildLootMsgFilter() throws Exception {
+        // Read custom configuration
+        LootMsgConfig config = readConfig("lootmsg", LootMsgConfig.class);
+        if (config == null) {
+            System.out.println("no lootmsg");
+            return "";
+        }
+        LootMsgConfig.Filter type = config.getType();
+        LootMsgConfig.Filter name = config.getName();
+        if (type == null && name == null) {
+            System.out.println("no lootmsg");
+            return "";
+        }
+        String s1 = buildLootMsgStringArray(type.getExcluded());
+        String s2 = buildLootMsgStringArray(type.getIncluded());
+        String s3 = buildLootMsgStringArray(name.getExcluded());
+        String s4 = buildLootMsgStringArray(name.getIncluded());
+        System.out.println("s1" + s1);
+        System.out.println("s2" + s2);
+        System.out.println("s3" + s3);
+        System.out.println("s4" + s4);
+        return "if (\"crowd.chat\".equals($1.getName())) {\n" +
+                "    if (this.__lootMsgExcludedTypes == null) {\n" +
+                "        synchronized (this) {\n" +
+                "            if (this.__lootMsgExcludedTypes == null) {\n" +
+                "                this.__lootMsgExcludedTypes = new java.util.HashSet();\n" +
+                "                java.util.Collections.addAll(this.__lootMsgExcludedTypes, ((Object[]) " + s1 + "));\n" +
+                "            }\n" +
+                "            if (this.__lootMsgIncludedTypes == null) {\n" +
+                "                this.__lootMsgIncludedTypes = new java.util.HashSet();\n" +
+                "                java.util.Collections.addAll(this.__lootMsgIncludedTypes, ((Object[]) " + s2 + "));\n" +
+                "            }\n" +
+                "            if (this.__lootMsgExcludedNames == null) {\n" +
+                "                this.__lootMsgExcludedNames = new java.util.HashSet();\n" +
+                "                java.util.Collections.addAll(this.__lootMsgExcludedNames, ((Object[]) " + s3 + "));\n" +
+                "            }\n" +
+                "            if (this.__lootMsgIncludedNames == null) {\n" +
+                "                this.__lootMsgIncludedNames = new java.util.HashSet();\n" +
+                "                java.util.Collections.addAll(this.__lootMsgIncludedNames, ((Object[]) " + s4 + "));\n" +
+                "            }\n" +
+                "        }\n" +
+                "    }\n" +
+                "    com.threerings.crowd.chat.data.ChatMessage _message = (com.threerings.crowd.chat.data.ChatMessage) $1.getArgs()[0];\n" +
+                "    System.out.println(\"messageReceived event:\" + $1.toString());\n" +
+                "    System.out.println(\"messageReceived ChatMessage:\" + _message.toString());\n" +
+                "    if (_message.bundle.equals(\"dungeon\") && _message.message.startsWith(\"m.item_awarded\")) {\n" +
+                "        String[] _args = _message.message.split(\"\\\\|\");\n" +
+                "        if (_args.length == 3) {\n" +
+                "            com.threerings.util.N _bundle = this._ctx.getMessageManager().dI(_message.bundle);\n" +
+                "            if (_bundle != null) {\n" +
+                "                boolean checkName = true;\n" +
+                "                String itemType = _bundle.bu(_args[1]).toLowerCase();\n" +
+                "                System.out.println(\"messageReceived itemType:\" + itemType);\n" +
+                "                if (itemType != null) {\n" +
+                "                    if (this.__lootMsgIncludedTypes.contains(itemType)) {\n" +
+                "                        checkName = false;\n" +
+                "                    } else if (this.__lootMsgExcludedTypes.contains(itemType)) {\n" +
+                "                        System.out.println(\"messageReceived itemType removed!!!!!:\" + itemType);\n" +
+                "                        return;\n" +
+                "                    }\n" +
+                "                }\n" +
+                "                if (checkName) {\n" +
+                "                    String itemName = _bundle.bu(_args[2]);\n" +
+                "                    System.out.println(\"messageReceived itemName:\" + itemName);\n" +
+                "                    if (itemName != null) {\n" +
+                "                        if (this.__lootMsgIncludedNames.contains(itemName)) {\n" +
+                "                        } else if (this.__lootMsgExcludedNames.contains(itemName)) {\n" +
+                "                        System.out.println(\"messageReceived itemName removed!!!!!:\" + itemName);\n" +
+                "                            return;\n" +
+                "                        }\n" +
+                "                    }\n" +
+                "                }\n" +
+                "            }\n" +
+                "        }\n" +
+                "    }\n" +
+                "}";
+    }
+
+    static String buildLootMsgStringArray(Collection<String> c) {
+        if (c == null) {
+            return "new String[0]";
+        }
+        StringBuilder sb = new StringBuilder("new String[]{");
+        for (String s : c) {
+            sb.append("\"").append(s.toLowerCase()).append("\",");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        sb.append("}");
+        System.out.println(sb);
+        return sb.toString();
+    }
+
+    static <T> T readConfig(String nane, Class<T> clazz) throws IOException {
         String dir = System.getProperty("user.dir");
-        File file = new File(dir + "/code-mods/cmd.yml");
+        File file = new File(dir + "/code-mods/" + nane + ".yml");
         if (!file.exists()) {
-            file = new File(dir + "/cmd.yml");
+            file = new File(dir + "/" + nane + ".yml");
         }
         if (!file.exists()) {
-            return new Config();
+            return null;
         }
         try (InputStream is = new FileInputStream(file)) {
             Yaml yaml = new Yaml();
-            return yaml.loadAs(is, Config.class);
+            return yaml.loadAs(is, clazz);
         }
     }
 
-    public static class Config {
+    public static class CmdConfig {
         private Map<String, String> alias;
         private Set<String> disable;
 
-        public Config() {
+        public CmdConfig() {
         }
 
-        public Config(Map<String, String> alias, Set<String> disable) {
+        public CmdConfig(Map<String, String> alias, Set<String> disable) {
             this.alias = alias;
             this.disable = disable;
         }
@@ -206,6 +317,64 @@ public class Commands {
 
         public void setDisable(Set<String> disable) {
             this.disable = disable;
+        }
+    }
+
+    public static class LootMsgConfig {
+        private Filter type;
+        private Filter name;
+
+        public LootMsgConfig() {
+        }
+
+        public LootMsgConfig(Filter type, Filter name) {
+            this.type = type;
+            this.name = name;
+        }
+
+        public Filter getType() {
+            return type;
+        }
+
+        public void setType(Filter type) {
+            this.type = type;
+        }
+
+        public Filter getName() {
+            return name;
+        }
+
+        public void setName(Filter name) {
+            this.name = name;
+        }
+
+        public static class Filter {
+            private Set<String> excluded;
+            private Set<String> included;
+
+            public Filter() {
+            }
+
+            public Filter(Set<String> excluded, Set<String> included) {
+                this.excluded = excluded;
+                this.included = included;
+            }
+
+            public Set<String> getExcluded() {
+                return excluded;
+            }
+
+            public void setExcluded(Set<String> excluded) {
+                this.excluded = excluded;
+            }
+
+            public Set<String> getIncluded() {
+                return included;
+            }
+
+            public void setIncluded(Set<String> included) {
+                this.included = included;
+            }
         }
     }
 

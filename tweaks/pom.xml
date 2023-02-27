@@ -22,20 +22,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.threerings</groupId>
-            <artifactId>projectx-config</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/../lib/projectx-config.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.threerings</groupId>
-            <artifactId>projectx-pcode</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/../lib/projectx-pcode.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>com.spiralstudio.mod</groupId>
             <artifactId>core</artifactId>
             <scope>provided</scope>
