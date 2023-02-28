@@ -1,6 +1,7 @@
 package com.spiralstudio.mod.lootfilter;
 
 import com.spiralstudio.mod.core.Configs;
+import com.spiralstudio.mod.core.Registers;
 import com.spiralstudio.mod.core.util.ClassBuilder;
 import com.spiralstudio.mod.core.util.FieldBuilder;
 import com.spiralstudio.mod.core.util.MethodBuilder;
@@ -19,6 +20,10 @@ import java.util.stream.Collectors;
 public class Main {
     private static boolean mounted = false;
 
+    static {
+        Registers.add(Main.class);
+    }
+
     public static void mount() throws Exception {
         if (mounted) {
             return;
@@ -28,7 +33,7 @@ public class Main {
         redefineMessageEvent(config);
     }
 
-    static void redefineMessageEvent(Config config) {
+    static void redefineMessageEvent(Config config) throws Exception {
         if (config == null || config.getMessage() == null) {
             return;
         }
@@ -58,16 +63,18 @@ public class Main {
                         .methodName("aO")
                         .paramTypeNames("java.lang.Object")
                         .insertBefore("" +
-                                "if ($1 instanceof com.threerings.presents.dobj.j) {\n" +
-                                "    if (this.hitLootMessage()) {\n" +
+                                "if ($1 instanceof com.threerings.crowd.chat.client.a) {\n" +
+                                "    com.threerings.crowd.chat.client.a _cd = (com.threerings.crowd.chat.client.a) $1;\n" +
+                                "    java.lang.reflect.Field _ctxField = com.threerings.crowd.chat.client.a.class.getDeclaredField(\"_ctx\");\n" +
+                                "    _ctxField.setAccessible(true);\n" +
+                                "    if (this.hitLootMessage((com.threerings.presents.b.b) _ctxField.get(_cd))) {\n" +
                                 "        return;\n" +
                                 "    }\n" +
-                                "    ((com.threerings.presents.dobj.j) $1).a(this);\n" +
                                 "}"))
                 // Filter out loot messages
                 .addMethod(new MethodBuilder()
                         .body("" +
-                                "public boolean hitLootMessage(com.threerings.presents.dobj.MessageEvent event) {\n" +
+                                "public boolean hitLootMessage(com.threerings.presents.b.b ctx) {\n" +
                                 "    com.threerings.presents.dobj.MessageEvent event = this;\n" +
                                 "    if (!\"crowd.chat\".equals(event.getName())) {\n" +
                                 "        return false;\n" +
@@ -98,7 +105,7 @@ public class Main {
                                 "    if (ss.length != 3) {\n" +
                                 "        return false;\n" +
                                 "    }\n" +
-                                "    com.threerings.util.N _bundle = this._ctx.getMessageManager().dI(_message.bundle);\n" +
+                                "    com.threerings.util.N _bundle = ctx.getMessageManager().dI(_message.bundle);\n" +
                                 "    if (_bundle == null) {\n" +
                                 "        return false;\n" +
                                 "    }\n" +
@@ -121,7 +128,8 @@ public class Main {
                                 "        }\n" +
                                 "    }\n" +
                                 "    return true;\n" +
-                                "}"));
+                                "}"))
+                .build();
     }
 
     static String buildLootStringArray(Collection<String> c) {
