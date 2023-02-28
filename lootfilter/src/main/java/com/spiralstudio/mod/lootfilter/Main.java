@@ -65,7 +65,7 @@ public class Main {
                         .insertBefore("" +
                                 "if ($1 instanceof com.threerings.crowd.chat.client.a) {\n" +
                                 "    com.threerings.crowd.chat.client.a _cd = (com.threerings.crowd.chat.client.a) $1;\n" +
-                                "    java.lang.reflect.Field _ctxField = com.threerings.crowd.chat.client.a.class.getDeclaredField(\"_ctx\");\n" +
+                                "    java.lang.reflect.Field _ctxField = com.threerings.presents.client.a.class.getDeclaredField(\"_ctx\");\n" +
                                 "    _ctxField.setAccessible(true);\n" +
                                 "    if (this.hitLootMessage((com.threerings.presents.b.b) _ctxField.get(_cd))) {\n" +
                                 "        return;\n" +
@@ -114,17 +114,17 @@ public class Main {
                                 "    if (itemName != null) {\n" +
                                 "        itemName = itemName.toLowerCase();\n" +
                                 "        if (__lootIncludedNames.contains(itemName)) {\n" +
-                                "            return true;\n" +
-                                "        } else if (__lootExcludedNames.contains(itemName)) {\n" +
                                 "            return false;\n" +
+                                "        } else if (__lootExcludedNames.contains(itemName)) {\n" +
+                                "            return true;\n" +
                                 "        }\n" +
                                 "    }\n" +
                                 "    if (itemType != null) {\n" +
                                 "        itemType = itemType.toLowerCase();\n" +
                                 "        if (__lootIncludedTypes.contains(itemType)) {\n" +
-                                "            return true;\n" +
-                                "        } else if (__lootExcludedTypes.contains(itemType)) {\n" +
                                 "            return false;\n" +
+                                "        } else if (__lootExcludedTypes.contains(itemType)) {\n" +
+                                "            return true;\n" +
                                 "        }\n" +
                                 "    }\n" +
                                 "    return true;\n" +
