@@ -1,5 +1,13 @@
+# Add aliases (will not remove the original commands)
 alias:
-  pandora: pdr
+  autoadvon: aon
+  autoadvoff: aoff
+# Disable commands
 disable:
-  - pandora
-
+  - autoadvon
+  - autoadvoff
+  - readyroom
+  - townsquare
+  - bazaar
+  - garrison
+  - arcade

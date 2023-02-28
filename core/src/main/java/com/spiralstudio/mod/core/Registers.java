@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author Leego Yih
  */
-public class Registers {
+public final class Registers {
     private static final List<Class<?>> classes = new ArrayList<>();
 
     /**

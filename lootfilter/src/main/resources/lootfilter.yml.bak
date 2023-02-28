@@ -1,0 +1,38 @@
+pickup:
+message:
+  type:
+    # Filter out the following item types
+    excluded:
+      - Rarity
+      - Material
+      - Mineral
+  name:
+    # Keep the following item names
+    included:
+      - Flawed Orb of Alchemy
+      - Simple Orb of Alchemy
+      - Advanced Orb of Alchemy
+      - Elite Orb of Alchemy
+      - Eternal Orb of Alchemy
+      - Radiant Fire Crystal
+      - Spark of Life
+      - Golden Slime Coin
+      - Kat Tribe Fetish
+      - Book of Dark Rituals
+      - Obsidian Shard
+      - Binding Essence
+      - Perplexing Element
+      - Lump of Coal
+      - Spoiled Treat
+      - Bottomless Stocking
+      - Razor Ribbon
+      - Indestructible Giftwrap
+      - Ancient Shell
+      - Fiendish Amu Glyph
+      - Fiendish Nok Glyph
+      - Fiendish Sol Glyph
+      - Fiendish Tor Glyph
+      - Fiendish Ur Glyph
+      - Fiendish ID Card
+      - Wicked Whisker
+      - Punkin Sprout

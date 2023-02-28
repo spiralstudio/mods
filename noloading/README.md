@@ -1,3 +1,3 @@
 # NoLoading
 
-Remove loading screen.
+Hide loading screen.

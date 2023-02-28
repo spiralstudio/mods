@@ -1,7 +1,7 @@
 {
   "mod": {
-    "name": "No Loading Screen",
-    "description": "Hide loading screen.",
+    "name": "Loot Filter",
+    "description": "Hide loot messages and pickup sprites.",
     "author": "Leego",
     "version": "1.0.0",
     "compatibility": "Yes"

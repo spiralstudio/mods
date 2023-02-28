@@ -1,18 +1,14 @@
 package com.spiralstudio.mod.autoadvance;
 
 import com.spiralstudio.mod.core.Commands;
+import com.spiralstudio.mod.core.Configs;
 import com.spiralstudio.mod.core.Registers;
 import com.spiralstudio.mod.core.util.ClassBuilder;
 import com.spiralstudio.mod.core.util.ConstructorModifier;
 import com.spiralstudio.mod.core.util.FieldBuilder;
 import com.spiralstudio.mod.core.util.MethodModifier;
-import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.lang.reflect.Modifier;
-import java.util.Map;
 
 /**
  * Enter "/autoadvon" to enable.
@@ -85,35 +81,31 @@ public class Main {
     }
 
     static boolean enableAutoAdv() throws Exception {
-        String dir = System.getProperty("user.dir");
-        File file = new File(dir + "/code-mods/autoadvance.yml");
-        if (!file.exists()) {
-            file = new File(dir + "/autoadvance.yml");
-        }
-        if (!file.exists()) {
-            return false;
-        }
-        try (InputStream is = new FileInputStream(file)) {
-            Yaml yaml = new Yaml();
-            Config config = yaml.loadAs(is, Config.class);
-            Map<String, String> autoadv = config.getAutoadv();
-            if (autoadv != null && autoadv.getOrDefault("enabled", "false").equalsIgnoreCase("true")) {
-                System.out.println("Auto Advance On (Configured)");
-                return true;
-            }
-        }
-        return false;
+        Config config = Configs.read("autoadvance", Config.class);
+        return config != null && config.getAutoadv() != null && config.getAutoadv().isEnabled();
     }
 
     public static class Config {
-        private Map<String, String> autoadv;
+        private Autoadv autoadv;
 
-        public Map<String, String> getAutoadv() {
+        public Autoadv getAutoadv() {
             return autoadv;
         }
 
-        public void setAutoadv(Map<String, String> autoadv) {
+        public void setAutoadv(Autoadv autoadv) {
             this.autoadv = autoadv;
+        }
+
+        public static class Autoadv {
+            private boolean enabled;
+
+            public boolean isEnabled() {
+                return enabled;
+            }
+
+            public void setEnabled(boolean enabled) {
+                this.enabled = enabled;
+            }
         }
     }
 
