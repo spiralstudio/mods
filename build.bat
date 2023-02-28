@@ -1,4 +1,4 @@
-set mods=autoadvance camera core noloading pandora pocketshop showping stayonline teleport
+set mods=autoadvance camera core lootfilter noloading pandora pocketshop showping stayonline teleport
 
 md target\code-mods\
 
