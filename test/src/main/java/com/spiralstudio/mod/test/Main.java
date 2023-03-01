@@ -23,6 +23,7 @@ public class Main {
         //testMonsterHudBar();
         //testAdminCommand();
         testMap();
+        testBaseItemListPanel();
     }
 
     static void testMonsterHudBar() throws Exception {
@@ -69,6 +70,19 @@ public class Main {
                                 "    var3.height = this.aqE.getRoot().getDisplayHeight() * 2;\n" +
                                 "    var3.width = this.aqE.getRoot().getDisplayWidth() * 2;\n" +
                                 "    this.aMq.setPreferredSize(var3);\n" +
+                                "}"))
+                .build();
+    }
+
+    static void testBaseItemListPanel() throws Exception {
+        ClassBuilder.fromClass("com.threerings.projectx.item.client.j")
+                .modifyMethod(new MethodModifier()
+                        .methodName("d")
+                        .paramTypeNames("com.threerings.projectx.item.client.j$b")
+                        .body("{" +
+                                "com.threerings.opengl.gui.ay _pill = a(this._ctx, $1.getName(), $1.Bo(), $1.getReference(), $1.Bf(), this.Bn(), this.HR(), false);" +
+                                "System.out.println(_pill);" +
+                                "return _pill;" +
                                 "}"))
                 .build();
     }
