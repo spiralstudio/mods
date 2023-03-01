@@ -6,6 +6,24 @@ It is the basis of all mods.
 
 Enter "/xhelp" to learn more about each command.
 
+If you want to add aliases or disable commands, please create a file named `cmd.yml` and put it in `code-mods`.
+
+```yaml
+# Add aliases (will not remove the original commands)
+alias:
+  autoadvon: aon
+  autoadvoff: aoff
+# Disable commands
+disable:
+  - autoadvon
+  - autoadvoff
+  - readyroom
+  - townsquare
+  - bazaar
+  - garrison
+  - arcade
+```
+
 ## Dev
 
 ### Registers
