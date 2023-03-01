@@ -8,6 +8,8 @@ pickup:
     # Keep the following item names
     included:
       - Remedy Capsule
+      - Health Capsule
+      - Super Health Capsule
       - Ultra Health Capsule
       - Ultra Poison Barrier
       - Ultra Shock Barrier

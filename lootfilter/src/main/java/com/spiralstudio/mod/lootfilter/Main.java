@@ -31,7 +31,7 @@ public class Main {
         }
         mounted = true;
         Config config = Configs.read("lootfilter", Config.class);
-        boolean added = addOffsetImplClass(config);
+        boolean added = addLootFilterClass(config);
         if (!added) {
             return;
         }
@@ -39,7 +39,7 @@ public class Main {
         redefineMessageEvent();
     }
 
-    static boolean addOffsetImplClass(Config config) throws Exception {
+    static boolean addLootFilterClass(Config config) throws Exception {
         if (config == null) {
             return false;
         }
@@ -129,7 +129,7 @@ public class Main {
                                 "}"))
                 .build();
 
-        Set[] args = new Set[]{
+        Set<String>[] args = new Set[]{
                 pickup != null && pickup.getType() != null ? pickup.getType().getExcluded() : null,
                 pickup != null && pickup.getType() != null ? pickup.getType().getIncluded() : null,
                 pickup != null && pickup.getName() != null ? pickup.getName().getExcluded() : null,
@@ -142,6 +142,11 @@ public class Main {
         for (int i = 0; i < args.length; i++) {
             if (args[i] == null) {
                 args[i] = Collections.emptySet();
+            } else {
+                args[i] = args[i].stream()
+                        .filter(o -> o != null && o.length() > 0)
+                        .map(String::toLowerCase)
+                        .collect(Collectors.toSet());
             }
         }
         Class.forName("com.spiralstudio.mod.lootfilter.LootFilter")
@@ -166,16 +171,16 @@ public class Main {
                                 "    if (_original != null) {\n" +
                                 "        com.threerings.projectx.item.data.ItemCodes.Group _group = _original.BA();\n" +
                                 "        if (_group != null) {\n" +
-                                "            com.threerings.util.N _bundle = _ctx.getMessageManager().dI(\"dungeon\");\n" +
+                                "            com.threerings.util.N _bundle = _ctx.getMessageManager().dI(\"item\");\n" +
                                 "            if (_bundle != null) {\n" +
                                 "                _type = _bundle.bu(_group.toString());\n" +
                                 "            }\n" +
                                 "        }\n" +
                                 "    }\n" +
-                                "    boolean _excluded = (boolean) Class.forName(\"com.spiralstudio.mod.lootfilter.LootFilter\")\n" +
+                                "    Boolean _excluded = (Boolean) Class.forName(\"com.spiralstudio.mod.lootfilter.LootFilter\")\n" +
                                 "        .getDeclaredMethod(\"isPickupExcluded\", new java.lang.Class[]{java.lang.String.class, java.lang.String.class})\n" +
                                 "        .invoke(null, new java.lang.Object[]{_type, _name});" +
-                                "    if (_excluded) {\n" +
+                                "    if (_excluded.booleanValue()) {\n" +
                                 "        this._model.setVisible(false);\n" +
                                 "        this._model.clearConfig();\n" +
                                 "        super.Eo();\n" +
@@ -226,9 +231,10 @@ public class Main {
                                 "    }\n" +
                                 "    String _itemType = _bundle.bu(ss[1]);\n" +
                                 "    String _itemName = _bundle.bu(ss[2]);\n" +
-                                "    return (boolean) Class.forName(\"com.spiralstudio.mod.lootfilter.LootFilter\")\n" +
+                                "    Boolean _excluded = (Boolean) Class.forName(\"com.spiralstudio.mod.lootfilter.LootFilter\")\n" +
                                 "        .getDeclaredMethod(\"isMessageExcluded\", new java.lang.Class[]{java.lang.String.class, java.lang.String.class})\n" +
-                                "        .invoke(null, new java.lang.Object[]{_itemType, _itemName});" +
+                                "        .invoke(null, new java.lang.Object[]{_itemType, _itemName});\n" +
+                                "    return _excluded.booleanValue();\n" +
                                 "}"))
                 .build();
     }
