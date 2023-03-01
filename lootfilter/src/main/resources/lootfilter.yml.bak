@@ -1,4 +1,27 @@
 pickup:
+  type:
+    # Filter out the following item types
+    excluded:
+      - Capsule
+      - Vial
+  name:
+    # Keep the following item names
+    included:
+      - Remedy Capsule
+      - Ultra Health Capsule
+      - Ultra Poison Barrier
+      - Ultra Shock Barrier
+      - Ultra Freeze Barrier
+      - Ultra Fire Barrier
+      - Ultra Shock Vial
+      - Ultra Fire Vial
+      - Ultra Stun Vial
+      - Ultra Curse Vial
+      - Ultra Sleep Vial
+      - Ultra Poison Vial
+      - Ultra Freeze Vial
+      - Luck Potion
+      - Ocarina of Slime
 message:
   type:
     # Filter out the following item types
@@ -9,12 +32,12 @@ message:
   name:
     # Keep the following item names
     included:
+      - Radiant Fire Crystal
       - Flawed Orb of Alchemy
       - Simple Orb of Alchemy
       - Advanced Orb of Alchemy
       - Elite Orb of Alchemy
       - Eternal Orb of Alchemy
-      - Radiant Fire Crystal
       - Spark of Life
       - Golden Slime Coin
       - Kat Tribe Fetish
