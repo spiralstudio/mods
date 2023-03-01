@@ -15,7 +15,9 @@ All mods need to be loaded using [projectx-hazard](https://github.com/spiralstud
 - [PocketShop](pocketshop) calls shops anytime and anywhere.
 - [Teleport](teleport) sends you to somewhere.
 - [Camera](camera) allows you moving and rotating the camera.
-- [AutoAdvance](autoadvance) automatically clicks the "Advance Now" button.
+- [AutoAdvance](autoadvance) automatically clicks the "Advance Now" button, removes "Prize Wheel" animations.
+- [NoLoading](noloading) hides loading screen.
+- [LootFilter](lootfilter) hides loot messages and pickup sprites.
 
 ## License
 
