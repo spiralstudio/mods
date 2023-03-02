@@ -82,6 +82,21 @@ public class Main {
                                 "}"));
     }
 
+    public String printStackTrace() {
+        java.lang.Throwable source = new java.lang.Throwable();
+        java.lang.StackTraceElement[] es = source.getStackTrace();
+        StringBuilder sb = new StringBuilder();
+        if (null != es) {
+            for (StackTraceElement e : es) {
+                sb.append(e.getClassName());
+                sb.append(".").append(e.getMethodName());
+                sb.append("(").append(e.getFileName()).append(":");
+                sb.append(e.getLineNumber()).append(")").append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
     public static void main(String[] args) {
     }
 }
