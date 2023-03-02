@@ -9,6 +9,7 @@ import javassist.NotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Leego Yih
@@ -27,8 +28,10 @@ public class ClassBuilder {
     private List<FieldModifier> fieldModifiers;
     private List<MethodBuilder> methodBuilders;
     private List<MethodModifier> methodModifiers;
+    private Consumer<Class<?>> actionOnComplete;
+    private Class<?> clazz;
 
-    ClassBuilder(String className, int mode) {
+    protected ClassBuilder(String className, int mode) {
         this.className = className;
         this.mode = mode;
     }
@@ -171,7 +174,15 @@ public class ClassBuilder {
         return this;
     }
 
+    public ClassBuilder actionOnComplete(Consumer<Class<?>> action) {
+        this.actionOnComplete = action;
+        return this;
+    }
+
     public Class<?> build() throws NotFoundException, CannotCompileException {
+        if (clazz != null) {
+            return clazz;
+        }
         if (classPool == null) {
             classPool = ClassPool.getDefault();
             classPool.appendClassPath(new LoaderClassPath(Thread.currentThread().getContextClassLoader()));
@@ -224,8 +235,11 @@ public class ClassBuilder {
                 mm.declaring(ctClass).build(classPool);
             }
         }
-        Class<?> clazz = ctClass.toClass();
+        clazz = ctClass.toClass();
         ctClass.detach();
+        if (actionOnComplete != null) {
+            actionOnComplete.accept(clazz);
+        }
         return clazz;
     }
 }

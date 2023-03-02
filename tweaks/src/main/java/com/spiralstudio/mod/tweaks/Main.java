@@ -1,7 +1,7 @@
 package com.spiralstudio.mod.tweaks;
 
+import com.spiralstudio.mod.core.ClassPool;
 import com.spiralstudio.mod.core.Registers;
-import com.spiralstudio.mod.core.util.ClassBuilder;
 import com.spiralstudio.mod.core.util.MethodModifier;
 
 /**
@@ -17,7 +17,7 @@ public class Main {
         Registers.add(Main.class);
     }
 
-    public static void mount() throws Exception {
+    public static void mount() {
         if (mounted) {
             return;
         }
@@ -27,16 +27,15 @@ public class Main {
         redefineTudeySceneConfig();
     }
 
-    static void redefineTudeySceneView() throws Exception {
-        ClassBuilder.fromClass("com.threerings.tudey.a.k")
+    static void redefineTudeySceneView() {
+        ClassPool.from("com.threerings.tudey.a.k")
                 .modifyMethod(new MethodModifier()
                         .methodName("Ol") // getBufferDelay
-                        .body("{ return 0; }"))
-                .build();
+                        .body("{ return 0; }"));
     }
 
-    static void redefineTudeySceneController() throws Exception {
-        ClassBuilder.fromClass("com.threerings.tudey.a.a")
+    static void redefineTudeySceneController() {
+        ClassPool.from("com.threerings.tudey.a.a")
                 .modifyMethod(new MethodModifier()
                         .methodName("tick") // tick -> transmitInput
                         .paramTypeNames("float")
@@ -66,20 +65,18 @@ public class Main {
                                 "        }\n" +
                                 "        this.Dt = var2;\n" +
                                 "    }\n" +
-                                "}"))
-                .build();
+                                "}"));
     }
 
-    static void redefineTudeySceneConfig() throws Exception {
-        ClassBuilder.fromClass("com.threerings.tudey.data.TudeySceneConfig")
+    static void redefineTudeySceneConfig() {
+        ClassPool.from("com.threerings.tudey.data.TudeySceneConfig")
                 .modifyMethod(new MethodModifier()
                         .methodName("ec") // getInputAdvance
                         .paramTypeNames("int")
                         .body("{ return this.um() + $1 + 5; }"))
                 .modifyMethod(new MethodModifier()
                         .methodName("um") // getTransmitInterval
-                        .body("{ return 70; }"))
-                .build();
+                        .body("{ return 70; }"));
     }
 
     public static void main(String[] args) {

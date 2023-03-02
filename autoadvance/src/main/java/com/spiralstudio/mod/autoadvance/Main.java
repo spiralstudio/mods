@@ -1,9 +1,9 @@
 package com.spiralstudio.mod.autoadvance;
 
+import com.spiralstudio.mod.core.ClassPool;
 import com.spiralstudio.mod.core.Commands;
 import com.spiralstudio.mod.core.Configs;
 import com.spiralstudio.mod.core.Registers;
-import com.spiralstudio.mod.core.util.ClassBuilder;
 import com.spiralstudio.mod.core.util.ConstructorModifier;
 import com.spiralstudio.mod.core.util.FieldBuilder;
 import com.spiralstudio.mod.core.util.MethodModifier;
@@ -24,7 +24,7 @@ public class Main {
         Registers.add(Main.class);
     }
 
-    public static void mount() throws Exception {
+    public static void mount() {
         if (mounted) {
             return;
         }
@@ -38,8 +38,8 @@ public class Main {
     /**
      * Adds static field <code>_variableElapsed</code> to control the button.
      */
-    static void redefineElevatorChoiceWindow() throws Exception {
-        ClassBuilder.fromClass("com.threerings.projectx.dungeon.client.Q")
+    static void redefineElevatorChoiceWindow() {
+        ClassPool.from("com.threerings.projectx.dungeon.client.Q")
                 .addField(new FieldBuilder()
                         .fieldName("_variableElapsed")
                         .typeName("java.lang.Float")
@@ -56,17 +56,15 @@ public class Main {
                 .modifyMethod(new MethodModifier()
                         .methodName("tick")
                         .paramTypeNames("float")
-                        .insertBefore("$1 += 1000.0F;"))
-                .build();
+                        .insertBefore("$1 += 1000.0F;"));
     }
 
-    static void redefineEndOfLevelWindow() throws Exception {
-        ClassBuilder.fromClass("com.threerings.projectx.dungeon.client.EndOfLevelWindow")
+    static void redefineEndOfLevelWindow() {
+        ClassPool.from("com.threerings.projectx.dungeon.client.EndOfLevelWindow")
                 .modifyMethod(new MethodModifier()
                         .methodName("tick")
                         .paramTypeNames("float")
-                        .insertBefore("$1 += 1000.0F;"))
-                .build();
+                        .insertBefore("$1 += 1000.0F;"));
     }
 
     static void addAutoAdvCommands() {
@@ -80,9 +78,14 @@ public class Main {
                 "java.lang.Class.forName(\"com.threerings.projectx.dungeon.client.Q\").getDeclaredField(\"_variableElapsed\").set(null, Float.valueOf(0F));\n");
     }
 
-    static boolean enableAutoAdv() throws Exception {
-        Config config = Configs.read("autoadvance", Config.class);
-        return config != null && config.getAutoadv() != null && config.getAutoadv().isEnabled();
+    static boolean enableAutoAdv() {
+        try {
+            Config config = Configs.read("autoadvance", Config.class);
+            return config != null && config.getAutoadv() != null && config.getAutoadv().isEnabled();
+        } catch (Exception e) {
+            System.out.println("Failed to read config: " + e.getMessage());
+            return false;
+        }
     }
 
     public static class Config {

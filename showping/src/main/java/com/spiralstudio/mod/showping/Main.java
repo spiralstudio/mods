@@ -1,6 +1,6 @@
 package com.spiralstudio.mod.showping;
 
-import com.spiralstudio.mod.core.util.ClassBuilder;
+import com.spiralstudio.mod.core.ClassPool;
 import com.spiralstudio.mod.core.util.MethodModifier;
 
 /**
@@ -15,16 +15,15 @@ public class Main {
     static {
     }
 
-    public static void mount() throws Exception {
+    public static void mount() {
         if (mounted) {
             return;
         }
         mounted = true;
-        ClassBuilder.fromClass("com.threerings.projectx.client.hud.Minimap")
+        ClassPool.from("com.threerings.projectx.client.hud.Minimap")
                 .modifyMethod(new MethodModifier()
                         .methodName("bG")
-                        .body("{$0.aoQ.setIcon(null);$0.aoQ.setText(Integer.toString($1));}"))
-                .build();
+                        .body("{$0.aoQ.setIcon(null);$0.aoQ.setText(Integer.toString($1));}"));
     }
 
     public static void main(String[] args) {

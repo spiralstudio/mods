@@ -21,7 +21,7 @@ public class Main {
         Registers.add(Main.class);
     }
 
-    public static void mount() throws Exception {
+    public static void mount() {
         if (mounted) {
             return;
         }

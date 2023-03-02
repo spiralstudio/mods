@@ -1,8 +1,8 @@
 package com.spiralstudio.mod.pandora;
 
+import com.spiralstudio.mod.core.ClassPool;
 import com.spiralstudio.mod.core.Commands;
 import com.spiralstudio.mod.core.Registers;
-import com.spiralstudio.mod.core.util.ClassBuilder;
 import com.spiralstudio.mod.core.util.ConstructorBuilder;
 import com.spiralstudio.mod.core.util.FieldBuilder;
 import com.spiralstudio.mod.core.util.MethodBuilder;
@@ -30,7 +30,7 @@ public class Main {
         Registers.add(Main.class);
     }
 
-    public static void mount() throws Exception {
+    public static void mount() {
         if (mounted) {
             return;
         }
@@ -44,8 +44,8 @@ public class Main {
         addPandoraCommands();
     }
 
-    static void addPreviewApplyListenerClass() throws Exception {
-        ClassBuilder.makeClass("com.spiralstudio.mod.pandora.PreviewApplyListener")
+    static void addPreviewApplyListenerClass() {
+        ClassPool.make("com.spiralstudio.mod.pandora.PreviewApplyListener")
                 .interfaceClassName("com.threerings.opengl.gui.event.a")
                 .addField(new FieldBuilder()
                         .fieldName("_ctx")
@@ -200,12 +200,11 @@ public class Main {
                                 "            _configPreviewField.set(_knightSprite, _previewConfigRef);\n" +
                                 "        }\n" +
                                 "    }\n" +
-                                "}"))
-                .build();
+                                "}"));
     }
 
-    static void redefineKnightSpriteToReplacePreviewItems() throws Exception {
-        ClassBuilder.fromClass("com.threerings.projectx.client.sprite.KnightSprite")
+    static void redefineKnightSpriteToReplacePreviewItems() {
+        ClassPool.from("com.threerings.projectx.client.sprite.KnightSprite")
                 .addField(new FieldBuilder()
                         .fieldName("_configPreview")
                         .typeName("com.threerings.config.ConfigReference")
@@ -218,12 +217,11 @@ public class Main {
                                 "    if (!this._configPreview.equals(this._actor.ES())) {\n" +
                                 "        this._configPreview.copy(this._actor.ES());\n" +
                                 "    }\n" +
-                                "}"))
-                .build();
+                                "}"));
     }
 
-    static void redefineGoodSlotToIgnoreException() throws Exception {
-        ClassBuilder.fromClass("com.threerings.projectx.shop.client.GoodSlot")
+    static void redefineGoodSlotToIgnoreException() {
+        ClassPool.from("com.threerings.projectx.shop.client.GoodSlot")
                 .modifyMethod(new MethodModifier()
                         .methodName("KC")
                         .body("{\n" +
@@ -245,12 +243,11 @@ public class Main {
                                 "    com.threerings.opengl.gui.q var5 = $0.getComponent(\"bound\");\n" +
                                 "    var5.setEnabled(var1);\n" +
                                 "    var5.setVisible(var1 || var2);\n" +
-                                "}"))
-                .build();
+                                "}"));
     }
 
-    static void redefineVendorListPanelToIgnoreException() throws Exception {
-        ClassBuilder.fromClass("com.threerings.projectx.shop.client.u")
+    static void redefineVendorListPanelToIgnoreException() {
+        ClassPool.from("com.threerings.projectx.shop.client.u")
                 .modifyMethod(new MethodModifier()
                         .methodName("j")
                         .body("{\n" +
@@ -280,12 +277,11 @@ public class Main {
                                 "            System.out.println(\"[VendorListPanel] Failed to add item to pandora \" + goodCount.good.toString() + \"\\n\" + e.getMessage());\n" +
                                 "        }\n" +
                                 "    }\n" +
-                                "}"))
-                .build();
+                                "}"));
     }
 
-    static void redefineShopDialogToCacheAndRenameTitle() throws Exception {
-        ClassBuilder.fromClass("com.threerings.projectx.shop.client.l")
+    static void redefineShopDialogToCacheAndRenameTitle() {
+        ClassPool.from("com.threerings.projectx.shop.client.l")
                 .modifyMethod(new MethodModifier()
                         .methodName("Bp")
                         .body("{\n" +
@@ -316,12 +312,11 @@ public class Main {
                                 "    btnApply.addListener$2eebd3b8(btnApplyListener);\n" +
                                 "    abM.add(btnApply, (Object) new Integer(1));\n" +
                                 "    System.out.println(\"[Pandora] Add Apply Button\");\n" +
-                                "}"))
-                .build();
+                                "}"));
     }
 
-    static void redefinePlayerObjectToPreview() throws Exception {
-        ClassBuilder.fromClass("com.threerings.projectx.data.PlayerObject")
+    static void redefinePlayerObjectToPreview() {
+        ClassPool.from("com.threerings.projectx.data.PlayerObject")
                 .addField(new FieldBuilder()
                         .fieldName("_equipmentPreview")
                         .typeName("com.threerings.projectx.item.data.LevelItem[]")
@@ -347,8 +342,7 @@ public class Main {
                                 "        return (com.threerings.projectx.item.data.LevelItem) item;\n" +
                                 "    }\n" +
                                 "    return null;\n" +
-                                "}"))
-                .build();
+                                "}"));
     }
 
     static void addPandoraCommands() {

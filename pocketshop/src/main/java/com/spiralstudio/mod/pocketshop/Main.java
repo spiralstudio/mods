@@ -1,8 +1,8 @@
 package com.spiralstudio.mod.pocketshop;
 
+import com.spiralstudio.mod.core.ClassPool;
 import com.spiralstudio.mod.core.Commands;
 import com.spiralstudio.mod.core.Registers;
-import com.spiralstudio.mod.core.util.ClassBuilder;
 import com.spiralstudio.mod.core.util.MethodModifier;
 
 /**
@@ -27,7 +27,7 @@ public class Main {
         Registers.add(Main.class);
     }
 
-    public static void mount() throws Exception {
+    public static void mount() {
         if (mounted) {
             return;
         }
@@ -38,20 +38,18 @@ public class Main {
         addShopCommands();
     }
 
-    static void redefineForgeDialogToEnableButton() throws Exception {
-        ClassBuilder.fromClass("com.threerings.projectx.item.client.n")
+    static void redefineForgeDialogToEnableButton() {
+        ClassPool.from("com.threerings.projectx.item.client.n")
                 .modifyMethod(new MethodModifier()
                         .methodName("HX")
-                        .insertAfter("this.aJN.setEnabled(true);\n"))
-                .build();
+                        .insertAfter("this.aJN.setEnabled(true);\n"));
     }
 
-    static void redefineCrafterDialogToEnableButton() throws Exception {
-        ClassBuilder.fromClass("com.threerings.projectx.craft.a.s")
+    static void redefineCrafterDialogToEnableButton() {
+        ClassPool.from("com.threerings.projectx.craft.a.s")
                 .modifyMethod(new MethodModifier()
                         .methodName("sA")
-                        .insertAfter("this.atz.setEnabled(true);\nthis.atz.setVisible(true);\n"))
-                .build();
+                        .insertAfter("this.atz.setEnabled(true);\nthis.atz.setVisible(true);\n"));
     }
 
     static void addShopCommands() {

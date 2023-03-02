@@ -1,7 +1,7 @@
 package com.spiralstudio.mod.test;
 
+import com.spiralstudio.mod.core.ClassPool;
 import com.spiralstudio.mod.core.Registers;
-import com.spiralstudio.mod.core.util.ClassBuilder;
 import com.spiralstudio.mod.core.util.ConstructorModifier;
 import com.spiralstudio.mod.core.util.MethodModifier;
 
@@ -15,7 +15,7 @@ public class Main {
         Registers.add(Main.class);
     }
 
-    public static void mount() throws Exception {
+    public static void mount() {
         if (mounted) {
             return;
         }
@@ -26,17 +26,16 @@ public class Main {
         testBaseItemListPanel();
     }
 
-    static void testMonsterHudBar() throws Exception {
-        ClassBuilder.fromClass("com.threerings.projectx.dungeon.client.g")
+    static void testMonsterHudBar() {
+        ClassPool.from("com.threerings.projectx.dungeon.client.g")
                 .modifyMethod(new MethodModifier()
                         .methodName("tick")
-                        .insertAfter("this.aov.setVisible(true);\n"))
-                .build();
+                        .insertAfter("this.aov.setVisible(true);\n"));
     }
 
-    static void testAdminCommand() throws Exception {
+    static void testAdminCommand() {
         // Does anyone have a token greater than zero?
-        ClassBuilder.fromClass("com.threerings.crowd.data.TokenRing")
+        ClassPool.from("com.threerings.crowd.data.TokenRing")
                 .modifyConstructor(new ConstructorModifier()
                         .paramTypeNames(new String[]{"int"})
                         .insertBefore("System.out.println(\"token :\" + $1);"))
@@ -48,20 +47,18 @@ public class Main {
                         .body("{return true;}"))
                 .modifyMethod(new MethodModifier()
                         .methodName("iD")
-                        .body("{return true;}"))
-                .build();
+                        .body("{return true;}"));
     }
 
-    static void testMap() throws Exception {
+    static void testMap() {
         // Show monsters on map
-        ClassBuilder.fromClass("com.threerings.projectx.map.client.a")
+        ClassPool.from("com.threerings.projectx.map.client.a")
                 .modifyConstructor(new ConstructorModifier()
                         .paramTypeNames("com.threerings.tudey.util.m", "com.threerings.tudey.a.k")
                         .insertAfter("" +
-                                "this.aMi.dY(ProjectXCodes.avh | MaskEditor.n(\"collision\", \"player\") | MaskEditor.n(\"collision\", \"player_barrier\") | MaskEditor.n(\"collision\", \"monster\"));\n"))
-                .build();
+                                "this.aMi.dY(ProjectXCodes.avh | MaskEditor.n(\"collision\", \"player\") | MaskEditor.n(\"collision\", \"player_barrier\") | MaskEditor.n(\"collision\", \"monster\"));\n"));
         // Zoom map
-        ClassBuilder.fromClass("com.threerings.projectx.map.client.c")
+        ClassPool.from("com.threerings.projectx.map.client.c")
                 .modifyMethod(new MethodModifier()
                         .methodName("tick")
                         .insertAfter("" +
@@ -70,12 +67,11 @@ public class Main {
                                 "    var3.height = this.aqE.getRoot().getDisplayHeight() * 2;\n" +
                                 "    var3.width = this.aqE.getRoot().getDisplayWidth() * 2;\n" +
                                 "    this.aMq.setPreferredSize(var3);\n" +
-                                "}"))
-                .build();
+                                "}"));
     }
 
-    static void testBaseItemListPanel() throws Exception {
-        ClassBuilder.fromClass("com.threerings.projectx.item.client.j")
+    static void testBaseItemListPanel() {
+        ClassPool.from("com.threerings.projectx.item.client.j")
                 .modifyMethod(new MethodModifier()
                         .methodName("d")
                         .paramTypeNames("com.threerings.projectx.item.client.j$b")
@@ -83,8 +79,7 @@ public class Main {
                                 "com.threerings.opengl.gui.ay _pill = a(this._ctx, $1.getName(), $1.Bo(), $1.getReference(), $1.Bf(), this.Bn(), this.HR(), false);" +
                                 "System.out.println(_pill);" +
                                 "return _pill;" +
-                                "}"))
-                .build();
+                                "}"));
     }
 
     public static void main(String[] args) {

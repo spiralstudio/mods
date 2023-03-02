@@ -1,6 +1,5 @@
 package com.spiralstudio.mod.core;
 
-import com.spiralstudio.mod.core.util.ClassBuilder;
 import com.spiralstudio.mod.core.util.FieldBuilder;
 import com.spiralstudio.mod.core.util.MethodModifier;
 
@@ -32,9 +31,7 @@ public final class Commands {
      * @param fieldType the type of the field to be added.
      */
     public static void addField(String fieldName, String fieldType) {
-        synchronized (fields) {
-            fields.put(fieldName, fieldType);
-        }
+        fields.put(fieldName, fieldType);
     }
 
     /**
@@ -43,9 +40,7 @@ public final class Commands {
      * @param map the fields to be added.
      */
     public static void addFields(Map<String, String> map) {
-        synchronized (fields) {
-            fields.putAll(map);
-        }
+        fields.putAll(map);
     }
 
     /**
@@ -55,9 +50,7 @@ public final class Commands {
      * @param commandBody the body of the command to be added.
      */
     public static void addCommand(String commandName, String commandBody) {
-        synchronized (commands) {
-            commands.put(commandName, commandBody);
-        }
+        commands.put(commandName, commandBody);
     }
 
     /**
@@ -66,9 +59,7 @@ public final class Commands {
      * @param map the commands to be added.
      */
     public static void addCommands(Map<String, String> map) {
-        synchronized (commands) {
-            commands.putAll(map);
-        }
+        commands.putAll(map);
     }
 
     public static void init() throws Exception {
@@ -79,7 +70,7 @@ public final class Commands {
         // Read custom configuration
         Config config = Configs.read("cmd", Config.class);
         // Override class `com.threerings.crowd.chat.client.ChatDirector`
-        ClassBuilder.fromClass("com.threerings.crowd.chat.client.a")
+        ClassPool.from("com.threerings.crowd.chat.client.a")
                 // Add custom fields
                 .addFields(fields.entrySet()
                         .stream()
@@ -92,8 +83,7 @@ public final class Commands {
                 .modifyMethod(new MethodModifier()
                         .methodName("a")
                         .paramTypeNames("com.threerings.crowd.chat.client.m", "java.lang.String", "boolean")
-                        .insertBefore(buildCommands(commands, config)))
-                .build();
+                        .insertBefore(buildCommands(commands, config)));
     }
 
     static String buildCommands(Map<String, String> commands, Config config) {

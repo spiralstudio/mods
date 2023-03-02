@@ -1,8 +1,8 @@
 package com.spiralstudio.mod.camera;
 
+import com.spiralstudio.mod.core.ClassPool;
 import com.spiralstudio.mod.core.Commands;
 import com.spiralstudio.mod.core.Registers;
-import com.spiralstudio.mod.core.util.ClassBuilder;
 import com.spiralstudio.mod.core.util.ConstructorBuilder;
 import com.spiralstudio.mod.core.util.FieldBuilder;
 import com.spiralstudio.mod.core.util.MethodBuilder;
@@ -25,7 +25,7 @@ public class Main {
         Registers.add(Main.class);
     }
 
-    public static void mount() throws Exception {
+    public static void mount() {
         if (mounted) {
             return;
         }
@@ -35,8 +35,8 @@ public class Main {
         addCameraCommands();
     }
 
-    static void addOffsetImplClass() throws Exception {
-        ClassBuilder.makeClass("com.spiralstudio.mod.camera.OffsetImpl")
+    static void addOffsetImplClass() {
+        ClassPool.make("com.spiralstudio.mod.camera.OffsetImpl")
                 .interfaceClassName("com.threerings.opengl.a.b$a")
                 .addFields(Arrays.stream(new String[]{"_tx", "_ty", "_tz", "_rx", "_ry", "_rz"})
                         .map(fieldName -> new FieldBuilder()
@@ -62,12 +62,11 @@ public class Main {
                                 "    com.threerings.math.Vector3f angles = o.mM().mv().h(this._rx, this._ry, this._rz);\n" +
                                 "    o.mM().e(angles.x,angles.y,angles.z);\n" +
                                 "    return true;\n" +
-                                "}"))
-                .build();
+                                "}"));
     }
 
-    static void redefineCameraHandler() throws Exception {
-        ClassBuilder.fromClass("com.threerings.opengl.a.b")
+    static void redefineCameraHandler() {
+        ClassPool.from("com.threerings.opengl.a.b")
                 .addField(new FieldBuilder()
                         .fieldName("_photomode")
                         .typeName("boolean")
@@ -175,8 +174,7 @@ public class Main {
                                 "}\n"))
                 .modifyMethod(new MethodModifier()
                         .methodName("updatePosition")
-                        .insertAfter("this.tickPhotoMode();\n"))
-                .build();
+                        .insertAfter("this.tickPhotoMode();\n"));
     }
 
     static void addCameraCommands() {

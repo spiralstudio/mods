@@ -1,6 +1,6 @@
 package com.spiralstudio.mod.noloading;
 
-import com.spiralstudio.mod.core.util.ClassBuilder;
+import com.spiralstudio.mod.core.ClassPool;
 import com.spiralstudio.mod.core.util.MethodModifier;
 
 /**
@@ -11,7 +11,7 @@ import com.spiralstudio.mod.core.util.MethodModifier;
 public class Main {
     private static boolean mounted = false;
 
-    public static void mount() throws Exception {
+    public static void mount() {
         if (mounted) {
             return;
         }
@@ -24,8 +24,8 @@ public class Main {
     /**
      * Hides the loading screen and removes the fading animations.
      */
-    static void redefineLoadingWindow() throws Exception {
-        ClassBuilder.fromClass("com.threerings.projectx.client.bi")
+    static void redefineLoadingWindow() {
+        ClassPool.from("com.threerings.projectx.client.bi")
                 .modifyMethod(new MethodModifier()
                         .methodName("J") // update
                         .paramTypeNames("float")
@@ -52,12 +52,11 @@ public class Main {
                                 "    this.acf.yO().uG();\n" +
                                 "    this._ctx.xa().addTickParticipant(new com.threerings.projectx.client.bj(this,\n" +
                                 "            new Object[]{\"fadeBackground\", Float.valueOf(0.0F), \"linger\", Float.valueOf(0.0F), \"fadeTitle\", Float.valueOf(0.0F)}));\n" +
-                                "}"))
-                .build();
+                                "}"));
     }
 
-    static void redefineProjectXSceneView() throws Exception {
-        ClassBuilder.fromClass("com.threerings.projectx.client.et")
+    static void redefineProjectXSceneView() {
+        ClassPool.from("com.threerings.projectx.client.et")
                 .modifyMethod(new MethodModifier()
                         .methodName("j")
                         .paramTypeNames("java.lang.Runnable")
@@ -74,17 +73,15 @@ public class Main {
                                 "    var2.setBackground(0, var3);\n" +
                                 "    var2.setBackground(1, var3);\n" +
                                 "    this._ctx.xa().addTickParticipant(new com.threerings.projectx.client.eu(this, new Object[]{\"fade\", Float.valueOf(0.0F)}, var2, $1));\n" +
-                                "}"))
-                .build();
+                                "}"));
     }
 
-    static void redefineScriptRunner() throws Exception {
-        ClassBuilder.fromClass("com.threerings.opengl.gui.ay$a")
+    static void redefineScriptRunner() {
+        ClassPool.from("com.threerings.opengl.gui.ay$a")
                 .modifyMethod(new MethodModifier()
                         .methodName("tick")
                         .paramTypeNames("float")
-                        .insertBefore("$1 += 1000.0F;"))
-                .build();
+                        .insertBefore("$1 += 1000.0F;"));
     }
 
     public static void main(String[] args) {

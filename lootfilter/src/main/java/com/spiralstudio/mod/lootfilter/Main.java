@@ -1,8 +1,8 @@
 package com.spiralstudio.mod.lootfilter;
 
+import com.spiralstudio.mod.core.ClassPool;
 import com.spiralstudio.mod.core.Configs;
 import com.spiralstudio.mod.core.Registers;
-import com.spiralstudio.mod.core.util.ClassBuilder;
 import com.spiralstudio.mod.core.util.FieldBuilder;
 import com.spiralstudio.mod.core.util.MethodBuilder;
 import com.spiralstudio.mod.core.util.MethodModifier;
@@ -48,7 +48,27 @@ public class Main {
         if (pickup == null && message == null) {
             return false;
         }
-        ClassBuilder.makeClass("com.spiralstudio.mod.lootfilter.LootFilter")
+        Set<String>[] args = new Set[]{
+                pickup != null && pickup.getType() != null ? pickup.getType().getExcluded() : null,
+                pickup != null && pickup.getType() != null ? pickup.getType().getIncluded() : null,
+                pickup != null && pickup.getName() != null ? pickup.getName().getExcluded() : null,
+                pickup != null && pickup.getName() != null ? pickup.getName().getIncluded() : null,
+                message != null && message.getType() != null ? message.getType().getExcluded() : null,
+                message != null && message.getType() != null ? message.getType().getIncluded() : null,
+                message != null && message.getName() != null ? message.getName().getExcluded() : null,
+                message != null && message.getName() != null ? message.getName().getIncluded() : null,
+        };
+        for (int i = 0; i < args.length; i++) {
+            if (args[i] == null) {
+                args[i] = Collections.emptySet();
+            } else {
+                args[i] = args[i].stream()
+                        .filter(o -> o != null && o.length() > 0)
+                        .map(String::toLowerCase)
+                        .collect(Collectors.toSet());
+            }
+        }
+        ClassPool.make("com.spiralstudio.mod.lootfilter.LootFilter")
                 .addField(new FieldBuilder()
                         .fieldName("_inited")
                         .typeName("boolean")
@@ -127,37 +147,19 @@ public class Main {
                                 "    }\n" +
                                 "    return false;\n" +
                                 "}"))
-                .build();
-
-        Set<String>[] args = new Set[]{
-                pickup != null && pickup.getType() != null ? pickup.getType().getExcluded() : null,
-                pickup != null && pickup.getType() != null ? pickup.getType().getIncluded() : null,
-                pickup != null && pickup.getName() != null ? pickup.getName().getExcluded() : null,
-                pickup != null && pickup.getName() != null ? pickup.getName().getIncluded() : null,
-                message != null && message.getType() != null ? message.getType().getExcluded() : null,
-                message != null && message.getType() != null ? message.getType().getIncluded() : null,
-                message != null && message.getName() != null ? message.getName().getExcluded() : null,
-                message != null && message.getName() != null ? message.getName().getIncluded() : null,
-        };
-        for (int i = 0; i < args.length; i++) {
-            if (args[i] == null) {
-                args[i] = Collections.emptySet();
-            } else {
-                args[i] = args[i].stream()
-                        .filter(o -> o != null && o.length() > 0)
-                        .map(String::toLowerCase)
-                        .collect(Collectors.toSet());
-            }
-        }
-        Class.forName("com.spiralstudio.mod.lootfilter.LootFilter")
-                .getDeclaredMethod("init", new Class[]{java.lang.Object[].class})
-                .invoke(null, new Object[]{args});
+                .actionOnComplete(clazz -> {
+                    try {
+                        clazz.getDeclaredMethod("init", new Class[]{Object[].class}).invoke(null, new Object[]{args});
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
         return true;
     }
 
-    static void redefinePickupSprite() throws Exception {
+    static void redefinePickupSprite() {
         // Override class `com.threerings.projectx.dungeon.client.a.PickupSprite`
-        ClassBuilder.fromClass("com.threerings.projectx.dungeon.client.a.A")
+        ClassPool.from("com.threerings.projectx.dungeon.client.a.A")
                 .modifyMethod(new MethodModifier()
                         .methodName("a")
                         .paramTypeNames("com.threerings.tudey.config.ActorSpriteConfig")
@@ -185,13 +187,12 @@ public class Main {
                                 "        this._model.clearConfig();\n" +
                                 "        super.Eo();\n" +
                                 "    }\n" +
-                                "}"))
-                .build();
+                                "}"));
     }
 
-    static void redefineMessageEvent() throws Exception {
+    static void redefineMessageEvent() {
         // Override class `com.threerings.presents.dobj.MessageEvent`
-        ClassBuilder.fromClass("com.threerings.presents.dobj.MessageEvent")
+        ClassPool.from("com.threerings.presents.dobj.MessageEvent")
                 // Override method `com.threerings.presents.dobj.MessageEvent.notifyListener`
                 .modifyMethod(new MethodModifier()
                         .methodName("aO")
@@ -235,8 +236,7 @@ public class Main {
                                 "        .getDeclaredMethod(\"isMessageExcluded\", new java.lang.Class[]{java.lang.String.class, java.lang.String.class})\n" +
                                 "        .invoke(null, new java.lang.Object[]{_itemType, _itemName});\n" +
                                 "    return _excluded.booleanValue();\n" +
-                                "}"))
-                .build();
+                                "}"));
     }
 
     public static class Config {

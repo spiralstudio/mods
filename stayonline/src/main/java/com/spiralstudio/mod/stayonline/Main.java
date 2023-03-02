@@ -1,6 +1,6 @@
 package com.spiralstudio.mod.stayonline;
 
-import com.spiralstudio.mod.core.util.ClassBuilder;
+import com.spiralstudio.mod.core.ClassPool;
 import com.spiralstudio.mod.core.util.MethodModifier;
 
 /**
@@ -15,16 +15,15 @@ public class Main {
     static {
     }
 
-    public static void mount() throws Exception {
+    public static void mount() {
         if (mounted) {
             return;
         }
         mounted = true;
-        ClassBuilder.fromClass("com.threerings.projectx.client.ProjectXApp$c")
+        ClassPool.from("com.threerings.projectx.client.ProjectXApp$c")
                 .modifyMethod(new MethodModifier()
                         .methodName("start")
-                        .body("{System.out.println(\"[StayOnline] Never Idle\");}"))
-                .build();
+                        .body("{System.out.println(\"[StayOnline] Never Idle\");}"));
     }
 
     public static void main(String[] args) {
