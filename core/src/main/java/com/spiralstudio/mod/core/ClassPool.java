@@ -19,7 +19,7 @@ public class ClassPool {
         return pool.computeIfAbsent(className, ClassBuilder::fromClass);
     }
 
-    protected static void init() throws Exception {
+    public static void init() throws Exception {
         for (Map.Entry<String, ClassBuilder> entry : pool.entrySet()) {
             entry.getValue().build();
         }
