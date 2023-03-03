@@ -1,0 +1,9 @@
+{
+  "mod": {
+    "name": "GearEx",
+    "description": "Show the value of equipments",
+    "author": "Leego",
+    "version": "1.0.0",
+    "compatibility": "Yes"
+  }
+}
