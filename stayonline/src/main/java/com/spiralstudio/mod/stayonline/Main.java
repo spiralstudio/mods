@@ -1,6 +1,7 @@
 package com.spiralstudio.mod.stayonline;
 
 import com.spiralstudio.mod.core.ClassPool;
+import com.spiralstudio.mod.core.Registers;
 import com.spiralstudio.mod.core.util.MethodModifier;
 
 /**
@@ -13,6 +14,7 @@ public class Main {
     private static boolean mounted = false;
 
     static {
+        Registers.add(Main.class);
     }
 
     public static void mount() {
